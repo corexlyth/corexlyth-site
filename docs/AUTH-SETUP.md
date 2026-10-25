@@ -1,7 +1,13 @@
-# Account system — connection pending
+# Account system — project provisioned, dashboard setup pending
 
-The account routes are implemented but must remain off the production navigation
-until a Supabase project is selected, configured and live-tested.
+The account routes are implemented on PR #4 and remain off production until
+dashboard configuration and live email testing are complete.
+
+Project: corexlyth-site (`bhsautccvnwgetfzdvui`), CoreXLyth organization,
+Frankfurt (`eu-central-1`). Creation was quoted at $0/month. Database connectivity
+and the security advisor check passed. The live Auth settings endpoint returned
+HTTP 200 with email authentication and required email confirmation enabled. The public client settings are configured
+in this branch; no privileged keys are stored in the client.
 
 ## Build configuration
 
@@ -58,4 +64,16 @@ selected Supabase project; mocks do not establish live service correctness.
   guard, rejected/successful login, restored session, password update, local logout,
   expired link and an implicit recovery-token callback (including URL cleanup).
 - Without configuration, form fieldsets stay disabled and the account link is absent.
-- Live Supabase/SMTP validation is pending project selection and configuration.
+- The Supabase project is provisioned. Live email validation remains blocked by
+  the dashboard sign-in required to save the production site URL and redirects.
+
+## Remaining activation steps
+
+The connected Supabase plugin can create/read projects but cannot update Auth URL
+configuration or SMTP settings. The dashboard required a separate login; the secure
+browser sign-in was declined. Do not retry sign-in without a new user request.
+
+Next authorized session: configure the Site URL and exact redirects listed above,
+check email confirmations and password requirements, establish delivery settings,
+and test registration/confirmation/recovery with a user-controlled email account.
+Only then mark the PR ready, run CI and merge for production publication.
