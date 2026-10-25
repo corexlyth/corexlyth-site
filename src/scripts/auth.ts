@@ -14,6 +14,7 @@ async function initialize(root: HTMLElement) {
   const base = root.dataset.base!;
   const destination = (path: string) => new URL(`${base}hesap/${path}`, location.origin).href;
   let busy = false;
+  let redirecting = false;
   let signedIn = false;
   const message = (text: string, error = false) => {
     status.textContent = text;
@@ -71,7 +72,7 @@ async function initialize(root: HTMLElement) {
     const client = createClient(authUrl, authKey, {
       auth: { flowType: 'implicit', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
     });
-    const maySubmit = () => !busy && (mode !== 'reset' || signedIn);
+    const maySubmit = () => !busy && !redirecting && (mode !== 'reset' || signedIn);
     const syncFields = () => { if (fields) fields.disabled = !maySubmit(); };
     const authError = (error: { code?: string; status?: number }) => {
       if (error.status === 429 || error.code === 'over_email_send_rate_limit' || error.code === 'over_request_rate_limit') return 'Çok fazla deneme yapıldı. Bir süre bekleyip tekrar dene.';
@@ -111,6 +112,9 @@ async function initialize(root: HTMLElement) {
       } else message(mode === 'confirm' ? 'Doğrulama tamamlanamadı. E-postandaki bağlantıyı yeniden aç veya giriş yap.' : 'Hesabını görüntülemek için giriş yap.');
     } else if (mode === 'reset') {
       message(signedIn ? 'Hesabın için yeni bir şifre belirle.' : 'Yeni şifre belirlemek için e-postandaki yenileme bağlantısını aç veya giriş yap.');
+    } else if (mode === 'login' && new URLSearchParams(location.search).get('kayit') === 'tamam') {
+      message('Doğrulama e-postası gönderildi. Gelen kutunu ve spam klasörünü kontrol et. Giriş yapmadan önce e-postandaki bağlantıyla hesabını doğrula.');
+      history.replaceState(null, '', location.pathname);
     } else message(mode === 'forgot' ? 'Şifre yenileme bağlantısı için e-posta adresini yaz.' : 'Bilgilerini aşağıya yaz.');
 
     form?.addEventListener('submit', async (event) => {
@@ -146,7 +150,11 @@ async function initialize(root: HTMLElement) {
           form.reset();
           validateInputs();
           if (data.session) location.assign(destination(''));
-          else message('Kayıt uygunsa doğrulama bağlantısı e-posta adresine gönderilecek. Gelen kutunu ve spam klasörünü kontrol et.');
+          else {
+            redirecting = true;
+            message('Doğrulama e-postası gönderildi. Giriş ekranına yönlendiriliyorsun…');
+            window.setTimeout(() => location.replace(destination('giris/?kayit=tamam')), 1800);
+          }
         } else if (mode === 'forgot') {
           const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: destination('sifre-yenile/') });
           if (error) throw error;

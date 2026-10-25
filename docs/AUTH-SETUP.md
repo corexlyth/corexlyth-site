@@ -72,3 +72,11 @@ The user confirmed the server-policy change, and the dashboard save completed.
 The minimum is 6 characters with all four character groups required. Run verify
 for Gmail/domain-suffix, character-group and minimum-length regression cases.
 The default SMTP restrictions and closed-test launch flag remain in place.
+
+## Kayıt sonrası bildirim ve e-posta metni
+
+Başarılı kayıt isteğinden sonra form temizlenir, yeniden gönderim kilitlenir ve bildirim gösterilir. 1,8 saniye sonra sabit giriş adresine yönlendirilir; doğrulama açıklaması girişte de kalır. E-posta veya şifre URL’ye taşınmaz.
+
+Kullanıcı gerçek kayıt, giriş, e-posta doğrulama ve şifre yenileme testlerini 25 Ekim 2026 tarihinde başarılı olarak bildirdi.
+
+Supabase Dashboard ücretsiz varsayılan e-posta hizmetinde şablon düzenlemesini kapatıyor. Varsayılan önizlemedeki bağlantı metni `Confirm email address`; kullanıcının Gmail otomatik çevirisinde yalnızca `E` görünmüş. Türkçe şablon `docs/email-templates/confirm-signup.html` içinde hazırdır; **henüz sunucuda etkin değildir**. Özel SMTP kurulduğunda (veya kullanıcı Pro seçerse), Confirm sign up konusu `CoreXLyth — E-posta adresini doğrula`, gövdesi bu dosya yapılmalıdır. `{{ .ConfirmationURL }}` korunmalıdır. Gerçek yeni mailde kontrol edilmeden düzeltildi sayılmamalıdır.
