@@ -6,6 +6,6 @@ export default defineConfig({
   base: '/corexlyth-site',
   output: 'static',
   integrations: [sitemap({
-    filter: (page) => !page.endsWith('/404.html') && !page.includes('/ara/'),
+    filter: (page) => !page.endsWith('/404.html') && !page.includes('/ara/') && !page.includes('/hesap/'),
   })],
 });

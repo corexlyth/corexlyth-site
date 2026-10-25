@@ -8,6 +8,7 @@ on:
       - 'public/**'
       - 'astro.config.mjs'
       - 'package.json'
+      - 'package-lock.json'
       - 'scripts/check-build.mjs'
       - '.github/workflows/astro-publish-root.yml'
   workflow_dispatch:
@@ -37,7 +38,7 @@ jobs:
         with:
           node-version: '24'
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - name: Build static Astro site
         run: npm run build
       - name: Check generated links, routes and assets
@@ -46,7 +47,7 @@ jobs:
         run: |
           cp -a dist/. .
           test -f .nojekyll || touch .nojekyll
-          git add -- index.html 404.html .nojekyll assets/ arsiv/ kategori/ etiket/ yazi/ ara/ rss.xml robots.txt sitemap-index.xml sitemap-0.xml pagefind/
+          git add -- index.html 404.html .nojekyll assets/ _astro/ hesap/ arsiv/ kategori/ etiket/ yazi/ ara/ rss.xml robots.txt sitemap-index.xml sitemap-0.xml pagefind/
           if git diff --cached --quiet; then
             echo "Compiled output is unchanged."
           else
