@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PostList from '../../components/PostList.astro';
+import Community from '../../components/Community.astro';
 import { categoryUrl, coverFor, dateTR, getPosts, postUrl, tagUrl, urlFor } from '../../lib/posts';
 import type { Post } from '../../lib/posts';
 
@@ -84,6 +85,8 @@ const structuredData = {
         <a class="cx-link" href={urlFor('arsiv/')}>← TÜM KAYITLARA DÖN</a>
       </footer>
     </article>
+
+    <Community post={post.id} />
 
     {related.length > 0 && <section class="cx-related cx-hud-frame" aria-label="Benzer içerikler">
       <p class="cx-kicker">FURTHER READING</p>
