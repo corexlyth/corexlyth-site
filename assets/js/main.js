@@ -35,10 +35,11 @@ document.addEventListener("click", (event) => {
 function upgradeImages(root = document) {
   root.querySelectorAll("img").forEach((img) => {
     if (img.closest(".cx-media-frame,.cx-auto-media,.cx-lightbox,.cx-story-card,.cx-record-row,.cx-article-cover,a,button")) return;
-    const wrap = document.createElement("figure");
+    const wrap = document.createElement("span");
     wrap.className = "cx-auto-media";
-    img.parentNode?.insertBefore(wrap, img);
-    wrap.appendChild(img);
+    const media = img.closest("picture") || img;
+    media.before(wrap);
+    wrap.appendChild(media);
   });
 }
 upgradeImages();
@@ -63,30 +64,82 @@ window.addEventListener("scroll", updateTopButton, {passive:true});
 updateTopButton();
 toTop?.addEventListener("click", () => window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}));
 
-const lightbox = document.querySelector(".cx-lightbox");
+// Native modal provides focus containment, Escape handling and an inert background.
+const lightbox = document.querySelector("dialog.cx-lightbox");
 const lightboxImage = lightbox?.querySelector("img");
-const closeLightbox = () => {
-  if (!lightbox) return;
-  lightbox.hidden = true;
-  if (lightboxImage) lightboxImage.removeAttribute("src");
-};
-document.querySelectorAll(".cx-media-frame img,.cx-auto-media img").forEach((img) => {
-  img.style.cursor = "zoom-in";
-  img.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!lightbox || !lightboxImage) return;
+if (lightbox && lightboxImage && typeof lightbox.showModal === "function") {
+  const caption = lightbox.querySelector("figcaption");
+  const count = lightbox.querySelector("[data-lightbox-count]");
+  const previous = lightbox.querySelector("[data-lightbox-prev]");
+  const next = lightbox.querySelector("[data-lightbox-next]");
+  const images = [...document.querySelectorAll(".cx-article-cover img,.cx-article__content img,.cx-media-frame img,.cx-auto-media img")]
+    .filter(img => !img.closest("a,button,.cx-lightbox"));
+  let active = 0;
+  let opener;
+
+  function displayImage(index) {
+    active = (index + images.length) % images.length;
+    const img = images[active];
+    const label = img.alt || `Görsel ${active + 1}`;
     lightboxImage.src = img.currentSrc || img.src;
     lightboxImage.alt = img.alt || "";
-    lightbox.hidden = false;
+    caption.textContent = label;
+    count.textContent = `${active + 1} / ${images.length}`;
+    previous.hidden = next.hidden = images.length < 2;
+  }
+  lightboxImage.addEventListener("error", () => {
+    caption.textContent = "Görsel yüklenemedi. Önizlemeyi kapatıp yeniden deneyebilirsin.";
   });
-});
-lightbox?.querySelector(".cx-lightbox__close")?.addEventListener("click", closeLightbox);
-lightbox?.addEventListener("click", (event) => {
-  if (event.target === lightbox) closeLightbox();
-});
-window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && lightbox && !lightbox.hidden) closeLightbox();
+  images.forEach((img, index) => {
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "cx-image-trigger";
+    trigger.setAttribute("aria-label", `Görseli büyüt: ${img.alt || `Görsel ${index + 1}`}`);
+    trigger.setAttribute("aria-haspopup", "dialog");
+    const media = img.closest("picture") || img;
+    media.before(trigger);
+    trigger.appendChild(media);
+    trigger.addEventListener("click", () => {
+      opener = trigger;
+      displayImage(index);
+      lightbox.showModal();
+      document.documentElement.classList.add("cx-modal-open");
+    });
+  });
+  previous.addEventListener("click", () => displayImage(active - 1));
+  next.addEventListener("click", () => displayImage(active + 1));
+  lightbox.querySelector(".cx-lightbox__close").addEventListener("click", () => lightbox.close());
+  lightbox.addEventListener("click", event => {
+    if (event.target === lightbox) lightbox.close();
+  });
+  lightbox.addEventListener("keydown", event => {
+    if (event.key === "Tab") {
+      const controls = [...lightbox.querySelectorAll("button")].filter(button => !button.hidden && !button.disabled);
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if ((event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      }
+    }
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      displayImage(active + (event.key === "ArrowLeft" ? -1 : 1));
+    }
+  });
+  lightbox.addEventListener("close", () => {
+    document.documentElement.classList.remove("cx-modal-open");
+    lightboxImage.removeAttribute("src");
+    opener?.focus({ preventScroll: true });
+  });
+}
+
+// Native anchor navigation still works without JavaScript.
+document.querySelectorAll(".cx-toc a").forEach(link => {
+  const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+  if (!heading) return;
+  heading.tabIndex = -1;
+  link.addEventListener("click", () => heading.focus({ preventScroll: true }));
 });
 
 console.info("CoreXLyth // system online");
