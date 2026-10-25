@@ -15,7 +15,7 @@ Yazılarda yorum/tek düzey yanıt, beğeni, özel kaydetme; hesapta isteğe ba�
 
 ## Kurulum / yayın
 
-Şema `db/community.sql`; Supabase uzakta `community_foundations`, `community_explicit_client_denial` ve `community_independent_reaction_limits` migration'larıyla kuruldu. İçerik ana kaynağı Markdown kalır. `db/posts.sql` yayımlanmış beş yazının slug/başlık kaydıdır. Yeni yazı eklerken bu kayıt güvenilen DB yayın adımıyla güncellenmelidir; taslak/silinen yazı için `active=false` yapılır. İstemci bilinmeyen yazı oluşturamaz. Site derlemesine asla service-role/DB şifresi konmaz.
+Şema `db/community.sql`; Supabase uzakta `community_foundations`, `community_explicit_client_denial` ve `community_independent_reaction_limits` migration'larıyla kuruldu. Başlangıç Markdown yazıları özel yayın yönetimine aktarıldı. Yeni yazılar ve düzenlemeler için `PUBLISHING.md` akışı kullanılır. Paneldeki yayımla/yayından kaldır işlemi, yazı etkileşim kaydını aynı transaction içinde günceller; artık yeni yazı için `db/posts.sql` dosyasını ayrıca elle düzenlemek gerekmez. Bu dosya yalnızca ilk kurulum kaydıdır. İstemci bilinmeyen bir yazıya doğrudan etkileşim ekleyemez. Gizli anahtarlar statik derlemeye konmaz.
 
 İlk moderatör, sahibin ekran görüntüsünde doğrulanmış olarak gösterdiği mevcut test hesabına proje yönetiminden atanmıştır. Otomatik ilk üye/moderatör ataması yoktur; kayıt olan yeni hesaplar normal üyedir. Sonraki moderatör atamaları yalnızca güvenilen DB yönetiminden, doğrulanmış hedef kimlik için yapılır. Kimlik ve e-posta bu depoya yazılmaz.
 

@@ -5,10 +5,10 @@
   "type": "module",
   "description": "CoreXLyth independent web portal",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "dev": "node scripts/prepare-content.mjs && astro dev",
+    "build": "node scripts/prepare-content.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
-    "verify": "node scripts/check-build.mjs && node scripts/check-auth-rules.mjs && node scripts/check-community.mjs"
+    "verify": "node scripts/check-build.mjs && node scripts/check-auth-rules.mjs && node scripts/check-community.mjs && node scripts/check-editor.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
@@ -18,8 +18,13 @@
     "pagefind": "^1.5.0"
   },
   "dependencies": {
+    "@astrojs/markdown-remark": "7.3.4",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "@supabase/supabase-js": "2.118.0"
+    "@supabase/supabase-js": "2.118.0",
+    "dompurify": "3.4.17",
+    "gray-matter": "4.0.3",
+    "marked": "18.1.1",
+    "rehype-sanitize": "6.0.0"
   }
 }
