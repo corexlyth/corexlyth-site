@@ -22,7 +22,8 @@ The SDK is pinned; package-lock.json and npm ci are used.
 - Exact redirect: https://corexlyth.github.io/corexlyth-site/hesap/dogrula/
 - Exact redirect: https://corexlyth.github.io/corexlyth-site/hesap/sifre-yenile/
 - Email sign-in and confirmation enabled; anonymous sign-in disabled.
-- Minimum password length set to 12 through the dashboard.
+- Minimum password length set to 6 with uppercase, lowercase, digit and symbol
+  character groups required through the dashboard after user confirmation.
 - Custom SMTP is not configured. Supabase's default SMTP allows only organization
   team addresses and has strict delivery limits. General public launch remains
   blocked until a production email sender is connected and tested.
@@ -57,7 +58,7 @@ then tests login/logout. A password recovery test follows subject to SMTP limits
 Do not request passwords or one-time codes in chat. Configure and test custom SMTP
 before setting publicLaunch=true and opening general membership.
 
-## Prepared input-validation update (awaiting server Save)
+## Live input validation
 
 The user requested a minimum of 6 characters with at least one ASCII uppercase
 letter, lowercase letter, digit and allowed punctuation mark. Signup and password
@@ -67,8 +68,7 @@ Login, signup and forgot-password email fields accept only syntactically valid
 and block invalid submission. This is client form validation; it does not establish
 mailbox ownership or availability. Confirmation emails remain required.
 
-The server form has the 6-character minimum and all four character groups selected
-but not saved. The existing saved 12-character minimum remains active until the
-browser's action-time security confirmation is received. Do not publish the new
-frontend password policy ahead of that save. Run verify for Gmail/domain-suffix,
-character-group and minimum-length regression cases.
+The user confirmed the server-policy change, and the dashboard save completed.
+The minimum is 6 characters with all four character groups required. Run verify
+for Gmail/domain-suffix, character-group and minimum-length regression cases.
+The default SMTP restrictions and closed-test launch flag remain in place.
