@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://corexlyth.github.io/corexlyth-site/sitemap-index.xml
