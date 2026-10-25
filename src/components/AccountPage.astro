@@ -2,6 +2,7 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { urlFor } from '../lib/posts';
 import { authConfigured, authPublicLaunch } from '../config/auth';
+import { MIN_PASSWORD_LENGTH, passwordChecks } from '../lib/auth-rules';
 interface Props { mode: 'account' | 'login' | 'signup' | 'forgot' | 'reset' | 'confirm'; }
 const { mode } = Astro.props;
 const titles = { account:'Hesabım', login:'Giriş yap', signup:'Hesap oluştur', forgot:'Şifremi unuttum', reset:'Yeni şifre belirle', confirm:'E-posta doğrulama' };
@@ -20,16 +21,28 @@ const newPassword = ['signup','reset'].includes(mode);
       {['login','signup','forgot','reset'].includes(mode) && <form data-auth-form method="post">
         <fieldset disabled>
           {needsEmail && <label>E-posta adresi
-            <input name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required />
+            <input name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required aria-describedby="cx-email-help" />
           </label>}
+          {needsEmail && <p id="cx-email-help" class="cx-field-hint" role="status" aria-live="polite">Yalnızca @gmail.com adresi kullan.</p>}
           {needsPassword && <label>{newPassword ? 'Yeni şifre' : 'Şifre'}
-            <input name="password" type="password" autocomplete={newPassword ? 'new-password' : 'current-password'} minlength={newPassword ? 12 : undefined} maxlength="128" required aria-describedby={newPassword ? 'cx-password-help' : undefined} />
+            <input name="password" type="password" autocomplete={newPassword ? 'new-password' : 'current-password'} minlength={newPassword ? MIN_PASSWORD_LENGTH : undefined} maxlength="128" required aria-describedby={newPassword ? 'cx-password-help' : undefined} />
           </label>}
           {newPassword && <>
-            <p id="cx-password-help">En az 12 karakter kullan. Bu site için farklı bir şifre seç.</p>
+            <div id="cx-password-help">
+              <p>Bu site için farklı bir şifre seç. Aşağıdaki şartların tamamı gerekli.</p>
+              <ul class="cx-password-rules" aria-label="Şifre şartları">
+                {passwordChecks('').map(check => <li data-password-rule={check.id} data-valid="false">
+                  <span data-rule-icon aria-hidden="true">○</span>
+                  <span>{check.label}</span>
+                  <small data-rule-state>Eksik</small>
+                </li>)}
+              </ul>
+              <p class="cx-field-hint" data-password-progress role="status" aria-live="polite">5 şarttan 0 tanesi tamamlandı.</p>
+            </div>
             <label>Şifreyi tekrar yaz
-              <input name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required />
+              <input name="confirmPassword" type="password" autocomplete="new-password" minlength={MIN_PASSWORD_LENGTH} maxlength="128" required aria-describedby="cx-confirm-help" />
             </label>
+            <p id="cx-confirm-help" class="cx-field-hint" role="status" aria-live="polite">Şifreni iki alana da aynı şekilde yaz.</p>
           </>}
           <button type="submit">{mode === 'forgot' ? 'Yenileme bağlantısı gönder' : mode === 'reset' ? 'Şifreyi güncelle' : titles[mode]}</button>
         </fieldset>

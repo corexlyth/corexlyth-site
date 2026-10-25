@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import { isGmail, normalizeEmail, validPassword, passwordChecks } from '../src/lib/auth-rules.ts';
+for(const email of ['bilo@gmail.com','Bilo.Name@GMAIL.COM','bilo+site@gmail.com']) assert(isGmail(email),email);
+for(const email of ['', 'bilo@hotmail.com','bilo@gmail.com.evil.test','bilo@sub.gmail.com','bilo@googlemail.com','bilo..name@gmail.com','.bilo@gmail.com','bilo.@gmail.com','bi lo@gmail.com','bilo@@gmail.com']) assert(!isGmail(email),email);
+assert.equal(normalizeEmail(' Bilo.Name@GMAIL.COM '),'bilo.name@gmail.com');
+assert(validPassword('Aa1!..'));
+for(const password of ['', 'Aa1!', 'aa1!..', 'AA1!..', 'Aaa!..', 'Aa1234', 'Aa1   ', 'Aa1。aa', 'Aa1!🙂']) assert(!validPassword(password));
+assert.equal(passwordChecks('A').filter(check=>check.valid).length,1);
+assert.equal(passwordChecks('Aa1!..').filter(check=>check.valid).length,5);
+console.log('CoreXLyth Gmail and password rule checks passed.');
