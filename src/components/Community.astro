@@ -1,0 +1,48 @@
+---
+import { urlFor } from '../lib/posts';
+import { authConfigured } from '../config/auth';
+interface Props { mode?: 'article' | 'account' | 'moderation'; post?: string; }
+const { mode = 'article', post = '' } = Astro.props;
+---
+<section class="cx-community cx-hud-frame" data-community={mode} data-post={post} data-base={urlFor('')} data-pagefind-ignore>
+  <p class="cx-kicker">COREXLYTH // TOPLULUK</p>
+  <h2>{mode === 'article' ? 'Yorumlar ve etkileşim' : mode === 'account' ? 'Profilim ve kaydettiklerim' : 'Yorum moderasyonu'}</h2>
+  <p data-community-status role="status" aria-live="polite">{authConfigured ? 'Topluluk yükleniyor…' : 'Topluluk henüz kullanıma açılmadı.'}</p>
+  <p data-community-login hidden>Katılmak için <a href={urlFor('hesap/giris/')}>giriş yap</a>. Yeni bir hesap için <a href={urlFor('hesap/kayit/')}>kayıt ol</a>.</p>
+  {mode === 'article' && <>
+    <div class="cx-community-actions">
+      <button type="button" data-like disabled aria-pressed="false">Beğen <span data-like-count>0</span></button>
+      <button type="button" data-bookmark disabled aria-pressed="false">Yazıyı kaydet</button>
+      <a href={urlFor('hesap/')}>Kaydettiklerim</a>
+    </div>
+    <p>Yorumlar incelendikten sonra yayımlanır. E-posta adresin yorumlarda gösterilmez.</p>
+  </>}
+  {mode !== 'moderation' && <form data-profile-form method="post" hidden>
+    <fieldset disabled>
+      <label>Görünen adın <input name="displayName" autocomplete="nickname" minlength="2" maxlength="40" required /></label>
+      <p>Bu ad yorumlarında herkese görünür. İstersen takma ad kullan.</p>
+      <button type="submit">Adımı kaydet</button>
+    </fieldset>
+  </form>}
+  {mode === 'account' && <>
+    <h3>Kaydedilen yazılar</h3>
+    <p>En son kaydettiğin 100 yazı burada görünür.</p>
+    <ul data-saved-list></ul>
+  </>}
+  {mode === 'article' && <form data-comment-form method="post" hidden>
+    <fieldset disabled>
+      <p data-reply-status>Yeni yorum</p>
+      <button type="button" data-cancel-reply hidden>Yanıttan vazgeç</button>
+      <label>Yorumun <textarea name="comment" rows="4" minlength="1" maxlength="2000" required></textarea></label>
+      <p>En fazla 2000 karakter. Gönderimler arasında 30 saniye bekle; saatte en fazla 10 yorum gönderebilirsin.</p>
+      <button type="submit">İncelemeye gönder</button>
+    </fieldset>
+  </form>}
+  {mode !== 'account' && <>
+    <div data-comment-list aria-label={mode === 'moderation' ? 'Moderasyon kuyruğu' : 'Yorumlar'}></div>
+    <button type="button" data-more hidden>Daha fazla yükle</button>
+  </>}
+  <p><button type="button" data-community-refresh>Yenile</button> <a data-moderation-link href={urlFor('hesap/moderasyon/')} hidden>Moderasyon paneli</a></p>
+  <noscript>Topluluk işlemleri için JavaScript gerekir. Yazıyı giriş yapmadan okuyabilirsin.</noscript>
+</section>
+<script>import '../scripts/community';</script>

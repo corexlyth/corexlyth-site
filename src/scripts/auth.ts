@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import { authConfigured, authUrl, authKey } from '../config/auth';
+import { getAuthClient } from '../lib/supabase-client';
+import { authConfigured } from '../config/auth';
 import { isGmail, normalizeEmail, passwordChecks, validPassword } from '../lib/auth-rules';
 
 const root = document.querySelector<HTMLElement>('[data-auth-page]');
@@ -69,9 +69,7 @@ async function initialize(root: HTMLElement) {
   if (!authConfigured) return;
 
   try {
-    const client = createClient(authUrl, authKey, {
-      auth: { flowType: 'implicit', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
-    });
+    const client = getAuthClient()!;
     const maySubmit = () => !busy && !redirecting && (mode !== 'reset' || signedIn);
     const syncFields = () => { if (fields) fields.disabled = !maySubmit(); };
     const authError = (error: { code?: string; status?: number }) => {

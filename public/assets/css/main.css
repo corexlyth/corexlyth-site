@@ -662,3 +662,23 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-field-hint{font-size:.9rem;line-height:1.6;color:#a7bcc5;min-height:1.6em}
 .cx-field-hint[data-valid=false]{color:#ffb4b4}
 .cx-account input[aria-invalid=true]{border-color:#f28c8c}
+
+/* Community: readable controls in the existing HUD. */
+.cx-home-search { margin:1.5rem 0; max-width:42rem; }
+.cx-community { padding:clamp(1.2rem,4vw,2.5rem); margin:2rem 0; overflow-wrap:anywhere; }
+.cx-community form { margin:1.5rem 0; }
+.cx-community fieldset { border:0; padding:0; margin:0; min-width:0; }
+.cx-community label { display:block; font-weight:600; }
+.cx-community input,.cx-community textarea { display:block; width:100%; box-sizing:border-box; margin:.6rem 0; padding:.8rem; color:var(--cx-text,#dce8ed); background:#08141d; border:1px solid #377889; font:inherit; }
+.cx-community textarea { resize:vertical; }
+.cx-community button { padding:.65rem .9rem; border:1px solid #58cfe2; background:#10313d; color:#e0faff; cursor:pointer; font:inherit; }
+.cx-community button:disabled { opacity:.5; cursor:default; }
+.cx-community button[aria-pressed=true] { background:#23616a; }
+.cx-community-actions,.cx-comment__actions { display:flex; flex-wrap:wrap; gap:.7rem; align-items:center; }
+.cx-community-actions a { padding:.65rem 0; }
+.cx-comment { border-top:1px solid #314652; padding:1.25rem 0; }
+.cx-comment__meta { font-size:.9rem; color:#a3c0c9; }
+.cx-comment__body { white-space:pre-wrap; }
+.cx-community [data-error=true] { color:#ffb5c5; }
+.cx-community :focus-visible { outline:2px solid #6af0ff; outline-offset:4px; }
+.cx-community [hidden] { display:none !important; }

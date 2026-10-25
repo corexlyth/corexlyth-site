@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import Community from './Community.astro';
 import { urlFor } from '../lib/posts';
 import { authConfigured, authPublicLaunch } from '../config/auth';
 import { MIN_PASSWORD_LENGTH, passwordChecks } from '../lib/auth-rules';
@@ -61,6 +62,7 @@ const newPassword = ['signup','reset'].includes(mode);
       </nav>
       <noscript><p>Hesap işlemleri için tarayıcında JavaScript açık olmalı. Yazıları giriş yapmadan okuyabilirsin.</p></noscript>
     </section>
+    {['account','confirm'].includes(mode) && <Community mode="account" />}
   </main>
 </SiteLayout>
 <script>
