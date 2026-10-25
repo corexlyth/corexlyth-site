@@ -1,0 +1,29 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { categoriesFrom, categoryUrl, getPosts, slugify, urlFor } from '../../lib/posts';
+import type { Post } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return categoriesFrom(posts).map(category => ({
+    params: { slug: slugify(category) },
+    props: { category, posts: posts.filter(p => p.data.category === category) },
+  }));
+}
+const { category, posts } = Astro.props as { category: string; posts: Post[] };
+---
+<SiteLayout title={`${category} | CoreXLyth Kanalları`} description={`CoreXLyth ${category} kategorisindeki bütün içerikleri keşfet.`}>
+  <main id="home" class="cx-list-page">
+    <nav class="cx-breadcrumb" aria-label="İçerik yolu"><a href={urlFor('')}>COREXLYTH</a><span>/</span><span>KANAL</span></nav>
+    <section class="cx-all-records cx-hud-frame">
+      <header class="cx-records-head">
+        <p class="cx-kicker">CHANNEL // INDEX</p>
+        <div class="cx-records-title"><h1>{category.toLocaleUpperCase('tr-TR')}</h1><span>{posts.length} YAYIN</span></div>
+        <p>Bu kanaldaki tüm kayıtlar, en yeni içerikten başlayarak listelenir.</p>
+        <a class="cx-link" href={urlFor('arsiv/')}>TÜM ARŞİVE GİT →</a>
+      </header>
+      <PostList posts={posts} />
+    </section>
+  </main>
+</SiteLayout>

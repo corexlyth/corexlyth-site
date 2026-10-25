@@ -1,0 +1,29 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts, tagsFrom, slugify, urlFor } from '../../lib/posts';
+import type { Post } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return tagsFrom(posts).map(tag => ({
+    params: { slug: slugify(tag) },
+    props: { tag, posts: posts.filter(p => p.data.tags.includes(tag)) },
+  }));
+}
+const { tag, posts } = Astro.props as { tag: string; posts: Post[] };
+---
+<SiteLayout title={`#${tag} | CoreXLyth Etiketleri`} description={`CoreXLyth'de ${tag} etiketi altındaki yazılar.`}>
+  <main id="home" class="cx-list-page">
+    <nav class="cx-breadcrumb" aria-label="İçerik yolu"><a href={urlFor('')}>COREXLYTH</a><span>/</span><span>ETİKET</span></nav>
+    <section class="cx-all-records cx-hud-frame">
+      <header class="cx-records-head">
+        <p class="cx-kicker">TAG // INDEX</p>
+        <div class="cx-records-title"><h1>#{tag.toLocaleUpperCase('tr-TR')}</h1><span>{posts.length} YAYIN</span></div>
+        <p>Bu etikete bağlı bütün yayınları buradan açabilirsin.</p>
+        <a class="cx-link" href={urlFor('arsiv/')}>ARŞİVE DÖN →</a>
+      </header>
+      <PostList posts={posts} />
+    </section>
+  </main>
+</SiteLayout>

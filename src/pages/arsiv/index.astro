@@ -1,0 +1,28 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { categoriesFrom, categoryUrl, getPosts, tagsFrom, tagUrl, urlFor } from '../../lib/posts';
+const posts = await getPosts();
+const categories = categoriesFrom(posts);
+const tags = tagsFrom(posts);
+---
+<SiteLayout title="Tüm Kayıtlar | CoreXLyth" description="CoreXLyth tüm yazılar, kanallar, içerik kategorileri ve etiketler arşivi.">
+  <main id="home" class="cx-list-page">
+    <nav class="cx-breadcrumb" aria-label="İçerik yolu"><a href={urlFor('')}>COREXLYTH</a><span>/</span><span>TÜM KAYITLAR</span></nav>
+    <section class="cx-all-records cx-hud-frame">
+      <header class="cx-records-head">
+        <p class="cx-kicker">ARCHIVE // ALL RECORDS</p>
+        <div class="cx-records-title"><h1>TÜM KAYITLAR</h1><span>{posts.length} YAYIN</span></div>
+        <p>CoreXLyth yayın akışı. Yeni yazılar otomatik olarak en üste gelir.</p>
+        <div class="cx-archive-filters" aria-label="Kategori bağlantıları">
+          {categories.map(category => <a href={categoryUrl(category)}>{category}</a>)}
+        </div>
+      </header>
+      <PostList posts={posts} />
+      <div class="cx-archive-tags">
+        <p class="cx-kicker">INDEX // TAGS</p>
+        <div class="cx-tag-links">{tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}</div>
+      </div>
+    </section>
+  </main>
+</SiteLayout>
