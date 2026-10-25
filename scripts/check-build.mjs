@@ -104,5 +104,13 @@ for(const route of ['', 'giris/', 'kayit/', 'sifremi-unuttum/', 'sifre-yenile/',
 }
 assert(!readFileSync(join(dist,'sitemap-0.xml'),'utf8').includes('/hesap/'),'Account routes excluded from sitemap');
 
+const authSettings=JSON.parse(readFileSync(join(root,'src/config/public-auth.json'),'utf8'));
+if(!authSettings.publicLaunch) {
+ const home=readFileSync(join(dist,'index.html'),'utf8');
+ assert(!home.includes('href="/corexlyth-site/hesap/"'),'Closed test account menu hidden on homepage');
+ const signup=readFileSync(join(dist,'hesap/kayit/index.html'),'utf8');
+ assert(signup.includes('Üyelik sistemi kapalı test aşamasında.'),'Closed test status visible on signup');
+}
+
 if(failures){console.error(`CoreXLyth verification failed: ${failures} errors`);process.exitCode=1;}
 else console.log('CoreXLyth content build verified.');

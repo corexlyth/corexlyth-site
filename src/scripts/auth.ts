@@ -28,6 +28,7 @@ async function initialize(root: HTMLElement) {
     const syncFields = () => { if (fields) fields.disabled = !maySubmit(); };
     const authError = (error: { code?: string; status?: number }) => {
       if (error.status === 429 || error.code === 'over_email_send_rate_limit' || error.code === 'over_request_rate_limit') return 'Çok fazla deneme yapıldı. Bir süre bekleyip tekrar dene.';
+      if (error.code === 'email_address_not_authorized') return 'Üyelik kapalı test aşamasında. Bu e-posta adresi için kayıt henüz açık değil.';
       if (error.code === 'email_not_confirmed') return 'Giriş yapmadan önce e-postana gelen doğrulama bağlantısını aç.';
       if (error.code === 'weak_password') return 'Bu şifre yeterince güçlü değil. Daha uzun ve farklı bir şifre seç.';
       if (error.code === 'same_password') return 'Yeni şifren önceki şifrenden farklı olmalı.';

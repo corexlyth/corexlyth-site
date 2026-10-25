@@ -1,7 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { urlFor } from '../lib/posts';
-import { authConfigured } from '../config/auth';
+import { authConfigured, authPublicLaunch } from '../config/auth';
 interface Props { mode: 'account' | 'login' | 'signup' | 'forgot' | 'reset' | 'confirm'; }
 const { mode } = Astro.props;
 const titles = { account:'Hesabım', login:'Giriş yap', signup:'Hesap oluştur', forgot:'Şifremi unuttum', reset:'Yeni şifre belirle', confirm:'E-posta doğrulama' };
@@ -15,6 +15,7 @@ const newPassword = ['signup','reset'].includes(mode);
     <section class="cx-account cx-hud-frame" data-auth-page={mode} data-base={urlFor('')}>
       <p class="cx-kicker">COREXLYTH // HESAP</p>
       <h1>{titles[mode]}</h1>
+      {!authPublicLaunch && <p>Üyelik sistemi kapalı test aşamasında.</p>}
       <p id="cx-auth-status" role="status" aria-live="polite">{authConfigured ? 'Bağlantı kontrol ediliyor…' : 'Hesap sistemi henüz kullanıma açılmadı.'}</p>
       {['login','signup','forgot','reset'].includes(mode) && <form data-auth-form method="post">
         <fieldset disabled>

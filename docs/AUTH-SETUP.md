@@ -1,79 +1,58 @@
-# Account system — project provisioned, dashboard setup pending
+# Account system — closed test
 
-The account routes are implemented on PR #4 and remain off production until
-dashboard configuration and live email testing are complete.
+Supabase project: corexlyth-site (`bhsautccvnwgetfzdvui`), CoreXLyth organization,
+Frankfurt (`eu-central-1`), creation quoted at $0/month.
 
-Project: corexlyth-site (`bhsautccvnwgetfzdvui`), CoreXLyth organization,
-Frankfurt (`eu-central-1`). Creation was quoted at $0/month. Database connectivity
-and the security advisor check passed. The live Auth settings endpoint returned
-HTTP 200 with email authentication and required email confirmation enabled. The public client settings are configured
-in this branch; no privileged keys are stored in the client.
+## Release scope
 
-## Build configuration
+Public client settings are connected. publicLaunch=false hides the general
+account menu. Direct account routes are published for the owner's closed test;
+this flag is a presentation setting, not an authorization mechanism. No private
+article content, profiles or user data is exposed by this release. Supabase owns
+Auth identities; no public database tables or privileged endpoints are added.
 
-Set the project URL and publishableKey in src/config/public-auth.json, or override
-with PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_PUBLISHABLE_KEY for Astro builds.
-Only modern sb_publishable_ keys are accepted. No service role, secret key or
-management token belongs in the static client or the repository. Missing
-configuration disables forms; the account menu is hidden. This is a static
-GitHub Pages app, not SSR; Supabase JS uses the documented implicit email flow.
+The public API URL and modern publishable key are in src/config/public-auth.json.
+PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_PUBLISHABLE_KEY can override them in builds.
+Privileged keys, non-HTTPS URLs and partial configurations are rejected at build.
+The SDK is pinned; package-lock.json and npm ci are used.
 
-The new dependency is pinned and package-lock.json must be committed.
+## Saved Supabase configuration
 
-## Supabase settings
+- Site URL: https://corexlyth.github.io/corexlyth-site/
+- Exact redirect: https://corexlyth.github.io/corexlyth-site/hesap/dogrula/
+- Exact redirect: https://corexlyth.github.io/corexlyth-site/hesap/sifre-yenile/
+- Email sign-in and confirmation enabled; anonymous sign-in disabled.
+- Minimum password length set to 12 through the dashboard.
+- Custom SMTP is not configured. Supabase's default SMTP allows only organization
+  team addresses and has strict delivery limits. General public launch remains
+  blocked until a production email sender is connected and tested.
 
-Site URL: https://corexlyth.github.io/corexlyth-site/
-Exact allowed redirects:
-- https://corexlyth.github.io/corexlyth-site/hesap/dogrula/
-- https://corexlyth.github.io/corexlyth-site/hesap/sifre-yenile/
+## Account behavior
 
-Enable email/password sign-in and email confirmations. Set minimum password
-length to at least 12 in the service as well as the form. Set up production SMTP
-and review delivery/rate limits before opening public registrations. Add only
-explicit development redirect URLs as required; avoid production wildcards.
+/hesap/, /hesap/giris/, /hesap/kayit/, /hesap/sifremi-unuttum/,
+/hesap/sifre-yenile/, /hesap/dogrula/ are noindex, outside sitemap and Pagefind.
+The static app uses Supabase's documented implicit email flow. Redirects after
+login are fixed internal paths. Callback pages use no-referrer. Missing/expired
+sessions cannot update passwords. Passwords are not logged, trimmed or stored by
+application code. Rendering uses textContent. Sign-out is local-device scope.
 
-## Behavior and boundaries
+Account display uses getUser, not an authorization boundary. Future database
+features require ownership RLS policies. Account deletion/export, profile editing,
+comments/bookmarks and moderation are follow-up work before broad membership use.
 
-Routes: /hesap/, /hesap/giris/, /hesap/kayit/,
-/hesap/sifremi-unuttum/, /hesap/sifre-yenile/, /hesap/dogrula/.
-All are noindex and omitted from sitemap and Pagefind. Redirects after login
-are fixed internal paths. Form inputs/status/email use textContent, never HTML.
-Passwords are not trimmed, logged or stored by application code. Supabase owns
-session storage/refresh and URL-token parsing. Callback pages use no-referrer.
-Missing/expired reset sessions cannot change a password. Error messages avoid
-revealing whether an email address is registered. Sign-out is local-device scope.
+## Validation
 
-This change creates no database tables, policies or privileged endpoints.
-Account display uses getUser; it is not an authorization boundary. Future
-profiles/comments/bookmarks require ownership RLS policies and server validation.
-Account deletion/export and moderation are separate follow-up work; these screens
-alone do not constitute a complete public membership launch.
+Production builds and route/script/SEO checks passed. Real pinned SDK tested with
+mocked HTTP responses in Chromium at 1280px and 393px: signup, mismatched passwords,
+reset requests, signed-out reset blocking, rejected/successful login, session
+restoration, password update, logout, expired links and recovery-token callbacks.
+Live Auth settings returned HTTP 200 with email/confirmation enabled. Database
+connectivity and security advisor checks passed. Real email confirmation and
+recovery are pending the owner's closed test; mocks do not prove mail delivery.
 
-## Validation before production
+## Next step
 
-Run npm run build and npm run verify. Test both missing configuration and mocked
-Auth HTTP responses with the actual SDK in desktop/mobile Chromium. Live email
-confirmation, expired links, logout and reset must then be tested against the
-selected Supabase project; mocks do not establish live service correctness.
-
-## Checks performed for this change
-
-- Astro/Pagefind production build and route, script, sitemap and noindex checks passed.
-- With the real pinned SDK and mocked Auth HTTP responses, Chromium checks passed
-  at 1280px and 393px: signup, password mismatch, reset request, unsigned-in reset
-  guard, rejected/successful login, restored session, password update, local logout,
-  expired link and an implicit recovery-token callback (including URL cleanup).
-- Without configuration, form fieldsets stay disabled and the account link is absent.
-- The Supabase project is provisioned. Live email validation remains blocked by
-  the dashboard sign-in required to save the production site URL and redirects.
-
-## Remaining activation steps
-
-The connected Supabase plugin can create/read projects but cannot update Auth URL
-configuration or SMTP settings. The dashboard required a separate login; the secure
-browser sign-in was declined. Do not retry sign-in without a new user request.
-
-Next authorized session: configure the Site URL and exact redirects listed above,
-check email confirmations and password requirements, establish delivery settings,
-and test registration/confirmation/recovery with a user-controlled email account.
-Only then mark the PR ready, run CI and merge for production publication.
+Owner signs up at /hesap/kayit/ using their Supabase team email, confirms the email,
+then tests login/logout. A password recovery test follows subject to SMTP limits.
+Do not request passwords or one-time codes in chat. Configure and test custom SMTP
+before setting publicLaunch=true and opening general membership.

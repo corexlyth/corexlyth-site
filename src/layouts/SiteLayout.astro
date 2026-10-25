@@ -1,5 +1,5 @@
 ---
-import { authConfigured } from '../config/auth';
+import { authConfigured, authPublicLaunch } from '../config/auth';
 interface Props { title?: string; description?: string; noindex?: boolean; image?: string; article?: boolean; publishedTime?: string; structuredData?: Record<string, unknown>; }
 const { title = 'CoreXLyth — Dijital keşif alanı',
 description = 'CoreXLyth: teknoloji, Android uygulamaları, rehberler ve dijital dünyadan bağımsız yayınlar.',
@@ -69,7 +69,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
         <a href={`${base}ara/`}>⌕ Ara</a>
         <a href={`${base}#kanallar`}>Kanallar</a>
         <a href={`${base}#hakkinda`}>Hakkında</a>
-        {authConfigured && <a href={`${base}hesap/`}>Hesabım</a>}
+        {authConfigured && authPublicLaunch && <a href={`${base}hesap/`}>Hesabım</a>}
       </nav>
     </div>
   </header>
