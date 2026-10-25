@@ -1,0 +1,36 @@
+name: Astro Foundation • Build and Smoke Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [feat/astro-foundation-20261025]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Build the future CoreXLyth website without publishing
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Install Astro dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build static website
+        run: npm run build
+      - name: Verify HTML routes and all frontend assets
+        run: npm run verify
+      - name: Archive preview build
+        uses: actions/upload-artifact@v4
+        with:
+          name: corexlyth-astro-preview
+          path: dist/
+          if-no-files-found: error
