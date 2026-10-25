@@ -28,7 +28,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
 <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
 {structuredData && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
-<link rel="stylesheet" href={`${base}assets/css/main.css?v=search-seo-1`} />
+<link rel="stylesheet" href={`${base}assets/css/main.css?v=reading-1`} />
+<noscript><style is:inline>.cx-boot{display:none!important}</style></noscript>
 <slot name="head" />
 </head>
 <body>
@@ -89,11 +90,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
   <button class="cx-to-top" type="button" aria-label="Sayfanın başına dön">↑</button>
 
-  <div class="cx-lightbox" role="dialog" aria-modal="true" aria-label="Görsel önizleme" hidden>
-    <button class="cx-lightbox__close" type="button" aria-label="Kapat">×</button>
-    <img alt="">
-  </div>
+  <dialog class="cx-lightbox" aria-label="Görsel önizleme">
+    <button class="cx-lightbox__close" type="button" aria-label="Görsel önizlemeyi kapat" autofocus>×</button>
+    <figure>
+      <img alt="" />
+      <figcaption id="cx-lightbox-caption" aria-live="polite"></figcaption>
+    </figure>
+    <div class="cx-lightbox__controls">
+      <button type="button" data-lightbox-prev aria-label="Önceki görsel">← Önceki</button>
+      <span data-lightbox-count aria-live="polite"></span>
+      <button type="button" data-lightbox-next aria-label="Sonraki görsel">Sonraki →</button>
+    </div>
+  </dialog>
 
-<script is:inline src={`${base}assets/js/main.js?v=search-seo-1`}></script>
+<script is:inline src={`${base}assets/js/main.js?v=reading-1`}></script>
 </body>
 </html>

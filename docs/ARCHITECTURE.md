@@ -36,3 +36,15 @@ and `npm run verify` before deployment.
 The current homepage contains preview-only article cards pointing to `#`.
 They are *not published articles* yet. The `MUSIC OFF/ON` toggle is not an
 audio player yet; playback awaits licensed media and user-triggered controls.
+
+## Reading functions
+
+- Article contents are generated from Astro's rendered h2/h3 headings. With fewer
+  than two headings no contents panel is emitted. Links and the collapsible
+  details panel work without JavaScript; navigation labels are excluded from Pagefind.
+- The native image dialog supports article covers and unlinked inline images,
+  including picture sources, alt captions, previous/next buttons and arrow keys.
+  Escape, close and backdrop clicks restore focus to the opening button. While
+  open, the background is inert and page scrolling is locked. Linked images keep
+  their existing destination. Browsers without showModal retain the normal images.
+- The visual theme remains unchanged; styling here supports these functions only.

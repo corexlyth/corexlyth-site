@@ -11,7 +11,8 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props as { post: Post };
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const contents = headings.filter(heading => heading.depth === 2 || heading.depth === 3);
 const related = (await getPosts()).filter(p => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some(t => post.data.tags.includes(t)))).slice(0,3);
 const coverAbsolute = new URL(coverFor(post), Astro.site ?? Astro.url).href;
 const structuredData = {
@@ -59,6 +60,17 @@ const structuredData = {
       <figure class="cx-article-cover">
         <img src={coverFor(post)} alt={post.data.coverAlt} loading="eager" />
       </figure>
+
+      {contents.length >= 2 && <details class="cx-toc" open data-pagefind-ignore>
+        <summary>İÇİNDEKİLER</summary>
+        <nav aria-label="Yazının içindekileri">
+          <ol>
+            {contents.map(heading => <li class:list={{ 'cx-toc__sub': heading.depth === 3 }}>
+              <a href={`#${heading.slug}`}>{heading.text}</a>
+            </li>)}
+          </ol>
+        </nav>
+      </details>}
 
       <div class="cx-article__content">
         <Content />

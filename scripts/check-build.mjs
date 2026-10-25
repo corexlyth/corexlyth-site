@@ -76,5 +76,20 @@ if(existsSync(join(dist,'index.html'))){
  assert(html.includes('/corexlyth-site/rss.xml'),'RSS discovery tag');
 }
 
+// Contents must link to generated headings, including repeated or Turkish titles.
+for(const file of markdown) {
+ const path=join(dist,`yazi/${file.slice(0,-3)}/index.html`);
+ if(!existsSync(path))continue;
+ const html=readFileSync(path,'utf8');
+ const headings=[...html.matchAll(/<h[23]\b[^>]*\bid="([^"]+)"/g)].map(match=>match[1]);
+ const toc=html.match(/<details\b[^>]*class="cx-toc"[^>]*>([\s\S]*?)<\/details>/);
+ if(headings.length>=2) {
+  assert(Boolean(toc),`Contents available: ${file}`);
+  const targets=[...(toc?.[1] ?? '').matchAll(/href="#([^"]+)"/g)].map(match=>match[1]);
+  assert(targets.length===headings.length && targets.every(id=>headings.includes(id)),`Contents targets resolve: ${file}`);
+ }
+ assert(html.includes('<dialog class="cx-lightbox"'),`Native image dialog: ${file}`);
+}
+
 if(failures){console.error(`CoreXLyth verification failed: ${failures} errors`);process.exitCode=1;}
 else console.log('CoreXLyth content build verified.');
