@@ -1,10 +1,10 @@
-name: Astro Foundation • Build and Smoke Tests
+name: CoreXLyth • Build and Content Tests
 
 on:
   pull_request:
     branches: [main]
   push:
-    branches: [feat/astro-foundation-20261025]
+    branches: [feat/content-engine-20261025, main]
   workflow_dispatch:
 
 permissions:
@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   verify:
-    name: Build the future CoreXLyth website without publishing
+    name: Build pages, articles and category index
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

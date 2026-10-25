@@ -1,0 +1,66 @@
+---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { categoryUrl, coverFor, dateTR, getPosts, postUrl, tagUrl, urlFor } from '../../lib/posts';
+import type { Post } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => data.draft !== true);
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const { Content } = await render(post);
+const related = (await getPosts()).filter(p => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some(t => post.data.tags.includes(t)))).slice(0,3);
+const coverAbsolute = new URL(coverFor(post), Astro.site ?? Astro.url).href;
+---
+<SiteLayout
+  title={`${post.data.title} | CoreXLyth`}
+  description={post.data.description}
+  image={coverAbsolute}
+  article={true}
+  publishedTime={post.data.pubDate.toISOString()}
+>
+  <main id="home" class="cx-reading-shell">
+    <nav class="cx-breadcrumb" aria-label="İçerik yolu">
+      <a href={urlFor('')}>COREXLYTH</a><span>/</span>
+      <a href={urlFor('arsiv/')}>KAYITLAR</a><span>/</span>
+      <a href={categoryUrl(post.data.category)}>{post.data.category.toLocaleUpperCase('tr-TR')}</a>
+    </nav>
+
+    <article class="cx-article cx-hud-frame">
+      <header class="cx-article__head">
+        <p class="cx-kicker">COREXLYTH // EDITORIAL RECORD</p>
+        <h1>{post.data.title}</h1>
+        <p class="cx-article__summary">{post.data.description}</p>
+        <div class="cx-article__meta">
+          <time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time>
+          <a href={categoryUrl(post.data.category)}>{post.data.category}</a>
+        </div>
+      </header>
+
+      <figure class="cx-article-cover">
+        <img src={coverFor(post)} alt={post.data.coverAlt} loading="eager" />
+      </figure>
+
+      <div class="cx-article__content">
+        <Content />
+      </div>
+
+      <footer class="cx-article__foot">
+        <p class="cx-kicker">TAGS // RELATED SIGNALS</p>
+        <div class="cx-tag-links">
+          {post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}
+        </div>
+        <a class="cx-link" href={urlFor('arsiv/')}>← TÜM KAYITLARA DÖN</a>
+      </footer>
+    </article>
+
+    {related.length > 0 && <section class="cx-related cx-hud-frame" aria-label="Benzer içerikler">
+      <p class="cx-kicker">FURTHER READING</p>
+      <h2>İlgini çekebilir</h2>
+      <PostList posts={related} />
+    </section>}
+  </main>
+</SiteLayout>
