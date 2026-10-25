@@ -14,6 +14,21 @@ const { post } = Astro.props as { post: Post };
 const { Content } = await render(post);
 const related = (await getPosts()).filter(p => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some(t => post.data.tags.includes(t)))).slice(0,3);
 const coverAbsolute = new URL(coverFor(post), Astro.site ?? Astro.url).href;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  inLanguage: 'tr-TR',
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+  image: coverAbsolute,
+  mainEntityOfPage: new URL(postUrl(post), Astro.site ?? Astro.url).href,
+  author: { '@type': 'Organization', name: 'CoreXLyth' },
+  publisher: { '@type': 'Organization', name: 'CoreXLyth', url: 'https://corexlyth.github.io/corexlyth-site/' },
+  articleSection: post.data.category,
+  keywords: post.data.tags.join(', '),
+};
 ---
 <SiteLayout
   title={`${post.data.title} | CoreXLyth`}
@@ -21,6 +36,7 @@ const coverAbsolute = new URL(coverFor(post), Astro.site ?? Astro.url).href;
   image={coverAbsolute}
   article={true}
   publishedTime={post.data.pubDate.toISOString()}
+  structuredData={structuredData}
 >
   <main id="home" class="cx-reading-shell">
     <nav class="cx-breadcrumb" aria-label="İçerik yolu">
@@ -29,7 +45,7 @@ const coverAbsolute = new URL(coverFor(post), Astro.site ?? Astro.url).href;
       <a href={categoryUrl(post.data.category)}>{post.data.category.toLocaleUpperCase('tr-TR')}</a>
     </nav>
 
-    <article class="cx-article cx-hud-frame">
+    <article class="cx-article cx-hud-frame" data-pagefind-body>
       <header class="cx-article__head">
         <p class="cx-kicker">COREXLYTH // EDITORIAL RECORD</p>
         <h1>{post.data.title}</h1>

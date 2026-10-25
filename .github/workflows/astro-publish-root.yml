@@ -46,7 +46,7 @@ jobs:
         run: |
           cp -a dist/. .
           test -f .nojekyll || touch .nojekyll
-          git add -- index.html 404.html .nojekyll assets/ arsiv/ kategori/ etiket/ yazi/
+          git add -- index.html 404.html .nojekyll assets/ arsiv/ kategori/ etiket/ yazi/ ara/ rss.xml robots.txt sitemap-index.xml sitemap-0.xml pagefind/
           if git diff --cached --quiet; then
             echo "Compiled output is unchanged."
           else
