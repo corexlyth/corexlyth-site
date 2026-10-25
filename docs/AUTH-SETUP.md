@@ -56,3 +56,19 @@ Owner signs up at /hesap/kayit/ using their Supabase team email, confirms the em
 then tests login/logout. A password recovery test follows subject to SMTP limits.
 Do not request passwords or one-time codes in chat. Configure and test custom SMTP
 before setting publicLaunch=true and opening general membership.
+
+## Prepared input-validation update (awaiting server Save)
+
+The user requested a minimum of 6 characters with at least one ASCII uppercase
+letter, lowercase letter, digit and allowed punctuation mark. Signup and password
+reset forms now have a live five-item checklist and a live matching indicator.
+Login, signup and forgot-password email fields accept only syntactically valid
+@gmail.com addresses (case-insensitive, plus aliases supported), normalize on blur,
+and block invalid submission. This is client form validation; it does not establish
+mailbox ownership or availability. Confirmation emails remain required.
+
+The server form has the 6-character minimum and all four character groups selected
+but not saved. The existing saved 12-character minimum remains active until the
+browser's action-time security confirmation is received. Do not publish the new
+frontend password policy ahead of that save. Run verify for Gmail/domain-suffix,
+character-group and minimum-length regression cases.

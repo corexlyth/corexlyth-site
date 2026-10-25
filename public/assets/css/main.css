@@ -652,3 +652,13 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 #cx-auth-status{line-height:1.7;min-height:3em}
 #cx-auth-status[data-error=true]{color:#ffb4b4}
 #cx-password-help{font-size:.9rem;line-height:1.6;color:#a7bcc5}
+
+/* Live account requirements: words/icons accompany color. */
+.cx-password-rules{list-style:none;padding:0;margin:14px 0}
+.cx-password-rules li{display:flex;align-items:baseline;gap:9px;margin:9px 0;color:#b6c6ce;line-height:1.6}
+.cx-password-rules [data-rule-icon]{flex:0 0 16px}
+.cx-password-rules [data-rule-state]{margin-left:auto;font-size:.75rem;white-space:nowrap}
+.cx-password-rules li[data-valid=true],.cx-field-hint[data-valid=true]{color:#8ee8b8}
+.cx-field-hint{font-size:.9rem;line-height:1.6;color:#a7bcc5;min-height:1.6em}
+.cx-field-hint[data-valid=false]{color:#ffb4b4}
+.cx-account input[aria-invalid=true]{border-color:#f28c8c}
