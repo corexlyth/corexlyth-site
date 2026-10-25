@@ -1,8 +1,11 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
-// GitHub Pages project site, not the user root domain.
 export default defineConfig({
   site: 'https://corexlyth.github.io',
   base: '/corexlyth-site',
   output: 'static',
+  integrations: [sitemap({
+    filter: (page) => !page.endsWith('/404.html') && !page.includes('/ara/'),
+  })],
 });

@@ -1,0 +1,38 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { urlFor } from '../../lib/posts';
+const base = urlFor('');
+---
+<SiteLayout
+  title="Site İçinde Ara | CoreXLyth"
+  description="CoreXLyth yayınlarında Android, uygulama, teknoloji ve rehber içeriklerini ara."
+  noindex={true}
+>
+  <main id="home" class="cx-list-page">
+    <nav class="cx-breadcrumb" aria-label="İçerik yolu">
+      <a href={base}>COREXLYTH</a><span>/</span><span>ARAMA</span>
+    </nav>
+    <section class="cx-search-page cx-hud-frame" id="cx-search" data-base={base}>
+      <div class="cx-hud-notch" aria-hidden="true"></div>
+      <header>
+        <p class="cx-kicker">DATABASE // SEARCH</p>
+        <h1>KAYITLARDA <span>ARA</span></h1>
+        <p>Yayın başlıklarında, açıklamalarında ve yazıların içeriğinde arama yap.</p>
+      </header>
+      <form class="cx-search-form" role="search" action={urlFor('ara/')} method="get">
+        <label for="cx-search-input">Aranacak kelime</label>
+        <div class="cx-search-form__row">
+          <input id="cx-search-input" type="search" name="q" placeholder="Örn: Android, LocalSend, güvenlik..." autocomplete="off" maxlength="100" required />
+          <button type="submit">ARA <span>↗</span></button>
+        </div>
+      </form>
+      <p class="cx-search-state" id="cx-search-state" role="status" aria-live="polite">Aramak için bir kelime yaz.</p>
+      <div class="cx-search-results" id="cx-search-results" aria-label="Arama sonuçları"></div>
+      <noscript><p>Site içi arama JavaScript gerektiriyor. <a href={urlFor('arsiv/')}>Bütün yayınları arşivden</a> inceleyebilirsin.</p></noscript>
+      <footer class="cx-search-foot">
+        <a href={urlFor('arsiv/')}>TÜM KAYITLARA GİT →</a>
+      </footer>
+    </section>
+  </main>
+  <script is:inline src={`${base}assets/js/search.js?v=search-seo-1`}></script>
+</SiteLayout>
