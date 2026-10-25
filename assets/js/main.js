@@ -34,7 +34,7 @@ document.addEventListener("click", (event) => {
 
 function upgradeImages(root = document) {
   root.querySelectorAll("img").forEach((img) => {
-    if (img.closest(".cx-media-frame,.cx-auto-media,.cx-lightbox,.cx-story-card,.cx-record-row,a,button")) return;
+    if (img.closest(".cx-media-frame,.cx-auto-media,.cx-lightbox,.cx-story-card,.cx-record-row,.cx-article-cover,a,button")) return;
     const wrap = document.createElement("figure");
     wrap.className = "cx-auto-media";
     img.parentNode?.insertBefore(wrap, img);
