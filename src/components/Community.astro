@@ -25,6 +25,7 @@ const { mode = 'article', post = '' } = Astro.props;
     </fieldset>
   </form>}
   {mode === 'account' && <>
+    <p><a data-editor-link href={urlFor('hesap/yazilar/')} hidden>Yazı yönetimi</a></p>
     <h3>Kaydedilen yazılar</h3>
     <p>En son kaydettiğin 100 yazı burada görünür.</p>
     <ul data-saved-list></ul>

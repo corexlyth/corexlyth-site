@@ -112,6 +112,8 @@ async function start(root:HTMLElement) {
       for(const p of state.bookmarks || []) {const li=node('li');const link=node('a',p.title);link.href=`${base}yazi/${encodeURIComponent(p.slug)}/`;li.append(link);saved.append(li);}
       if(!saved.childElementCount) saved.append(node('li',state.signedIn?'Henüz bir yazı kaydetmedin.':'Kaydettiğin yazıları görmek için giriş yap.'));
     }
+    const editorLink=find('[data-editor-link]');
+    if(editorLink){editorLink.hidden=true;if(state.signedIn){const capability=await client.rpc('cx_editor_read');if(current!==request)return;editorLink.hidden=Boolean(capability.error);}}
     sync();
     tell(state.blocked?'Hesabının topluluk gönderimleri kısıtlandı.':mode==='moderation'?'Yorumları inceleyebilir, yayımlayabilir veya silebilirsin.':'Topluluk güncel.');
   }

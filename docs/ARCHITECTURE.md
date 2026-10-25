@@ -1,50 +1,27 @@
-# CoreXLyth — Site Architecture & Release Plan
+# CoreXLyth — Architecture
 
-## Production safety
+## Production
 
-The existing root `index.html` and `assets/` remain the **live GitHub Pages version**.
-New Astro source is developed in `src/` and its static copies under `public/`.
-Until we deliberately switch the Pages publishing source to GitHub Actions,
-**do not remove or replace the existing root site**.
+GitHub Pages serves the generated repository root at `https://corexlyth.github.io/corexlyth-site/`. Source lives in `src/` and `public/assets/`. The checked publishing workflow builds Astro, verifies output, replaces only generated root directories and commits the refreshed root. Source pushes and manual dispatch publish normally; a periodic check rebuilds only when the public publication fingerprint changes.
 
-## Architecture
+## Content
 
-- **UI**: existing CoreXLyth cyberpunk/HUD HTML and CSS, kept visually unchanged during this port.
-- **Builder**: Astro. Reusable global layout: `src/layouts/SiteLayout.astro`.
-- **Routes**: `src/pages/index.astro` and `src/pages/404.astro` first.
-- **Static frontend assets**: `public/assets/`.
-- **URL path**: `/corexlyth-site/`, configured via Astro `base`.
-- **Tests**: `npm run build && npm run verify` on each pull request.
-- **Live site**: continues at https://corexlyth.github.io/corexlyth-site/
+Private drafts, editorial roles, audit history and publication snapshots live in Supabase's unexposed `cx_private` schema. The source Markdown files are the original five imported posts and provide a migration fallback. Explicit publication snapshots override these files; withdrawal records suppress the fallback. `prepare-content.mjs` creates the public-only `.cache/blog` collection before Astro runs. No private draft is read by CI.
 
-## Development
+`/hesap/yazilar/` provides private drafting and a sanitized browser preview. Editors save drafts; the owner publishes/withdraws. Save uses optimistic revisions. Publishing updates the interaction registry atomically. See `PUBLISHING.md`, `COMMUNITY.md` and `AUTH-SETUP.md` for operation and permissions.
 
-Use Node 24. Run `npm install`, `npm run dev` for development, `npm run build`
-and `npm run verify` before deployment.
+## Routes and services
 
-## Next steps (separate, testable changes)
+- Astro article pages, taxonomy, archive, RSS and sitemap share the same collection.
+- Pagefind indexes rendered public article bodies; account/editor routes are noindex and excluded.
+- Supabase provides verified membership and checked private RPC gateways. Client configuration contains only the public publishable key.
+- The HUD/cyberpunk layout is retained; functionality is tested before visual refinement.
+- Node 24, pinned added dependencies and lockfile are used by CI. `npm run build && npm run verify` checks public output.
 
-1. Capture and commit the exact package lockfile, green CI and compare UI screenshots.
-2. Switch Pages source to GitHub Actions and deploy Astro only after verified.
-3. Extract the repeated category, card, header and footer UI into components.
-4. Add real posts using Astro content collections; eliminate placeholder `#` links.
-5. Add taxonomy, archive, search, SEO and RSS.
-6. After content is stable, implement Supabase auth and member functions securely.
+## Reading
 
-### Note on unfinished controls
+Contents use rendered h2/h3 headings and native details. Native image dialogs support cover/inline images, keyboard navigation, Escape, focus restoration and inert background. Linked images retain their destinations. Raw HTML in Markdown is rendered as text and the resulting HTML tree is sanitized; dangerous URL protocols are removed.
 
-The current homepage contains preview-only article cards pointing to `#`.
-They are *not published articles* yet. The `MUSIC OFF/ON` toggle is not an
-audio player yet; playback awaits licensed media and user-triggered controls.
+## Rollout
 
-## Reading functions
-
-- Article contents are generated from Astro's rendered h2/h3 headings. With fewer
-  than two headings no contents panel is emitted. Links and the collapsible
-  details panel work without JavaScript; navigation labels are excluded from Pagefind.
-- The native image dialog supports article covers and unlinked inline images,
-  including picture sources, alt captions, previous/next buttons and arrow keys.
-  Escape, close and backdrop clicks restore focus to the opening button. While
-  open, the background is inert and page scrolling is locked. Linked images keep
-  their existing destination. Browsers without showModal retain the normal images.
-- The visual theme remains unchanged; styling here supports these functions only.
+Membership remains in closed test. Music is postponed. Private DB backups/restore drills, custom SMTP, public-launch spam controls and Blogger migration remain separate steps. Publishing is eventually reflected on the static site; GitHub scheduling may exceed the nominal 15-minute check interval. Publication is not proof that the new static pages have deployed; the editor reads the deployed manifest separately.
