@@ -78,3 +78,27 @@ window.addEventListener("keydown", (event) => {
 });
 
 console.info("CoreXLyth // system online");
+
+const expandButton = document.querySelector(".cx-expand-btn");
+const recordList = document.querySelector(".cx-record-list");
+expandButton?.addEventListener("click", () => {
+  const expanded = recordList?.classList.toggle("is-expanded") ?? false;
+  expandButton.setAttribute("aria-expanded", String(expanded));
+  expandButton.innerHTML = expanded ? 'AKIŞI DARALT <span>↑</span>' : 'AKIŞI GENİŞLET <span>↓</span>';
+});
+
+document.querySelectorAll(".cx-panel-carousel").forEach((carousel) => {
+  carousel.addEventListener("wheel", (event) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    if (carousel.scrollWidth <= carousel.clientWidth) return;
+    event.preventDefault();
+    carousel.scrollLeft += event.deltaY;
+  }, {passive:false});
+});
+
+const musicButton = document.querySelector(".cx-music-toggle");
+musicButton?.addEventListener("click", () => {
+  const isOn = musicButton.getAttribute("aria-pressed") === "true";
+  musicButton.setAttribute("aria-pressed", String(!isOn));
+  musicButton.querySelector("b").textContent = isOn ? "OFF" : "ON";
+});
