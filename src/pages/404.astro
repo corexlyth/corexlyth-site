@@ -1,0 +1,14 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<SiteLayout title="404 — Kayıt bulunamadı | CoreXLyth" description="İstenen CoreXLyth sayfası bulunamadı." noindex={true}>
+  <main id="home" style="min-height:75vh;display:grid;place-items:center;">
+    <section class="cx-frame" style="width:min(100%,720px);padding:clamp(28px,7vw,70px);text-align:center;">
+      <p class="cx-kicker">SYSTEM // 404</p>
+      <h1 style="font-size:clamp(3rem,9vw,6rem);color:#edfaff;margin:12px 0">Kayıt bulunamadı.</h1>
+      <p style="line-height:1.8;color:#9aafb8;">Bu adres CoreXLyth arşivinde bulunmuyor. Ana sayfadan keşfe devam edebilirsin.</p>
+      <a class="cx-explore-btn" style="display:inline-block;margin:25px 0 0" href={base}>ANA SAYFAYA DÖN →</a>
+    </section>
+  </main>
+</SiteLayout>

@@ -1,0 +1,280 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<SiteLayout>
+<a class="cx-skip-link" href="#home">Ana içeriğe geç</a>
+  <div class="cx-boot" aria-hidden="true">
+    <div class="cx-boot__core">
+      <span class="cx-boot__kicker">COREXLYTH // BOOT</span>
+      <strong class="cx-boot__logo" data-text="CoreXLyth">CoreXLyth</strong>
+      <span class="cx-boot__bar"><i></i></span>
+    </div>
+  </div>
+
+  <div class="cx-ambient" aria-hidden="true">
+    <i class="cx-ambient__orb cx-ambient__orb--a"></i>
+    <i class="cx-ambient__orb cx-ambient__orb--b"></i>
+    <i class="cx-ambient__grid"></i>
+    <i class="cx-ambient__scan"></i>
+  </div>
+
+  <header class="cx-header">
+    <div class="cx-header__inner">
+      <a class="cx-brand" href={base} aria-label="CoreXLyth ana sayfa">
+        <span class="cx-brand__node">NODE://CX</span>
+        <span class="cx-brand__name" data-text="CoreXLyth">CoreXLyth</span>
+        <span class="cx-brand__dot" aria-hidden="true"></span>
+      </a>
+
+      <button class="cx-menu-button" type="button" aria-expanded="false" aria-controls="cx-nav">
+        <span></span><span></span><span></span>
+        <b>MENU</b>
+      </button>
+
+      <nav class="cx-nav" id="cx-nav" aria-label="Ana menü">
+        <a href="#home">Başlangıç</a>
+        <a href="#kayitlar">Yazılar</a>
+        <a href="#kanallar">Kanallar</a>
+        <a href="#hakkinda">Hakkında</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="cx-hero cx-frame">
+      <div class="cx-frame__trace" aria-hidden="true"></div>
+
+      <div class="cx-hero__copy">
+        <p class="cx-kicker">COREXLYTH // DIGITAL FRONTIER</p>
+        <h1>Keşfedilecek yeni şeyler var.</h1>
+        <p class="cx-lead">Teknolojinin gölgelerinde keşfeder, dijital dünyanın derinliklerinde yol açarız.</p>
+
+        <div class="cx-home-meta">
+          <span><i class="cx-live-dot"></i>SIGNAL ACTIVE</span>
+          <span>CHANNELS // 03</span>
+          <span>NETWORK // PUBLIC</span>
+        </div>
+      </div>
+
+      <aside class="cx-terminal cx-frame cx-frame--compact">
+        <div class="cx-terminal__top">
+          <span>SYSTEM // STATUS</span>
+          <i></i>
+        </div>
+        <dl>
+          <div><dt>HOST</dt><dd>GITHUB PAGES</dd></div>
+          <div><dt>CORE</dt><dd>ONLINE</dd></div>
+          <div><dt>THEME</dt><dd>CX MODE</dd></div>
+          <div><dt>LATENCY</dt><dd>NOMINAL</dd></div>
+        </dl>
+      </aside>
+    </section>
+
+    <section class="cx-discovery" id="kanallar">
+      <div class="cx-discovery-title">
+        <p class="cx-kicker">CHANNEL INDEX // AUTO</p>
+        <h2>KEŞİF<br>ALANLARI</h2>
+      </div>
+
+      <article class="cx-category-panel cx-hud-frame" style="--cx-accent:#9a6cff">
+        <div class="cx-hud-notch" aria-hidden="true"></div>
+        <header class="cx-category-panel__head">
+          <div>
+            <div class="cx-category-panel__title-row">
+              <h3>TARİH</h3>
+              <span>02 YAYIN</span>
+              <em>// AUTO</em>
+            </div>
+            <p>“Tarih” etiketiyle eşleşen son içerikler.</p>
+            <b>ADAPTİF KANAL</b>
+          </div>
+          <a class="cx-explore-btn" href="#kayitlar">KEŞFET <span>→</span></a>
+        </header>
+
+        <div class="cx-panel-carousel" tabindex="0" aria-label="Tarih içerikleri">
+          <article class="cx-story-card" style="--cx-card-accent:#9a6cff">
+            <img src={`${base}assets/img/corexlyth-featured.svg`} alt="Tarih içeriği kapak görseli">
+            <div class="cx-story-card__shade"></div>
+            <div class="cx-story-card__body">
+              <div class="cx-story-card__meta"><span>06.10.2026</span><b>TARİH</b></div>
+              <h4>1839 — Tanzimat Fermanı: Osmanlı Neden Kendini Değiştirmek Zorunda...</h4>
+              <p>1839 yazında Osmanlı Devleti'nin önünde sakin sakin reform hazırlayabileceği bir masa yoktu...</p>
+            </div>
+          </article>
+
+          <article class="cx-story-card" style="--cx-card-accent:#58eaff">
+            <img src={`${base}assets/img/corexlyth-lab.svg`} alt="Tarih içeriği kapak görseli">
+            <div class="cx-story-card__shade"></div>
+            <div class="cx-story-card__body">
+              <div class="cx-story-card__meta"><span>30.09.2026</span><b>TARİH</b></div>
+              <h4>Bir Cumhuriyet Nasıl Kurulur? Türkiye Cumhuriyeti'nin İlk Yılları</h4>
+              <p>Takvimde bir tarih yazmak kolaydı; asıl mesele yeni bir devlet düzeni kurmaktı...</p>
+            </div>
+          </article>
+        </div>
+      </article>
+
+      <article class="cx-category-panel cx-hud-frame" style="--cx-accent:#76e8bd">
+        <div class="cx-hud-notch" aria-hidden="true"></div>
+        <header class="cx-category-panel__head">
+          <div>
+            <div class="cx-category-panel__title-row">
+              <h3>TÜRKİYE CUMHURİYETİ</h3>
+              <span>02 YAYIN</span>
+              <em>// AUTO</em>
+            </div>
+            <p>“Türkiye Cumhuriyeti” etiketiyle eşleşen son içerikler.</p>
+            <b>ADAPTİF KANAL</b>
+          </div>
+          <a class="cx-explore-btn" href="#kayitlar">KEŞFET <span>→</span></a>
+        </header>
+
+        <div class="cx-panel-carousel" tabindex="0" aria-label="Türkiye Cumhuriyeti içerikleri">
+          <article class="cx-story-card" style="--cx-card-accent:#76e8bd">
+            <img src={`${base}assets/img/corexlyth-featured.svg`} alt="Türkiye Cumhuriyeti içeriği kapak görseli">
+            <div class="cx-story-card__shade"></div>
+            <div class="cx-story-card__body">
+              <div class="cx-story-card__meta"><span>06.10.2026</span><b>TARİH</b></div>
+              <h4>1839 — Tanzimat Fermanı: Osmanlı Neden Kendini Değiştirmek Zorunda...</h4>
+              <p>Osmanlı'nın reform arayışından modern devlet fikrine uzanan dönüşüm zinciri...</p>
+            </div>
+          </article>
+
+          <article class="cx-story-card" style="--cx-card-accent:#f6b85c">
+            <img src={`${base}assets/img/corexlyth-apps.svg`} alt="Türkiye Cumhuriyeti içeriği kapak görseli">
+            <div class="cx-story-card__shade"></div>
+            <div class="cx-story-card__body">
+              <div class="cx-story-card__meta"><span>30.09.2026</span><b>TARİH</b></div>
+              <h4>Bir Cumhuriyetin Doğuşu: Yeni Türkiye'nin Kuruluş Hikâyesi</h4>
+              <p>Yeni kurumlar, yeni bir toplum düzeni ve uzun bir dönüşüm süreci...</p>
+            </div>
+          </article>
+        </div>
+      </article>
+
+      <article class="cx-category-panel cx-hud-frame" style="--cx-accent:#58eaff">
+        <div class="cx-hud-notch" aria-hidden="true"></div>
+        <header class="cx-category-panel__head">
+          <div>
+            <div class="cx-category-panel__title-row">
+              <h3>GÖRÜNMEYEN SİSTEMLER</h3>
+              <span>02 YAYIN</span>
+              <em>// AUTO</em>
+            </div>
+            <p>İnternetin ve cihazların perde arkasındaki görünmeyen katmanlar.</p>
+            <b>ADAPTİF KANAL</b>
+          </div>
+          <a class="cx-explore-btn" href="#kayitlar">KEŞFET <span>→</span></a>
+        </header>
+
+        <div class="cx-panel-carousel" tabindex="0" aria-label="Görünmeyen sistemler içerikleri">
+          <article class="cx-story-card" style="--cx-card-accent:#58eaff">
+            <img src={`${base}assets/img/corexlyth-code.svg`} alt="İnternet altyapısı kapak görseli">
+            <div class="cx-story-card__shade"></div>
+            <div class="cx-story-card__body">
+              <div class="cx-story-card__meta"><span>03.10.2026</span><b>GÖRÜNMEYEN SİSTEMLER</b></div>
+              <h4>Telefon İnternete Nasıl Bağlanıyor? 4G ve 5G'nin Arkasındaki Görünmez Ağ</h4>
+              <p>Telefonu cebinden çıkarıyorsun. Sağ üst köşede birkaç saniye içinde 4G, 4.5G veya 5G yazısı beliriyor...</p>
+            </div>
+          </article>
+
+          <article class="cx-story-card" style="--cx-card-accent:#ff315e">
+            <img src={`${base}assets/img/corexlyth-lab.svg`} alt="Wi-Fi sistemi kapak görseli">
+            <div class="cx-story-card__shade"></div>
+            <div class="cx-story-card__body">
+              <div class="cx-story-card__meta"><span>01.10.2026</span><b>NETWORK</b></div>
+              <h4>Wi‑Fi Aslında Nasıl Çalışıyor? Evin İçindeki Görünmez Trafik</h4>
+              <p>Telefon eline aldığında bağlantı hazır gibi görünür ama arka planda ciddi bir trafik vardır...</p>
+            </div>
+          </article>
+        </div>
+      </article>
+    </section>
+
+    <section class="cx-all-records cx-hud-frame" id="kayitlar">
+      <div class="cx-hud-notch" aria-hidden="true"></div>
+      <header class="cx-records-head">
+        <div class="cx-records-title">
+          <h2>TÜM KAYITLAR</h2>
+          <span>11 YAYIN</span>
+        </div>
+        <p>Ne var ne yok, sisteme düşen her şey burada. En yenisinden en eskisine bütün kayıtlar tek akışta.</p>
+        <button class="cx-expand-btn" type="button" aria-expanded="false">AKIŞI GENİŞLET <span>↓</span></button>
+      </header>
+
+      <div class="cx-record-list">
+        <a class="cx-record-row" href="#">
+          <span class="cx-record-date">06.10.2026</span>
+          <span class="cx-record-copy"><b>1839 — Tanzimat Fermanı: Osmanlı Neden Kendini...</b><small>1839 yazında Osmanlı Devleti'nin önünde sakin sakin reform hazırlay...</small></span>
+          <img src={`${base}assets/img/corexlyth-featured.svg`} alt="">
+        </a>
+        <a class="cx-record-row" href="#">
+          <span class="cx-record-date">04.10.2026</span>
+          <span class="cx-record-copy"><b>Android Uygulamalarının İçini Gör: App Manager ile...</b><small>Telefonunda bir uygulama var. Açıyorsun, kullanıyorsun, kapatıyorsun...</small></span>
+          <img src={`${base}assets/img/corexlyth-apps.svg`} alt="">
+        </a>
+        <a class="cx-record-row" href="#">
+          <span class="cx-record-date">03.10.2026</span>
+          <span class="cx-record-copy"><b>Telefon İnternete Nasıl Bağlanıyor? 4G ve 5G'nin A...</b><small>Telefonu cebinden çıkarıyorsun. Sağ üst köşede birkaç saniye içinde...</small></span>
+          <img src={`${base}assets/img/corexlyth-code.svg`} alt="">
+        </a>
+        <a class="cx-record-row" href="#">
+          <span class="cx-record-date">03.10.2026</span>
+          <span class="cx-record-copy"><b>Android'de Root Olmadan Sistem Uygulamalarını...</b><small>Yeni bir Android telefon alıyorsun. Kutudan çıkarıyorsun. Daha kendi u...</small></span>
+          <img src={`${base}assets/img/corexlyth-lab.svg`} alt="">
+        </a>
+        <a class="cx-record-row" href="#">
+          <span class="cx-record-date">02.10.2026</span>
+          <span class="cx-record-copy"><b>WhatsApp'a Atmadan Dosya Gönder: LocalSend ile...</b><small>Telefondan bilgisayara birkaç fotoğraf atacaksın. Kendine WhatsApp...</small></span>
+          <img src={`${base}assets/img/corexlyth-featured.svg`} alt="">
+        </a>
+        <a class="cx-record-row cx-record-row--extra" href="#">
+          <span class="cx-record-date">01.10.2026</span>
+          <span class="cx-record-copy"><b>Wi‑Fi Aslında Nasıl Çalışıyor? Görünmeyen Trafik</b><small>Modem, cihazlar ve radyo sinyalleri arasında sürekli bir veri akışı...</small></span>
+          <img src={`${base}assets/img/corexlyth-code.svg`} alt="">
+        </a>
+        <a class="cx-record-row cx-record-row--extra" href="#">
+          <span class="cx-record-date">30.09.2026</span>
+          <span class="cx-record-copy"><b>Bir Cumhuriyet Nasıl Kurulur?</b><small>Yeni bir devlet düzeninin ilk yıllarında yaşanan yapısal dönüşümler...</small></span>
+          <img src={`${base}assets/img/corexlyth-apps.svg`} alt="">
+        </a>
+      </div>
+    </section>
+
+    <section class="cx-info-grid" id="hakkinda">
+      <article class="cx-info cx-frame">
+        <p class="cx-kicker">ABOUT // CORE</p>
+        <h2>CoreXLyth nedir?</h2>
+        <p>Teknoloji, uygulamalar, pratik rehberler, deneyler ve dijital dünyadan seçilmiş kayıtların tutulduğu bağımsız bir keşif alanı.</p>
+      </article>
+      <article class="cx-info cx-frame cx-info--signal">
+        <p class="cx-kicker">NETWORK // STATUS</p>
+        <ul>
+          <li><span>Frontend</span><b>ACTIVE</b></li>
+          <li><span>Animations</span><b>ACTIVE</b></li>
+          <li><span>Database</span><b>PLANNED</b></li>
+          <li><span>Auth</span><b>PLANNED</b></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <footer class="cx-footer cx-footer--neural">
+    <div class="cx-footer-neural">
+      <span class="cx-footer-neural__node">COREXLYTH • NEURAL INTERFACE <i></i></span>
+      <strong>EXPLORE <b>•</b> CREATE <b>•</b> EVOLVE</strong>
+      <p>Fikirler <b>•</b> deneyimler <b>•</b> projeler</p>
+      <small>Bağlantı kararlı • CoreXLyth</small>
+    </div>
+  </footer>
+
+  <button class="cx-music-toggle" type="button" disabled title="Müzik oynatıcı ileride eklenecek" aria-label="Müzik oynatıcı yakında eklenecek">♫ MUSIC • <b>YAKINDA</b></button>
+
+  <button class="cx-to-top" type="button" aria-label="Sayfanın başına dön">↑</button>
+
+  <div class="cx-lightbox" role="dialog" aria-modal="true" aria-label="Görsel önizleme" hidden>
+    <button class="cx-lightbox__close" type="button" aria-label="Kapat">×</button>
+    <img alt="">
+  </div>
+</SiteLayout>
