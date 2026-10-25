@@ -84,11 +84,11 @@ select set_config('request.jwt.claims','{"sub":"22222222-2222-4222-8222-22222222
 do $$
 declare hit boolean:=false; a jsonb; id bigint:=current_setting('cx.test.comment')::bigint;
 begin
- perform public.cx_community_write('profile',p_body=>'Second member');
  begin perform public.cx_community_write('comment','localsend-ile-dosya-aktarimi','cross-post',id); exception when others then hit:=sqlerrm='invalid_parent'; end;
  assert hit,'cross-post reply denied';
  a:=public.cx_community_write('comment','android-izinlerini-kontrol-et','A reply',id);
  perform set_config('cx.test.reply',a->>'id',true);
+ assert public.cx_community_read('android-izinlerini-kontrol-et',(a->>'id')::bigint-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',a->>'id','name','Anonim')),'member without profile comments as Anonim';
 end $$;
 reset role;
 update cx_private.limits set last_at=now()-interval '1 hour' where user_id='22222222-2222-4222-8222-222222222222';
@@ -107,7 +107,21 @@ begin
  assert hit,'unverified member denied';
 end $$;
 select set_config('request.jwt.claims','{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',true);
+reset role;
+update cx_private.limits set last_at=now()-interval '1 minute' where user_id='11111111-1111-4111-8111-111111111111' and bucket='profile';
+set local role authenticated;
+select public.cx_community_write('profile',p_body=>'');
+do $$ begin assert public.cx_community_read()->>'displayName' is null,'nickname can be cleared'; end $$;
 select public.cx_community_write('delete',p_comment=>current_setting('cx.test.comment')::bigint);
+select set_config('request.jwt.claims','{"sub":"33333333-3333-4333-8333-333333333333","role":"authenticated"}',true);
+do $$
+declare hit boolean:=false;
+begin
+ begin perform public.cx_community_write('hide',p_comment=>current_setting('cx.test.reply')::bigint); exception when others then hit:=sqlerrm='invalid_action'; end;
+ assert hit,'hide action removed even for moderator';
+ perform public.cx_community_write('delete',p_comment=>current_setting('cx.test.reply')::bigint);
+ assert public.cx_community_read('android-izinlerini-kontrol-et',current_setting('cx.test.reply')::bigint-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',current_setting('cx.test.reply'),'status','deleted')),'moderator can remove another member comment';
+end $$;
 reset role;
 set local role anon;
 select set_config('request.jwt.claims','{"role":"anon"}',true);

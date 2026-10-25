@@ -17,10 +17,10 @@ const { mode = 'article', post = '' } = Astro.props;
     </div>
     <p>Yorumlar incelendikten sonra yayımlanır. E-posta adresin yorumlarda gösterilmez.</p>
   </>}
-  {mode !== 'moderation' && <form data-profile-form method="post" hidden>
+  {mode === 'account' && <form data-profile-form method="post" hidden>
     <fieldset disabled>
-      <label>Görünen adın <input name="displayName" autocomplete="nickname" minlength="2" maxlength="40" required /></label>
-      <p>Bu ad yorumlarında herkese görünür. İstersen takma ad kullan.</p>
+      <label>Görünen adın <input name="displayName" autocomplete="nickname" minlength="2" maxlength="40" /></label>
+      <p>Takma adın isteğe bağlıdır ve yorumlarında herkese görünür. Boş bırakırsan Anonim olarak görünürsün.</p>
       <button type="submit">Adımı kaydet</button>
     </fieldset>
   </form>}
@@ -35,14 +35,14 @@ const { mode = 'article', post = '' } = Astro.props;
       <button type="button" data-cancel-reply hidden>Yanıttan vazgeç</button>
       <label>Yorumun <textarea name="comment" rows="4" minlength="1" maxlength="2000" required></textarea></label>
       <p>En fazla 2000 karakter. Gönderimler arasında 30 saniye bekle; saatte en fazla 10 yorum gönderebilirsin.</p>
-      <button type="submit">İncelemeye gönder</button>
+      <button type="submit">Yayınla</button>
     </fieldset>
   </form>}
   {mode !== 'account' && <>
     <div data-comment-list aria-label={mode === 'moderation' ? 'Moderasyon kuyruğu' : 'Yorumlar'}></div>
     <button type="button" data-more hidden>Daha fazla yükle</button>
   </>}
-  <p><button type="button" data-community-refresh>Yenile</button> <a data-moderation-link href={urlFor('hesap/moderasyon/')} hidden>Moderasyon paneli</a></p>
+  <p><button type="button" data-community-refresh>Yenile</button> {mode === 'account' && <a data-moderation-link href={urlFor('hesap/moderasyon/')} hidden>Moderasyon paneli</a>}</p>
   <noscript>Topluluk işlemleri için JavaScript gerekir. Yazıyı giriş yapmadan okuyabilirsin.</noscript>
 </section>
 <script>import '../scripts/community';</script>
