@@ -19,10 +19,22 @@ nav?.querySelectorAll("a").forEach((link) => {
     menuButton?.setAttribute("aria-expanded", "false");
   });
 });
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !nav?.classList.contains("is-open")) return;
+  nav.classList.remove("is-open");
+  menuButton?.setAttribute("aria-expanded", "false");
+  menuButton?.focus();
+});
+document.addEventListener("click", (event) => {
+  if (!nav?.classList.contains("is-open")) return;
+  if (nav.contains(event.target) || menuButton?.contains(event.target)) return;
+  nav.classList.remove("is-open");
+  menuButton?.setAttribute("aria-expanded", "false");
+});
 
 function upgradeImages(root = document) {
   root.querySelectorAll("img").forEach((img) => {
-    if (img.closest(".cx-media-frame,.cx-auto-media,.cx-lightbox")) return;
+    if (img.closest(".cx-media-frame,.cx-auto-media,.cx-lightbox,.cx-story-card,.cx-record-row,a,button")) return;
     const wrap = document.createElement("figure");
     wrap.className = "cx-auto-media";
     img.parentNode?.insertBefore(wrap, img);
@@ -49,7 +61,7 @@ const toTop = document.querySelector(".cx-to-top");
 const updateTopButton = () => toTop?.classList.toggle("is-visible", window.scrollY > 520);
 window.addEventListener("scroll", updateTopButton, {passive:true});
 updateTopButton();
-toTop?.addEventListener("click", () => window.scrollTo({top:0,behavior:"smooth"}));
+toTop?.addEventListener("click", () => window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}));
 
 const lightbox = document.querySelector(".cx-lightbox");
 const lightboxImage = lightbox?.querySelector("img");
@@ -96,9 +108,3 @@ document.querySelectorAll(".cx-panel-carousel").forEach((carousel) => {
   }, {passive:false});
 });
 
-const musicButton = document.querySelector(".cx-music-toggle");
-musicButton?.addEventListener("click", () => {
-  const isOn = musicButton.getAttribute("aria-pressed") === "true";
-  musicButton.setAttribute("aria-pressed", String(!isOn));
-  musicButton.querySelector("b").textContent = isOn ? "OFF" : "ON";
-});
