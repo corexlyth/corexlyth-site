@@ -4,109 +4,209 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#050812">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="description" content="CoreXLyth — Teknolojinin gölgelerinde keşfeder, dijital dünyanın derinliklerinde yol açarız.">
   <title>CoreXLyth</title>
-  <link rel="stylesheet" href="./assets/css/main.css">
+  <link rel="stylesheet" href="./assets/css/main.css?v=20261025-2">
 </head>
 <body>
-  <div class="ambient" aria-hidden="true">
-    <span class="ambient__orb ambient__orb--cyan"></span>
-    <span class="ambient__orb ambient__orb--violet"></span>
-    <span class="ambient__grid"></span>
-    <span class="ambient__noise"></span>
+  <div class="cx-boot" aria-hidden="true">
+    <div class="cx-boot__core">
+      <span class="cx-boot__kicker">COREXLYTH // BOOT</span>
+      <strong class="cx-boot__logo" data-text="CoreXLyth">CoreXLyth</strong>
+      <span class="cx-boot__bar"><i></i></span>
+    </div>
   </div>
 
-  <header class="site-header">
-    <a class="brand" href="./" aria-label="CoreXLyth ana sayfa">
-      <span class="brand__signal">CX//CORE</span>
-      <span class="brand__name">CoreXLyth</span>
-    </a>
+  <div class="cx-ambient" aria-hidden="true">
+    <i class="cx-ambient__orb cx-ambient__orb--a"></i>
+    <i class="cx-ambient__orb cx-ambient__orb--b"></i>
+    <i class="cx-ambient__grid"></i>
+    <i class="cx-ambient__scan"></i>
+  </div>
 
-    <nav class="nav" aria-label="Ana menü">
-      <a href="#yazilar">Yazılar</a>
-      <a href="#kategoriler">Kategoriler</a>
-      <a href="#hakkinda">Hakkında</a>
-    </nav>
+  <header class="cx-header">
+    <div class="cx-header__inner">
+      <a class="cx-brand" href="./" aria-label="CoreXLyth ana sayfa">
+        <span class="cx-brand__node">NODE://CX</span>
+        <span class="cx-brand__name" data-text="CoreXLyth">CoreXLyth</span>
+        <span class="cx-brand__dot" aria-hidden="true"></span>
+      </a>
+
+      <button class="cx-menu-button" type="button" aria-expanded="false" aria-controls="cx-nav">
+        <span></span><span></span><span></span>
+        <b>MENU</b>
+      </button>
+
+      <nav class="cx-nav" id="cx-nav" aria-label="Ana menü">
+        <a href="#home">Başlangıç</a>
+        <a href="#yazilar">Yazılar</a>
+        <a href="#kanallar">Kanallar</a>
+        <a href="#hakkinda">Hakkında</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="hero__content">
-        <p class="eyebrow">COREXLYTH // DIGITAL FRONTIER</p>
-        <h1>Keşfedilecek yeni şeyler var.</h1>
-        <p class="tagline">Teknolojinin gölgelerinde keşfeder, dijital dünyanın derinliklerinde yol açarız.</p>
+  <main id="home">
+    <section class="cx-hero cx-frame">
+      <div class="cx-frame__trace" aria-hidden="true"></div>
 
-        <div class="chips" id="kategoriler" aria-label="Öne çıkan kategoriler">
-          <span>UYGULAMALAR</span>
-          <span>REHBERLER</span>
-          <span>DİJİTAL DÜNYA</span>
+      <div class="cx-hero__copy">
+        <p class="cx-kicker">COREXLYTH // DIGITAL FRONTIER</p>
+        <h1>Keşfedilecek yeni şeyler var.</h1>
+        <p class="cx-lead">Teknolojinin gölgelerinde keşfeder, dijital dünyanın derinliklerinde yol açarız.</p>
+
+        <div class="cx-home-meta">
+          <span><i class="cx-live-dot"></i>SIGNAL ACTIVE</span>
+          <span>CHANNELS // 03</span>
+          <span>NETWORK // PUBLIC</span>
         </div>
       </div>
 
-      <aside class="hero-panel" aria-label="CoreXLyth durum paneli">
-        <p class="hero-panel__label">SYSTEM STATUS</p>
-        <div class="hero-panel__line">
-          <span>Pages</span>
-          <strong>ONLINE</strong>
+      <aside class="cx-terminal cx-frame cx-frame--compact">
+        <div class="cx-terminal__top">
+          <span>SYSTEM // STATUS</span>
+          <i></i>
         </div>
-        <div class="hero-panel__line">
-          <span>Theme</span>
-          <strong>CORE MODE</strong>
-        </div>
-        <div class="hero-panel__line">
-          <span>Signal</span>
-          <strong>STABLE</strong>
-        </div>
+        <dl>
+          <div><dt>HOST</dt><dd>GITHUB PAGES</dd></div>
+          <div><dt>CORE</dt><dd>ONLINE</dd></div>
+          <div><dt>THEME</dt><dd>CX MODE</dd></div>
+          <div><dt>LATENCY</dt><dd>NOMINAL</dd></div>
+        </dl>
       </aside>
     </section>
 
-    <section class="feed" id="yazilar">
-      <div class="section-head">
+    <section class="cx-channel-area" id="kanallar">
+      <div class="cx-section-heading">
         <div>
-          <p class="eyebrow">AKIŞ // SON YAZILAR</p>
-          <h2>Yeni kayıtlar</h2>
+          <p class="cx-kicker">CHANNEL INDEX</p>
+          <h2>Keşif kanalları</h2>
         </div>
-        <span class="section-head__status">LIVE FEED</span>
+        <span>03 ACTIVE CHANNELS</span>
       </div>
 
-      <div class="card-grid">
-        <article class="post-card">
-          <div class="post-card__visual post-card__visual--cyan" aria-hidden="true"></div>
-          <div class="post-card__body">
-            <p class="post-card__meta">COREXLyth • REHBER</p>
-            <h3>GitHub Pages ile yeni dönem başlıyor</h3>
-            <p>CoreXLyth artık tamamen kontrolümüzde olan bağımsız bir web altyapısına taşınıyor.</p>
-            <a href="#" aria-label="Yazıyı oku">Devamını oku <span>→</span></a>
+      <div class="cx-channel-grid">
+        <article class="cx-channel cx-frame" style="--cx-accent:#58eaff">
+          <span class="cx-channel__code">01</span>
+          <h3>Uygulamalar</h3>
+          <p>Android araçları, açık kaynak projeler ve günlük hayatta işe yarayan uygulamalar.</p>
+          <a href="#yazilar">KANALA GİR →</a>
+        </article>
+
+        <article class="cx-channel cx-frame" style="--cx-accent:#9a6cff">
+          <span class="cx-channel__code">02</span>
+          <h3>Rehberler</h3>
+          <p>Kurulumlar, özelleştirmeler, deneyler ve adım adım teknik rehberler.</p>
+          <a href="#yazilar">KANALA GİR →</a>
+        </article>
+
+        <article class="cx-channel cx-frame" style="--cx-accent:#ff315e">
+          <span class="cx-channel__code">03</span>
+          <h3>Dijital Dünya</h3>
+          <p>Web, yazılım, servisler ve dijital dünyanın ilginç köşelerinden kayıtlar.</p>
+          <a href="#yazilar">KANALA GİR →</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="cx-feed" id="yazilar">
+      <div class="cx-section-heading">
+        <div>
+          <p class="cx-kicker">ARCHIVE // LATEST SIGNALS</p>
+          <h2>Yeni kayıtlar</h2>
+        </div>
+        <span class="cx-section-heading__live"><i class="cx-live-dot"></i>LIVE FEED</span>
+      </div>
+
+      <div class="cx-featured cx-frame">
+        <a class="cx-media-frame cx-media-frame--featured" href="#" aria-label="Öne çıkan yazı">
+          <img src="./assets/img/corexlyth-featured.svg" alt="CoreXLyth dijital teknoloji görseli" loading="eager">
+          <span class="cx-media-frame__hud">FEATURED // 001</span>
+        </a>
+        <div class="cx-featured__copy">
+          <p class="cx-card-top"><span>COREXLyth</span><b>REHBER</b></p>
+          <h3>CoreXLyth bağımsız web dönemine geçiyor</h3>
+          <p>Blogger sınırlarını geride bırakıp görünümü, animasyonları ve JavaScript sistemlerini tamamen kontrol ettiğimiz yeni altyapıyı kuruyoruz.</p>
+          <a class="cx-link" href="#">KAYDI AÇ <span>↗</span></a>
+        </div>
+      </div>
+
+      <div class="cx-card-grid">
+        <article class="cx-log-card cx-frame">
+          <a class="cx-media-frame" href="#">
+            <img src="./assets/img/corexlyth-apps.svg" alt="Uygulamalar kanal görseli" loading="lazy">
+            <span class="cx-media-frame__hud">VISUAL RECORD // A1</span>
+          </a>
+          <div class="cx-log-card__body">
+            <p class="cx-card-top"><span>25.10.2026</span><b>UYGULAMA</b></p>
+            <h3>Yeni sistem, aynı CoreXLyth ruhu</h3>
+            <p>Kartlar, HUD yüzeyleri ve neon çizgiler yeniden tasarlanıyor.</p>
+            <a class="cx-link" href="#">DEVAMINI OKU <span>→</span></a>
           </div>
         </article>
 
-        <article class="post-card">
-          <div class="post-card__visual post-card__visual--violet" aria-hidden="true"></div>
-          <div class="post-card__body">
-            <p class="post-card__meta">COREXLyth • SİSTEM</p>
-            <h3>Özel JavaScript sistemleri için hazır</h3>
-            <p>Story Engine, animasyonlar ve ileride eklenecek özel modüller artık özgürce geliştirilebilir.</p>
-            <a href="#" aria-label="Yazıyı oku">Devamını oku <span>→</span></a>
+        <article class="cx-log-card cx-frame">
+          <a class="cx-media-frame" href="#">
+            <img src="./assets/img/corexlyth-code.svg" alt="Kod ve rehber kanal görseli" loading="lazy">
+            <span class="cx-media-frame__hud">VISUAL RECORD // B2</span>
+          </a>
+          <div class="cx-log-card__body">
+            <p class="cx-card-top"><span>25.10.2026</span><b>SİSTEM</b></p>
+            <h3>JavaScript sistemleri artık tamamen özgür</h3>
+            <p>Özel etkileşimler ve görsel motorlar doğrudan site kodunda yaşayacak.</p>
+            <a class="cx-link" href="#">DEVAMINI OKU <span>→</span></a>
           </div>
         </article>
 
-        <article class="post-card">
-          <div class="post-card__visual post-card__visual--magenta" aria-hidden="true"></div>
-          <div class="post-card__body">
-            <p class="post-card__meta">COREXLyth • LAB</p>
-            <h3>Yeni deneyler yakında</h3>
-            <p>Mobil odaklı tasarım, özel yazı kartları ve etkileşimli arayüz bileşenleri sırada.</p>
-            <a href="#" aria-label="Yazıyı oku">Devamını oku <span>→</span></a>
+        <article class="cx-log-card cx-frame">
+          <a class="cx-media-frame" href="#">
+            <img src="./assets/img/corexlyth-lab.svg" alt="CoreXLyth deney laboratuvarı görseli" loading="lazy">
+            <span class="cx-media-frame__hud">VISUAL RECORD // C3</span>
+          </a>
+          <div class="cx-log-card__body">
+            <p class="cx-card-top"><span>25.10.2026</span><b>LAB</b></p>
+            <h3>Yeni deneyler için alan açıldı</h3>
+            <p>Mobil arayüz, galeriler, ışık kutuları ve veri katmanları sırada.</p>
+            <a class="cx-link" href="#">DEVAMINI OKU <span>→</span></a>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="about-strip" id="hakkinda">
-      <p>COREXLyth // Teknoloji, uygulamalar, rehberler ve dijital keşifler.</p>
+    <section class="cx-info-grid" id="hakkinda">
+      <article class="cx-info cx-frame">
+        <p class="cx-kicker">ABOUT // CORE</p>
+        <h2>CoreXLyth nedir?</h2>
+        <p>Teknoloji, uygulamalar, pratik rehberler, deneyler ve dijital dünyadan seçilmiş kayıtların tutulduğu bağımsız bir keşif alanı.</p>
+      </article>
+      <article class="cx-info cx-frame cx-info--signal">
+        <p class="cx-kicker">NETWORK // STATUS</p>
+        <ul>
+          <li><span>Frontend</span><b>ACTIVE</b></li>
+          <li><span>Animations</span><b>ACTIVE</b></li>
+          <li><span>Database</span><b>PLANNED</b></li>
+          <li><span>Auth</span><b>PLANNED</b></li>
+        </ul>
+      </article>
     </section>
   </main>
 
-  <script src="./assets/js/main.js"></script>
+  <footer class="cx-footer">
+    <div>
+      <span>COREXLYTH // END OF LINE</span>
+      <p>Teknolojinin gölgelerinde keşfeder, dijital dünyanın derinliklerinde yol açarız.</p>
+    </div>
+    <b>© 2026 COREXLYTH</b>
+  </footer>
+
+  <button class="cx-to-top" type="button" aria-label="Sayfanın başına dön">↑</button>
+
+  <div class="cx-lightbox" role="dialog" aria-modal="true" aria-label="Görsel önizleme" hidden>
+    <button class="cx-lightbox__close" type="button" aria-label="Kapat">×</button>
+    <img alt="">
+  </div>
+
+  <script src="./assets/js/main.js?v=20261025-2"></script>
 </body>
 </html>
