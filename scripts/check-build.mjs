@@ -91,5 +91,26 @@ for(const file of markdown) {
  assert(html.includes('<dialog class="cx-lightbox"'),`Native image dialog: ${file}`);
 }
 
+for(const route of ['', 'giris/', 'kayit/', 'sifremi-unuttum/', 'sifre-yenile/', 'dogrula/']) {
+ const path=join(dist,`hesap/${route}index.html`);
+ assert(existsSync(path),`Account route: /hesap/${route}`);
+ if(!existsSync(path))continue;
+ const html=readFileSync(path,'utf8');
+ assert(html.includes('noindex, follow'),`Account excluded from indexing: ${route}`);
+ assert(!html.includes('data-pagefind-body'),`Account not indexed by search: ${route}`);
+ const scripts=[...html.matchAll(/<script[^>]+src="([^"?]+)[^"]*"/g)];
+ for(const match of scripts) if(match[1].startsWith('/corexlyth-site/'))
+   assert(existsSync(join(dist,match[1].replace('/corexlyth-site/',''))),`Account script exists: ${match[1]}`);
+}
+assert(!readFileSync(join(dist,'sitemap-0.xml'),'utf8').includes('/hesap/'),'Account routes excluded from sitemap');
+
+const authSettings=JSON.parse(readFileSync(join(root,'src/config/public-auth.json'),'utf8'));
+if(!authSettings.publicLaunch) {
+ const home=readFileSync(join(dist,'index.html'),'utf8');
+ assert(!home.includes('href="/corexlyth-site/hesap/"'),'Closed test account menu hidden on homepage');
+ const signup=readFileSync(join(dist,'hesap/kayit/index.html'),'utf8');
+ assert(signup.includes('Üyelik sistemi kapalı test aşamasında.'),'Closed test status visible on signup');
+}
+
 if(failures){console.error(`CoreXLyth verification failed: ${failures} errors`);process.exitCode=1;}
 else console.log('CoreXLyth content build verified.');

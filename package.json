@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
-    "@astrojs/sitemap": "^3.7.3"
+    "@astrojs/sitemap": "^3.7.3",
+    "@supabase/supabase-js": "2.118.0"
   }
 }
