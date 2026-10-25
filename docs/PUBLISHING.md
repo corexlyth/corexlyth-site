@@ -12,7 +12,7 @@ Panel: `/hesap/yazilar/`. Hesabım bölümünde bağlantı yalnızca içerik yet
 6. Site UTC dakikaları 7,22,37,52'de yayın değişikliklerini kontrol eder. GitHub zamanlamayı geciktirebilir; 15 dakika kesin süre değildir. Manuel hızlandırma için GitHub Actions > Publish verified Astro output > Run workflow kullanılabilir. Zamanlanmış işlerin uzun repo hareketsizliğinde durması da GitHub'ın sınırları arasındadır.
 7. Paneldeki 'sitede derlenen sürüm' bilgisi, gerçekten yayımlanan manifestten okunur. Yayın akışı ile statik sitenin hazır olması ayrı durumlardır.
 
-Kaydedilmemiş değişiklik varken yayımlama kapalıdır. Başka sekme aynı yazıyı değiştirirse revision kontrolü eski kaydın yenisini ezmesini reddeder; metni kopyalayıp son sürümle karşılaştırmak gerekir. Adres ilk kayıttan sonra panelde sabittir. İleri tarihli otomatik yayın, özel kapak yükleme ve sürüm geçmişinden tek düğmeyle geri dönüş bu sürüme dahil değildir. Değişiklik geçmişi özel DB'de tutulur.
+Kaydedilmemiş değişiklik varken yayımlama kapalıdır. Başka sekme aynı yazıyı değiştirirse revision kontrolü eski kaydın yenisini ezmesini reddeder; metni kopyalayıp son sürümle karşılaştırmak gerekir. Adres ilk kayıttan sonra panelde sabittir. İleri tarihli otomatik yayın ve sürüm geçmişinden tek düğmeyle geri dönüş bu sürüme dahil değildir. Değişiklik geçmişi özel DB'de tutulur.
 
 ## Veri / güvenlik
 
@@ -28,4 +28,16 @@ Yayımla/yayından kaldır işlemi etkileşim yazı kaydını aynı transaction'
 
 Zamanlanmış iş, manifest hash değişmediyse Astro derlemesini atlar. Gerçek yayında önce eski üretilmiş sayfa dizinleri temizlenir; böylece yayından kaldırılan sayfa ve eski arama dizini kökte kalmaz. `public/content-manifest.json` ve kökteki kopya yalnızca açık yayın sürümlerini taşır. Gizli anahtar, GitHub token veya DB şifresi istemciye verilmez.
 
-`db/editor.sql` şemayı, `db/editor-tests.sql` rollback içinde sentetik kullanıcılarla erişim/sürüm/yayın testlerini tanımlar. Kod/başlangıç yazıları Git'tedir; özel taslak ve geçmiş için ayrıca veritabanı yedekleme düzeni kurulmalıdır. Bu yayın paneli yedeklemenin yerini almaz.
+`db/editor.sql` şemayı, `db/editor-tests.sql` rollback içinde sentetik kullanıcılarla erişim/sürüm/yayın testlerini tanımlar. Yedekleme adımı kullanıcının isteğiyle kapsamdan çıkarılmıştır; bu panel bir yedekleme sistemi kurmaz.
+
+## Görseller
+
+Kapak ve yazı içi görsel yükleme eklendi. JPEG/PNG/WebP/AVIF kaynak en fazla 15 MB; tarayıcı uzun kenarı en fazla 1920 piksele indirir, meta verilerini taşımadan WebP üretir ve 2 MB çıktı sınırı uygular. SVG/GIF kabul edilmez. Yüklenen görsel tekrar seçilip kapakta veya birden fazla yazıda kullanılabilir; açıklama metni kapağın alt alanına veya Markdown alt metnine yazılır. Önizleme 60 saniyelik imzalı özel adres kullanır; bu adres metne kaydedilmez.
+
+`cx-editor-media` özel Storage bucket'ıdır. Sadece doğrulanmış ve engellenmemiş içerik yetkilileri yükleyebilir/seçebilir. Normal üyeler ve yalnızca yorum moderatörü olan hesaplar erişemez. Dosya yolu kullanıcı UUID'si ve rastgele dosya UUID'sidir; üzerine yazma yoktur. Kaydı oluşmuş dosyalar istemciden silinemez. Başarısız kayıt sonrasında yalnızca kendi kayıtsız yüklemesini temizleme hakkı vardır.
+
+Özel `media` kayıtları yayınlara `publication_media` üzerinden bağlanır. Yayın snapshot'ının kapak/gövdesindeki yönetilen görsel adresleri aynı transaction'da doğrulanır. Etkin yayında kullanılan dosyalar RLS ile anonim derleme istemcisine okunabilir hale gelir; diğer dosyalar ve taslaklar özel kalır. Yayından kaldırılınca başka etkin yazıda kullanılmayan dosyanın anonim erişimi kapanır; mevcut statik kopya sonraki başarılı site yayınına kadar kalabilir. Daha önce herkese yayımlanmış dosya Git geçmişinden/ziyaretçi önbelleğinden geriye dönük geri alınmış sayılmaz.
+
+Derleme public feed'deki etkin dosyaları indirir; boyut ve WebP imzasını doğrular ve `public/assets/img/uploads/` içine koyar. Bu dizin otomatik yönetilir; elle dosya koyma. Artık kullanılmayan dosyalar yeni çıktıya taşınmaz. İmzalı adres, özel taslak veya ayrıcalıklı anahtar derlemeye girmez. Mevcut yayımlanmış dosyalar boyut kontrolüyle yeniden kullanılır.
+
+`db/media.sql` ve `db/media-tests.sql` yetkileri ve rollback testlerini tanımlar. SQL testi yalnızca metadata fixture'ı kullanır, fiziksel dosya oluşturmaz; dosya kodlama/yükleme/önizleme tarayıcı testinde gerçek canvas çıktısı ve taklit Storage yanıtlarıyla sınanır. Gerçek kullanıcı oturumuyla ilk dosya yükleme ayrıca kullanıcı tarafından denenmelidir.

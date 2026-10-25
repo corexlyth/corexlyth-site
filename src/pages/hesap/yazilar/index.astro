@@ -13,6 +13,16 @@ import { urlFor } from '../../../lib/posts';
         <p>Taslaklar özeldir. Yayımlama, kaydedilmiş sürümü herkese açık yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; değişikliğin sayfalara yansıması genellikle 15 dakika veya daha uzun sürebilir.</p>
         <label for="cx-editor-list">Bir yazı aç</label><select id="cx-editor-list" data-editor-list><option value="">Yeni yazı</option></select>
         <button type="button" data-editor-new>Yeni yazı</button>
+        <section class="cx-editor-media" aria-labelledby="cx-media-title">
+          <h2 id="cx-media-title">Görseller</h2>
+          <label>Görsel açıklaması <input data-media-alt minlength="5" maxlength="300" placeholder="Görselde ne olduğunu kısaca anlat" /></label>
+          <p>JPG, PNG, WebP, AVIF · en fazla 15 MB. Uzun kenar en fazla 1920 piksele küçültülür ve WebP olarak kaydedilir. Taslak görselleri özel alanda tutulur.</p>
+          <input data-media-file type="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden />
+          <div class="cx-community-actions"><button type="button" data-media-upload-cover>Kapak yükle</button><button type="button" data-media-upload-inline>Yazı içine görsel yükle</button></div>
+          <label for="cx-media-list">Yüklü görseller</label><select id="cx-media-list" data-media-list><option value="">Yüklü görseller</option></select>
+          <div class="cx-community-actions"><button type="button" data-media-use-cover>Kapağa uygula</button><button type="button" data-media-use-inline>Yazıya ekle</button></div>
+          <p data-media-status role="status" aria-live="polite">Bir görsel yükle veya yüklü bir görsel seç.</p>
+        </section>
         <form data-editor-form method="post">
           <fieldset disabled>
             <label>Yazı adresi <input name="slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="160" required placeholder="ornek-yazi-adresi" /></label>
@@ -37,7 +47,7 @@ import { urlFor } from '../../../lib/posts';
         <p data-editor-state></p><p data-editor-deployed></p>
         <div class="cx-community-actions"><button type="button" data-editor-publish disabled>Kaydedilmiş sürümü yayımla</button><button type="button" data-editor-unpublish disabled>Yayından kaldır</button></div>
         <p data-editor-live hidden><a data-editor-live-link>Yazıyı sitede aç</a> · Yeni sürümün görünmesi yayın kontrolünden sonra olur.</p>
-        <section data-editor-preview-box hidden><h2>Önizleme</h2><p>Bu önizleme tarayıcında hazırlanır; taslağı yayımlamaz.</p><h3 data-editor-preview-title></h3><div class="cx-article__content" data-editor-preview-body></div></section>
+        <section data-editor-preview-box hidden><h2>Önizleme</h2><p>Bu önizleme tarayıcında hazırlanır; taslağı yayımlamaz.</p><h3 data-editor-preview-title></h3><img data-editor-preview-cover hidden alt="" style="max-width:100%;height:auto" /><div class="cx-article__content" data-editor-preview-body></div></section>
       </div>
       <noscript>Yazı yönetimi JavaScript gerektirir.</noscript>
     </section>
