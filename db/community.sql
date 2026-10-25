@@ -116,7 +116,7 @@ begin
   join cx_private.posts post on post.slug=c.post_slug and post.active
   where c.id>p_after and (
    (p_queue and c.status in ('pending','published','hidden')) or
-   (not p_queue and p_post is not null and c.post_slug=p_post and (c.status in ('published','deleted') or c.user_id=u or m))
+   (not p_queue and p_post is not null and c.post_slug=p_post and c.status in ('published','deleted'))
   ) order by c.id limit 51
  ) page;
  result:=jsonb_build_object('comments',rows_json,'moderator',m,'blocked',blocked,'signedIn',u is not null,
