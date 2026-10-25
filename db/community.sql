@@ -110,7 +110,7 @@ begin
  if p_post is not null and not exists(select 1 from cx_private.posts where slug=p_post and active) then raise exception 'post_not_found'; end if;
  select coalesce(jsonb_agg(row_data order by id),'[]'::jsonb) into rows_json from (
   select c.id,jsonb_build_object('id',c.id::text,'post',c.post_slug,'parent',c.parent_id::text,
-   'name',case when c.status='deleted' then 'Üye' else coalesce(p.display_name,'CoreXLyth üyesi') end,
+   'name',case when c.status='deleted' then 'Üye' else coalesce(p.display_name,'Anonim') end,
    'body',c.body,'status',c.status,'createdAt',c.created_at,'own',coalesce(c.user_id=u,false)) as row_data
   from cx_private.comments c left join cx_private.profiles p on p.user_id=c.user_id
   join cx_private.posts post on post.slug=c.post_slug and post.active
@@ -139,12 +139,15 @@ begin
  select coalesce(bool_or(moderator and not blocked),false) into m from cx_private.members where user_id=u;
  if p_action in ('comment','like','bookmark') and not exists(select 1 from cx_private.posts where slug=p_post and active) then raise exception 'post_not_found'; end if;
  if p_action='profile' then
-  if p_body is null or char_length(btrim(p_body)) not between 2 and 40 or p_body ~ '[[:cntrl:]]' then raise exception 'invalid_name'; end if;
   perform cx_private.throttle(u,'profile',2,30);
-  insert into cx_private.profiles(user_id,display_name) values(u,btrim(p_body)) on conflict(user_id) do update set display_name=excluded.display_name,updated_at=now();
+  if btrim(coalesce(p_body,''))='' then
+   delete from cx_private.profiles where user_id=u;
+  else
+   if char_length(btrim(p_body)) not between 2 and 40 or p_body ~ '[[:cntrl:]]' then raise exception 'invalid_name'; end if;
+   insert into cx_private.profiles(user_id,display_name) values(u,btrim(p_body)) on conflict(user_id) do update set display_name=excluded.display_name,updated_at=now();
+  end if;
  elsif p_action='comment' then
   if p_body is null or char_length(btrim(p_body)) not between 1 and 2000 then raise exception 'invalid_comment'; end if;
-  if not exists(select 1 from cx_private.profiles where user_id=u) then raise exception 'profile_required'; end if;
   if p_comment is not null then
    select * into parent from cx_private.comments where id=p_comment for share;
    if not found or parent.post_slug<>p_post or parent.parent_id is not null or parent.status<>'published' then raise exception 'invalid_parent'; end if;
@@ -161,17 +164,18 @@ begin
    if p_value then insert into cx_private.bookmarks(user_id,post_slug) values(u,p_post) on conflict do nothing;
    else delete from cx_private.bookmarks where post_slug=p_post and user_id=u; end if;
   end if;
- elsif p_action in ('delete','publish','hide','block','unblock') then
+ elsif p_action in ('delete','publish','block','unblock') then
   select * into c from cx_private.comments where id=p_comment for update;
   if not found then raise exception 'comment_not_found'; end if;
   if p_action='delete' then
-   if c.user_id is distinct from u then raise exception using errcode='42501',message='not_owner'; end if;
+   if c.user_id is distinct from u and not m then raise exception using errcode='42501',message='not_owner'; end if;
    update cx_private.comments set body='[Yorum silindi]',status='deleted',updated_at=now() where id=c.id;
+   if m then insert into cx_private.moderation_log(actor_id,comment_id,action) values(u,c.id,p_action); end if;
   else
    if not m then raise exception using errcode='42501',message='moderator_required'; end if;
-   if p_action in ('publish','hide') then
+   if p_action='publish' then
     if c.status='deleted' then raise exception 'comment_deleted'; end if;
-    update cx_private.comments set status=case when p_action='publish' then 'published' else 'hidden' end,updated_at=now() where id=c.id;
+    update cx_private.comments set status='published',updated_at=now() where id=c.id;
    else
     if c.user_id is null or c.user_id=u or exists(select 1 from cx_private.members where user_id=c.user_id and moderator) then raise exception 'invalid_member'; end if;
     insert into cx_private.members(user_id,blocked) values(c.user_id,p_action='block') on conflict(user_id) do update set blocked=excluded.blocked;

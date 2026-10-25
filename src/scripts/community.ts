@@ -24,7 +24,6 @@ async function start(root:HTMLElement) {
     const msg = error?.message || '';
     if(msg.includes('rate_limited') || error?.status===429) return 'Gönderim sınırına ulaştın. Biraz bekleyip tekrar dene.';
     if(msg.includes('member_blocked')) return 'Bu hesabın topluluk gönderimleri kısıtlandı.';
-    if(msg.includes('profile_required')) return 'Önce görünen adını kaydet.';
     if(msg.includes('moderator_required')) return 'Bu bölüm için moderatör yetkisi gerekiyor.';
     if(msg.includes('login_required')) return 'İşlem için doğrulanmış hesabınla giriş yap.';
     if(msg.includes('invalid_parent')) return 'Bu yoruma artık yanıt verilemiyor. Listeyi yenile.';
@@ -34,12 +33,13 @@ async function start(root:HTMLElement) {
   function sync() {
     root.querySelectorAll<HTMLButtonElement>('button').forEach(button => { button.disabled=busy; });
     if(profile) { profile.hidden=!state?.signedIn; profile.querySelector('fieldset')!.disabled=!enabled(); }
-    if(commentForm) { commentForm.hidden=!state?.signedIn; commentForm.querySelector('fieldset')!.disabled=!enabled() || !state?.displayName; }
+    if(commentForm) { commentForm.hidden=!state?.signedIn; commentForm.querySelector('fieldset')!.disabled=!enabled(); }
     if(like) like.disabled=!enabled();
     if(bookmark) bookmark.disabled=!enabled();
     root.querySelectorAll<HTMLButtonElement>('[data-member-action]').forEach(button=>button.disabled=!enabled());
     find('[data-community-login]').hidden=Boolean(state?.signedIn);
-    find('[data-moderation-link]').hidden=!state?.moderator;
+    const moderationLink=find('[data-moderation-link]');
+    if(moderationLink) moderationLink.hidden=!state?.moderator;
   }
   function resetReply() {
     replying=null;
@@ -61,28 +61,28 @@ async function start(root:HTMLElement) {
   function renderComment(c:Comment) {
     const article=node('article'); article.className='cx-comment'; article.dataset.commentId=c.id;
     const head=node('p'); head.className='cx-comment__meta';
-    const author=node('strong',c.name); const date=node('time',new Date(c.createdAt).toLocaleString('tr-TR'));date.dateTime=c.createdAt;
+    const author=node('strong',c.name || 'Anonim'); const date=node('time',new Date(c.createdAt).toLocaleString('tr-TR'));date.dateTime=c.createdAt;
     head.append(author,document.createTextNode(' · '),date);
-    const labels:Record<string,string>={pending:'İnceleme bekliyor',hidden:'Yayından kaldırıldı',deleted:'Yorum silindi'};
+    const labels:Record<string,string>={pending:'İnceleme bekliyor',hidden:'İnceleme bekliyor'};
     article.append(head);
     if(mode==='moderation') { const link=node('a','Yazıyı aç');link.href=`${base}yazi/${encodeURIComponent(c.post)}/`;article.append(link); }
     if(c.parent) article.append(node('p',`↳ #${c.parent} numaralı yoruma yanıt`));
-    const body=node('p',c.body);body.className='cx-comment__body'; article.append(body);
+    const body=node('p',c.status==='deleted'?'Yorum silindi.':c.body);body.className='cx-comment__body'; article.append(body);
     if(labels[c.status]) article.append(node('p',labels[c.status]));
     const actions=node('div');actions.className='cx-comment__actions';
     if(mode==='article' && !c.parent && c.status==='published' && state?.signedIn) actions.append(actionButton('Yanıtla',()=>{
       replying=c.id;find('[data-reply-status]').textContent=`${c.name} adlı üyeye yanıt (#${c.id})`;
       find('[data-cancel-reply]').hidden=false;find<HTMLTextAreaElement>('textarea').focus();
     }));
-    if(c.own && c.status!=='deleted') {
+    if((c.own || (mode==='moderation' && state?.moderator)) && c.status!=='deleted') {
       let confirmDelete=false;
-      const remove=actionButton('Yorumumu sil',()=>{
+      const remove=actionButton('Sil',()=>{
         if(!confirmDelete) { confirmDelete=true;remove.textContent='Silmek için tekrar dokun'; return; }
         void (async()=>{if(await write('delete',{p_comment:c.id})) { await load();tell('Yorumun silindi.'); }})();
       });actions.append(remove);
     }
-    if(state?.moderator && c.status!=='deleted') {
-      for(const [label,action] of [['Yayımla','publish'],['Gizle','hide'],...(!c.own ? [['Üyeyi engelle','block'],['Engeli kaldır','unblock']] : [])]) {
+    if(mode==='moderation' && state?.moderator && c.status!=='deleted') {
+      for(const [label,action] of [...(c.status!=='published' ? [['Yayınla','publish']] : []),...(!c.own ? [['Üyeyi engelle','block'],['Engeli kaldır','unblock']] : [])]) {
         actions.append(actionButton(label,()=>{void(async()=>{if(await write(action,{p_comment:c.id})){await load();tell('Moderasyon işlemi kaydedildi.');}})();}));
       }
     }
@@ -113,12 +113,12 @@ async function start(root:HTMLElement) {
       if(!saved.childElementCount) saved.append(node('li',state.signedIn?'Henüz bir yazı kaydetmedin.':'Kaydettiğin yazıları görmek için giriş yap.'));
     }
     sync();
-    tell(state.blocked?'Hesabının topluluk gönderimleri kısıtlandı.':state.signedIn&&!state.displayName?'Katılmak için önce görünen adını belirle.':mode==='moderation'?'Yorumları inceleyebilir, yayımlayabilir veya gizleyebilirsin.':'Topluluk güncel.');
+    tell(state.blocked?'Hesabının topluluk gönderimleri kısıtlandı.':mode==='moderation'?'Yorumları inceleyebilir, yayımlayabilir veya silebilirsin.':'Topluluk güncel.');
   }
   if(!client) return;
   profile?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
     if(!profile.reportValidity()) return;
-    if(await write('profile',{p_body:String(new FormData(profile).get('displayName') || '').trim()})){await load();tell('Görünen adın kaydedildi.');}
+    if(await write('profile',{p_body:String(new FormData(profile).get('displayName') || '').trim()})){await load();tell(state?.displayName?'Görünen adın kaydedildi.':'Takma adın kaldırıldı. Yorumlarında Anonim görüneceksin.');}
   })();});
   commentForm?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
     if(!commentForm.reportValidity()) return;

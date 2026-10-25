@@ -11,6 +11,8 @@ for(const file of readdirSync('src/content/blog').filter(f=>f.endsWith('.md'))){
  const slug=file.slice(0,-3),page=read(`dist/yazi/${slug}/index.html`);
  assert.ok(registry.includes(`('${slug}',`),`Published post missing from trusted community registry: ${slug}`);
  assert.match(page,/data-community="article"/);
+ assert.ok(!page.includes('data-profile-form'),'Article must not include the nickname editor');
+ assert.ok(!page.includes('data-moderation-link'),'Article must not include moderation navigation');
  assert.match(page,/data-pagefind-ignore/);
  assert.ok(page.includes(`data-post="${slug}"`));
 }
