@@ -16,7 +16,7 @@ begin
  a:=public.cx_community_write('comment','android-izinlerini-kontrol-et','<script>alert(1)</script>');
  id:=a->>'id'; perform set_config('cx.test.comment',id,true);
  a:=public.cx_community_read('android-izinlerini-kontrol-et',id::bigint-1);
- assert a->'comments' @> jsonb_build_array(jsonb_build_object('id',id,'status','pending','own',true)), 'author sees own pending';
+ assert not (a->'comments' @> jsonb_build_array(jsonb_build_object('id',id))), 'author cannot see pending on article';
  begin perform public.cx_community_write('comment','android-izinlerini-kontrol-et','burst'); exception when others then hit:=sqlerrm='rate_limited'; end;
  assert hit,'comment burst blocked';
  perform public.cx_community_write('like','android-izinlerini-kontrol-et',p_value=>true);
@@ -68,7 +68,9 @@ do $$
 declare id bigint:=current_setting('cx.test.comment')::bigint;
 begin
  assert public.cx_community_read(p_after=>id-1,p_queue=>true)->'comments' @> jsonb_build_array(jsonb_build_object('id',id::text)),'moderator sees queue';
+ assert not (public.cx_community_read('android-izinlerini-kontrol-et',id-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',id::text))),'moderator cannot see pending on article';
  perform public.cx_community_write('publish',p_comment=>id);
+ assert public.cx_community_read('android-izinlerini-kontrol-et',id-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',id::text,'status','published')),'approved comment appears on article';
  perform public.cx_community_write('block',p_comment=>id);
 end $$;
 select set_config('request.jwt.claims','{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',true);
@@ -88,7 +90,7 @@ begin
  assert hit,'cross-post reply denied';
  a:=public.cx_community_write('comment','android-izinlerini-kontrol-et','A reply',id);
  perform set_config('cx.test.reply',a->>'id',true);
- assert public.cx_community_read('android-izinlerini-kontrol-et',(a->>'id')::bigint-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',a->>'id','name','Anonim')),'member without profile comments as Anonim';
+ assert not (public.cx_community_read('android-izinlerini-kontrol-et',(a->>'id')::bigint-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',a->>'id'))),'unnamed member pending reply stays out of article';
 end $$;
 reset role;
 update cx_private.limits set last_at=now()-interval '1 hour' where user_id='22222222-2222-4222-8222-222222222222';
@@ -119,6 +121,9 @@ declare hit boolean:=false;
 begin
  begin perform public.cx_community_write('hide',p_comment=>current_setting('cx.test.reply')::bigint); exception when others then hit:=sqlerrm='invalid_action'; end;
  assert hit,'hide action removed even for moderator';
+ assert public.cx_community_read(p_after=>current_setting('cx.test.reply')::bigint-1,p_queue=>true)->'comments' @> jsonb_build_array(jsonb_build_object('id',current_setting('cx.test.reply'),'name','Anonim')),'unnamed pending reply appears as Anonim only in admin panel';
+ perform public.cx_community_write('publish',p_comment=>current_setting('cx.test.reply')::bigint);
+ assert public.cx_community_read('android-izinlerini-kontrol-et',current_setting('cx.test.reply')::bigint-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',current_setting('cx.test.reply'),'name','Anonim')),'approved unnamed reply appears as Anonim';
  perform public.cx_community_write('delete',p_comment=>current_setting('cx.test.reply')::bigint);
  assert public.cx_community_read('android-izinlerini-kontrol-et',current_setting('cx.test.reply')::bigint-1)->'comments' @> jsonb_build_array(jsonb_build_object('id',current_setting('cx.test.reply'),'status','deleted')),'moderator can remove another member comment';
 end $$;

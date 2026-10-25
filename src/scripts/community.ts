@@ -123,7 +123,7 @@ async function start(root:HTMLElement) {
   commentForm?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
     if(!commentForm.reportValidity()) return;
     if(await write('comment',{p_body:String(new FormData(commentForm).get('comment') || '').trim(),p_comment:replying})){
-      commentForm.reset();resetReply();await load();tell('Yorumun alındı. İncelendikten sonra yayımlanacak.');
+      commentForm.reset();resetReply();await load();tell('Yorumun incelemeye alındı. Onaylandıktan sonra burada görünecek.');
     }
   })();});
   find('[data-cancel-reply]')?.addEventListener('click',resetReply);
