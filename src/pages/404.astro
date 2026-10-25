@@ -1,6 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-const base = import.meta.env.BASE_URL;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <SiteLayout title="404 — Kayıt bulunamadı | CoreXLyth" description="İstenen CoreXLyth sayfası bulunamadı." noindex={true}>
   <main id="home" style="min-height:75vh;display:grid;place-items:center;">
