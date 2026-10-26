@@ -34,7 +34,7 @@ document.addEventListener("click", (event) => {
 
 function upgradeImages(root = document) {
   root.querySelectorAll("img").forEach((img) => {
-    if (img.closest(".cx-media-frame,.cx-auto-media,.cx-lightbox,.cx-story-card,.cx-record-row,.cx-article-cover,a,button")) return;
+    if (img.closest(".cx-figure,.cx-gallery,.cx-media-frame,.cx-auto-media,.cx-lightbox,.cx-story-card,.cx-record-row,.cx-article-cover,a,button")) return;
     const wrap = document.createElement("span");
     wrap.className = "cx-auto-media";
     const media = img.closest("picture") || img;

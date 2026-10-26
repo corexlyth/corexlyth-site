@@ -14,13 +14,13 @@ import { urlFor } from '../../../lib/posts';
         <label for="cx-editor-list">Bir yazı aç</label><select id="cx-editor-list" data-editor-list><option value="">Yeni yazı</option></select>
         <button type="button" data-editor-new>Yeni yazı</button>
         <section class="cx-editor-media" aria-labelledby="cx-media-title">
-          <h2 id="cx-media-title">Görseller</h2>
-          <label>Görsel açıklaması <input data-media-alt minlength="5" maxlength="300" placeholder="Görselde ne olduğunu kısaca anlat" /></label>
+          <h2 id="cx-media-title">Kapak görseli</h2>
+          <label>Kapak açıklaması <input data-media-alt minlength="5" maxlength="300" placeholder="Görselde ne olduğunu kısaca anlat" /></label>
           <p>JPG, PNG, WebP, AVIF · en fazla 15 MB. Uzun kenar en fazla 1920 piksele küçültülür ve WebP olarak kaydedilir. Taslak görselleri özel alanda tutulur.</p>
           <input data-media-file type="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden />
-          <div class="cx-community-actions"><button type="button" data-media-upload-cover>Kapak yükle</button><button type="button" data-media-upload-inline>Yazı içine görsel yükle</button></div>
+          <div class="cx-community-actions"><button type="button" data-media-upload-cover>Kapak yükle</button></div>
           <label for="cx-media-list">Yüklü görseller</label><select id="cx-media-list" data-media-list><option value="">Yüklü görseller</option></select>
-          <div class="cx-community-actions"><button type="button" data-media-use-cover>Kapağa uygula</button><button type="button" data-media-use-inline>Yazıya ekle</button></div>
+          <div class="cx-community-actions"><button type="button" data-media-use-cover>Kapağa uygula</button></div>
           <p data-media-status role="status" aria-live="polite">Bir görsel yükle veya yüklü bir görsel seç.</p>
         </section>
         <form data-editor-form method="post">
@@ -40,14 +40,35 @@ import { urlFor } from '../../../lib/posts';
             </select></label>
             <label>Görsel açıklaması <input name="coverAlt" minlength="5" maxlength="300" required /></label>
             <label><input name="featured" type="checkbox" /> Öne çıkan yazı</label>
-            <label>Yazı (Markdown) <textarea name="body" rows="18" maxlength="100000" required></textarea></label>
+            <div class="cx-writing-area">
+              <label for="cx-write-body">Yazı alanı</label>
+              <div class="cx-write-toolbar" role="group" aria-label="Yazı biçimlendirme araçları">
+                <button type="button" data-write-block="h2">Bölüm başlığı</button><button type="button" data-write-block="h3">Alt başlık</button><button type="button" data-write-block="h4">Küçük başlık</button>
+                <button type="button" data-write-block="bold">Kalın</button><button type="button" data-write-block="italic">Vurgulu</button><button type="button" data-write-block="link">Bağlantı</button>
+                <button type="button" data-write-block="list">Madde listesi</button><button type="button" data-write-block="ordered">Numaralı liste</button><button type="button" data-write-block="check">Kontrol listesi</button>
+                <button type="button" data-media-open-inline>Görsel ekle</button><button type="button" data-media-open-gallery>Galeri ekle</button>
+                <button type="button" data-write-block="note">Not</button><button type="button" data-write-block="info">Bilgi</button><button type="button" data-write-block="warning">Uyarı</button><button type="button" data-write-block="tip">İpucu</button><button type="button" data-write-block="important">Önemli</button>
+                <button type="button" data-write-block="quote">Alıntı</button><button type="button" data-write-block="code">Kod bloğu</button><button type="button" data-write-block="inline-code">Satır içi kod</button><button type="button" data-write-block="table">Tablo</button><button type="button" data-write-block="details">Açılır kutu</button><button type="button" data-write-block="divider">Ayırıcı</button>
+              </div>
+              <p class="cx-field-hint">Metni seçip bir araca dokun veya imleci eklemek istediğin yere bırak. Araçlar biçimi hazır ekler; sonucu aşağıdaki canlı önizlemeden takip edebilirsin.</p>
+              <textarea id="cx-write-body" name="body" rows="18" maxlength="100000" required aria-label="Yazı alanı"></textarea>
+            </div>
             <div class="cx-community-actions"><button type="submit">Taslağı kaydet</button><button type="button" data-editor-preview>Önizle</button></div>
           </fieldset>
         </form>
         <p data-editor-state></p><p data-editor-deployed></p>
         <div class="cx-community-actions"><button type="button" data-editor-publish disabled>Kaydedilmiş sürümü yayımla</button><button type="button" data-editor-unpublish disabled>Yayından kaldır</button></div>
         <p data-editor-live hidden><a data-editor-live-link>Yazıyı sitede aç</a> · Yeni sürümün görünmesi yayın kontrolünden sonra olur.</p>
-        <section data-editor-preview-box hidden><h2>Önizleme</h2><p>Bu önizleme tarayıcında hazırlanır; taslağı yayımlamaz.</p><h3 data-editor-preview-title></h3><img data-editor-preview-cover hidden alt="" style="max-width:100%;height:auto" /><div class="cx-article__content" data-editor-preview-body></div></section>
+        <dialog class="cx-inline-media-dialog" data-inline-media-dialog aria-labelledby="cx-inline-media-title">
+          <h2 id="cx-inline-media-title" data-inline-media-title>Yazıya görsel ekle</h2>
+          <button type="button" data-inline-media-choose>Dosyadan görsel seç</button>
+          <input type="file" data-inline-media-file accept="image/jpeg,image/png,image/webp,image/avif" hidden />
+          <label for="cx-inline-media-list">Daha önce yüklediklerim</label><select id="cx-inline-media-list" data-inline-media-list></select>
+          <button type="button" data-inline-media-existing>Seçilenleri kullan</button>
+          <div data-inline-media-queue></div><p data-inline-media-status role="status" aria-live="polite"></p>
+          <div class="cx-community-actions"><button type="button" data-inline-media-insert>Yazıya ekle</button><button type="button" data-inline-media-close>Vazgeç</button></div>
+        </dialog>
+        <section data-editor-preview-box hidden><h2>Canlı önizleme</h2><p>Yazı alanındaki değişiklikler burada biçimlenir; bu görünüm taslağı yayımlamaz.</p><h3 data-editor-preview-title></h3><img data-editor-preview-cover hidden alt="" style="max-width:100%;height:auto" /><div class="cx-article__content" data-editor-preview-body></div></section>
       </div>
       <noscript>Yazı yönetimi JavaScript gerektirir.</noscript>
     </section>

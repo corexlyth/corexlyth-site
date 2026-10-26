@@ -41,3 +41,13 @@ Kapak ve yazı içi görsel yükleme eklendi. JPEG/PNG/WebP/AVIF kaynak en fazla
 Derleme public feed'deki etkin dosyaları indirir; boyut ve WebP imzasını doğrular ve `public/assets/img/uploads/` içine koyar. Bu dizin otomatik yönetilir; elle dosya koyma. Artık kullanılmayan dosyalar yeni çıktıya taşınmaz. İmzalı adres, özel taslak veya ayrıcalıklı anahtar derlemeye girmez. Mevcut yayımlanmış dosyalar boyut kontrolüyle yeniden kullanılır.
 
 `db/media.sql` ve `db/media-tests.sql` yetkileri ve rollback testlerini tanımlar. SQL testi yalnızca metadata fixture'ı kullanır, fiziksel dosya oluşturmaz; dosya kodlama/yükleme/önizleme tarayıcı testinde gerçek canvas çıktısı ve taklit Storage yanıtlarıyla sınanır. Gerçek kullanıcı oturumuyla ilk dosya yükleme ayrıca kullanıcı tarafından denenmelidir.
+
+## Yazı alanı araçları ve bloklar
+
+Üstteki görsel alanı yalnızca kapağı seçer. Yazı alanındaki **Görsel ekle** ve **Galeri ekle** düğmeleri imlecin bulunduğu yere içerik ekler. Dosya seçebilir veya daha önce yüklenen görselleri yeniden kullanabilirsin. Galeri bir defada 2–10 görsel alır; her görselin kendi zorunlu açıklaması vardır. Galeride yarıda kalan yüklemeyi yeniden denemek başarılı dosyaları tekrar yüklemez.
+
+Araç çubuğu Markdown metnini hazırlar; metni seçerek başlık, kalın/vurgulu, bağlantı, madde/numara/kontrol listesi, alıntı, kod, tablo, ayırıcı, not, bilgi, uyarı, ipucu, önemli ve açılır kutu ekleyebilirsin. Altındaki canlı önizleme yazdıkça güncellenir; taslağı kaydetmez veya yayımlamaz. Kaydetme ve yayımlama ayrı işlemlerdir.
+
+Önizleme ve statik yayın aynı blok dönüştürücülerini kullanır. Başlıklar ve listeler temalı çerçeve alır. Tek başına duran Markdown görseli açıklamalı fotoğraf çerçevesine dönüşür. Galeri, görselleri tek grupta gösterir; yayımlanan yazıda görseller mevcut büyütme/ileri/geri kontrolleriyle açılır.
+
+Elle düzenlerken blok işaretleri `> [!NOTE]`, `> [!INFO]`, `> [!WARNING]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!DETAILS]` ve `> [!GALLERY]` biçimindedir. İçerik sonraki `> ` satırlarındadır. İşaretten sonra aynı satırda özel kutu başlığı yazılabilir. Galeri en az iki görsel içerir; araya başka metin karışırsa metni kaybetmeden normal alıntı olarak gösterilir. Ham HTML çalıştırılmaz; literal metin olarak gösterilir ve güvenli HTML filtresinden geçer.
