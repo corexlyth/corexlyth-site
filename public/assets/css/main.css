@@ -823,3 +823,7 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
  .cx-record-row,.cx-list-page .cx-record-row{min-height:140px}
  .cx-record-date{font-size:16px}.cx-record-copy b{font-size:1.35rem}.cx-record-copy small{font-size:.95rem}
 }
+
+.cx-editor-save{position:sticky;top:84px;z-index:12;margin:16px 0;padding:12px 16px;border:1px solid #365267;background:#07131ef5;color:#b7ccd5;font-size:.9rem}
+.cx-editor-save[data-state=saved]{border-color:#378d78;color:#9df2cb}.cx-editor-save[data-state=saving]{border-color:#58cfe2;color:#baf5ff}.cx-editor-save[data-state=pending]{color:#f4d194}.cx-editor-save[data-state=error]{border-color:#b44867;color:#ffb5c5}
+.cx-editor [data-editor-recovery]{padding:16px;border:1px solid #b48a48;background:#17140d}.cx-editor [data-editor-slug-reset]{font-size:.82rem}
