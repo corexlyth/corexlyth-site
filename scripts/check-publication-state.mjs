@@ -3,6 +3,7 @@ import {publicationState,pageMatchesPublication} from '../src/lib/publication-st
 const post={slug:'yazi',title:'Örnek yazı',revision:4,published:true,published_revision:2};
 assert.equal(publicationState({...post,published:false},{slug:'yazi',revision:2,active:true},true).key,'withdrawing');
 assert.equal(publicationState(post).key,'queued');
+assert.equal(publicationState(post,{slug:'other',revision:2,active:true},true).key,'queued');
 assert.equal(publicationState(post,{slug:'yazi',revision:1,active:true}).key,'updating');
 assert.equal(publicationState(post,{slug:'yazi',revision:2,active:true}).key,'ready');
 assert.equal(publicationState(post,{slug:'yazi',revision:2,active:true},true).key,'live');

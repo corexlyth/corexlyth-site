@@ -53,9 +53,9 @@ async function initialize(root:HTMLElement){
    if(result.key!=='ready'){info.textContent=result.key==='updating'?'Yayımdaki eski sürüm açık. İstenen güncelleme siteye aktarılıyor; işlem bitince bağlantı açılacak.':'Yayın isteğin alındı. Yazının siteye aktarımı bekleniyor. Bu aşamada henüz yayında değil.';state();return;}
    info.textContent='Yayın dosyası hazır. Yazının sayfası doğrulanıyor…';
    const url=`${root.dataset.base}yazi/${encodeURIComponent(target)}/`;const page=await fetch(url,{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(10000)});const html=page.ok?await page.text():'';if(!current())return;
-   if(!page.ok||!pageMatchesPublication(html,target,expected)){publicationStage='queued';info.textContent='Site güncellemesi henüz bu adreste hazır değil. Bağlantı hazır olduğunda otomatik açılacak.';state();return;}
+   if(!page.ok||!pageMatchesPublication(html,target,expected)){publicationStage='queued';list.unverified(target);info.textContent='Site güncellemesi henüz bu adreste hazır değil. Bağlantı hazır olduğunda otomatik açılacak.';state();return;}
    publicationStage='live';list.verified(target,expected);link.href=url;view.hidden=false;info.textContent=`Yayında · sitedeki sürüm: ${expected}.${revision!==expected?' Taslakta henüz yayımlanmamış değişiklikler var.':''}`;state();
-  }catch{if(current()){if(publicationStage!=='live'){view.hidden=true;link.removeAttribute('href');}info.textContent='Yayın durumu kontrol edilemedi. Listeyi ve yayın durumunu yenileyerek tekrar deneyebilirsin.';}}
+  }catch{if(current()){if(publicationStage!=='live'){view.hidden=true;link.removeAttribute('href');}info.textContent='Yayın durumu kontrol edilemedi. Listeyi ve yayın durumunu yenileyerek tekrar deneyebilirsin.';state();}}
  }
  async function refreshList(){const epoch=sessionEpoch;const {data,error}=await client!.rpc('cx_editor_read');if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');role=data.role;list.setPosts(data.posts);
   for(const p of data.posts)reserved.add(p.slug);const current=data.posts.find((p:{slug:string})=>p.slug===slug);if(current){published=Boolean(current.published);publishedRevision=current.published_revision??(published?current.revision:0);}list.value=slug;}
@@ -91,12 +91,12 @@ async function initialize(root:HTMLElement){
  $('[data-recovery-discard]').addEventListener('click',()=>{pendingRecovery=null;clearCache();$('[data-editor-recovery]').hidden=true;state();saveStatus('Henüz kaydedilmemiş yeni yazı.');});
  $('[data-recovery-restore]').addEventListener('click',()=>{void(async()=>{
   const r=pendingRecovery;if(!r||busy||signedOut)return;const epoch=sessionEpoch;busy=true;sync();
-  try{let same=false;if(r.revision){const result=await client.rpc('cx_editor_read',{p_slug:r.slug});if(result.error)throw result.error;same=result.data.revision===r.revision;published=same&&result.data.published;}
+  try{let same=false;if(r.revision){const result=await client.rpc('cx_editor_read',{p_slug:r.slug});if(result.error)throw result.error;same=result.data.revision===r.revision;published=same&&result.data.published;publishedRevision=same?(result.data.publishedRevision??(published?result.data.revision:0)):0;}
    if(epoch!==sessionEpoch)return;
    slug=same?r.slug:'';revision=same?r.revision:0;if(!same)published=false;publicationDate=r.payload.pubDate;
    for(const [k,v] of Object.entries(r.payload)){if(k==='featured')field(k).checked=Boolean(v);else if(field(k))field(k).value=Array.isArray(v)?v.join(', '):String(v);}
    chooseCategory(r.payload.category);slugManual=true;field('slug').value=same?r.slug:r.revision?titleSlug(r.payload.title,reserved):reserved.has(r.slug)?titleSlug(r.slug,reserved):r.slug;
-   pendingRecovery=null;$('[data-editor-recovery]').hidden=true;blocked=false;changed();tell(r.revision&&!same?'Sunucuda daha yeni sürüm var. Kurtarılan metin ayrı bir yeni taslak olarak açıldı.':'Yarım kalan değişiklikler geri yüklendi.');
+   pendingRecovery=null;$('[data-editor-recovery]').hidden=true;blocked=false;publicationStage=published?'queued':'draft';list.value=slug;changed();void deployedState();tell(r.revision&&!same?'Sunucuda daha yeni sürüm var. Kurtarılan metin ayrı bir yeni taslak olarak açıldı.':'Yarım kalan değişiklikler geri yüklendi.');
   }catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}
  })();});
  form.addEventListener('input',event=>{if(event.target===field('title'))generateSlug();if(event.target===field('slug'))slugManual=true;if(event.target===newCategory)field('category').value=newCategory.value;changed();});

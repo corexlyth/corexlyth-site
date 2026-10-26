@@ -31,6 +31,7 @@ export function editorLibrary(root:HTMLElement,onSelect:(slug:string)=>void){
   setPosts(value:EditorEntry[]){posts=value;render();},
   manifest(value:PublishedVersion[]){versions.clear();for(const p of value)versions.set(p.slug,p);render();},
   verified(slug:string,revision:number){checked.set(slug,revision);render();},
+  unverified(slug:string){checked.delete(slug);render();},
   clear(){posts=[];selected='';query.value='';checked.clear();versions.clear();render();},
   reveal(value:string){selected='';this.value=value;}
  };
