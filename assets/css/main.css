@@ -691,3 +691,6 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-editor button:disabled { opacity:.5;cursor:default; }.cx-editor [hidden] { display:none!important; }
 .cx-editor [data-error=true] { color:#ffb5c5; }.cx-editor [data-editor-preview-box] { margin-top:2rem;border-top:1px solid #377889; }
 .cx-editor :focus-visible { outline:2px solid #6af0ff;outline-offset:3px; }
+
+.cx-editor-media { padding:1rem; margin:1.5rem 0; border:1px solid #377889; }
+.cx-editor-media input[hidden] { display:none!important; }
