@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { urlFor } from '../../../lib/posts';
+import { categoriesFrom, getPosts, urlFor } from '../../../lib/posts';
+const categories=categoriesFrom(await getPosts());
 ---
 <SiteLayout title="Yazı yönetimi | CoreXLyth" noindex={true}>
   <meta slot="head" name="referrer" content="no-referrer" />
@@ -13,6 +14,8 @@ import { urlFor } from '../../../lib/posts';
         <p>Taslaklar özeldir. Yayımlama, kaydedilmiş sürümü herkese açık yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; değişikliğin sayfalara yansıması genellikle 15 dakika veya daha uzun sürebilir.</p>
         <label for="cx-editor-list">Bir yazı aç</label><select id="cx-editor-list" data-editor-list><option value="">Yeni yazı</option></select>
         <button type="button" data-editor-new>Yeni yazı</button>
+        <div class="cx-editor-save" data-editor-save data-state="idle" role="status" aria-live="polite">Henüz kaydedilmemiş yeni yazı.</div>
+        <div data-editor-recovery hidden><p>Bu hesapla bu cihazda yarım kalan değişiklikler bulundu.</p><button type="button" data-recovery-restore>Yazmaya devam et</button> <button type="button" data-recovery-discard>Vazgeç</button></div>
         <form id="cx-editor-form" data-editor-form method="post">
           <fieldset disabled>
         <section class="cx-editor-media" aria-labelledby="cx-media-title">
@@ -26,13 +29,16 @@ import { urlFor } from '../../../lib/posts';
           <p data-media-status role="status" aria-live="polite">Bu yazının kapak görselini cihazından yükle.</p>
         </section>
             <label>Yazı adresi <input name="slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="160" required placeholder="ornek-yazi-adresi" /></label>
-            <p>Kaydettikten sonra adres sabit kalır. Türkçe harf yerine düz harf ve tire kullan.</p>
+            <p>Adres başlıktan otomatik oluşturulur. İstersen ilk kayıttan önce değiştirebilirsin; kayıt başladıktan sonra sabit kalır.</p>
+            <button type="button" data-editor-slug-reset>Adresi başlıktan oluştur</button>
             <label>Başlık <input name="title" minlength="8" maxlength="200" required /></label>
             <label>Kısa açıklama <textarea name="description" minlength="35" maxlength="220" rows="3" required></textarea></label>
             <p data-editor-date>Yayın tarihi ilk yayımlama anında otomatik belirlenir. Hazır olmayan yazıyı taslak olarak saklayabilirsin.</p>
-            <label>Kategori <input name="category" minlength="2" maxlength="80" required placeholder="Örneğin: Android" aria-describedby="cx-category-hint" /></label>
+            <label>Kategori <select data-editor-category required aria-describedby="cx-category-hint"><option value="">Kategori seç</option>{categories.map(category=><option value={category}>{category}</option>)}<option value="__new__">Yeni kategori ekle…</option></select></label>
+            <label data-editor-category-wrap hidden>Yeni kategori adı <input data-editor-category-new minlength="2" maxlength="80" placeholder="Örneğin: Android" /></label>
+            <input name="category" type="hidden" value="" />
             <p id="cx-category-hint">Kategori yazının ana konusudur: Android, Web geliştirme veya Uygulamalar gibi. Okuyucu bu kategoriye girerek benzer yazıları bulur. Her yazı için tek kategori yaz.</p>
-            <label>Etiketler <input name="tags" required placeholder="Android, Rehber, Güvenlik" /></label>
+            <label>Etiketler <input name="tags" maxlength="1200" required placeholder="Android, Rehber, Güvenlik" /></label>
             <p>Virgülle ayır. Her etiket 2–50 karakter; en fazla 20 etiket.</p>
             <label><input name="featured" type="checkbox" /> Öne çıkan yazı</label>
             <div class="cx-writing-area">
@@ -48,7 +54,8 @@ import { urlFor } from '../../../lib/posts';
               <p class="cx-field-hint">Metni seçip bir araca dokun veya imleci eklemek istediğin yere bırak. Araçlar biçimi hazır ekler; sonucu aşağıdaki canlı önizlemeden takip edebilirsin.</p>
               <textarea id="cx-write-body" name="body" rows="18" maxlength="100000" required aria-label="Yazı alanı"></textarea>
             </div>
-            <div class="cx-community-actions"><button type="submit">Taslağı kaydet</button><button type="button" data-editor-preview>Önizle</button></div>
+            <p>Gerekli alanlar tamamlandığında taslak otomatik kaydedilir. Eksik alanlarla yazdığın metin bu cihazda geçici olarak korunur; çıkış yaptığında cihazdaki bu geçici kayıt silinir.</p>
+            <div class="cx-community-actions"><button type="submit" data-editor-save-button>Taslağı kaydet</button><button type="button" data-editor-preview>Önizle</button></div>
           </fieldset>
         </form>
         <p data-editor-state></p><p data-editor-deployed></p>

@@ -53,3 +53,13 @@ Araç çubuğu Markdown metnini hazırlar; metni seçerek başlık, kalın/vurgu
 Elle düzenlerken blok işaretleri `> [!NOTE]`, `> [!INFO]`, `> [!WARNING]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!DETAILS]` ve `> [!GALLERY]` biçimindedir. İçerik sonraki `> ` satırlarındadır. İşaretten sonra aynı satırda özel kutu başlığı yazılabilir. Galeri en az iki görsel içerir; araya başka metin karışırsa metni kaybetmeden normal alıntı olarak gösterilir. Ham HTML çalıştırılmaz; literal metin olarak gösterilir ve güvenli HTML filtresinden geçer.
 
 `db/editor-publication-date.sql` mevcut kurulumda sunucu tarih kuralını uygular. İstemciden gelen tarih kayıtta yok sayılır; ilk yayında tekrar sunucu zamanı alınır. Başlık, liste, kutu, galeri, fotoğraf, alıntı, tablo ve kod çerçeveleri aynı kesik köşeli HUD dilini ve küçük vurgu farklarını kullanır.
+
+## Editör kolaylıkları ve otomatik kayıt
+
+Başlık Türkçe harfler sadeleştirilerek adrese çevrilir. Mevcut taslak adresleriyle çakışırsa sıra eki kullanılır. Adresi elle değiştirmek başlıktan üretmeyi durdurur; “Adresi başlıktan oluştur” bunu ilk kayıt öncesinde yeniden etkinleştirir. İlk kayıt isteği başlayınca adres sabitlenir. Kategori seçimi yayımlanmış kategorilerden yapılır; mevcut özel taslak açıldığında onun kategorisi de seçime eklenir. Yeni kategori eklemek mümkündür.
+
+Zorunlu alanlar tamamlanınca, kısa bir yazma arasından sonra özel taslak kaydedilir. Otomatik sunucu kayıtları arasında en az 35 saniye bırakılır; mevcut sunucu hız sınırı korunur. Elle kaydetme kullanılabilir. Kaydetme sırasında yazı alanı düzenlenebilir; yanıt yalnızca gönderilen sürümü onaylar ve bu sırada yazılan yeni metni silmez. Yayımlama ayrı ve açık onaylı işlemdir.
+
+Eksik alanlar ve henüz sunucuya yazılmamış değişiklikler, yalnızca yetkili kullanıcının UUID'sine bağlı tek bir cihaz kurtarma kaydında tutulur. Bu kayıt gizli pencere/depolama engeli ya da kullanıcı tarafından silinme halinde kullanılamaz. Yeniden açılınca geri yükleme seçimi sunulur; üç günden eski veya geçersiz kayıt reddedilir. Başarılı tam kayıt, vazgeçme ve site içindeki herhangi bir sayfadan çıkış bu geçici kaydı temizler. Normal üyeye veya farklı hesaba bu taslak açılmaz.
+
+Sürüm çakışması otomatik kayıt döngüsünü durdurur. Kurtarmada sunucu sürümü ilerlemişse metin ayrı yeni taslak olarak açılır; güncel yazının üzerine yazılmaz. Ağ hatalarında sınırlı tekrar yapılır; kaydedilemeyen metin ve hata durumu görünür kalır.

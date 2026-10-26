@@ -3,6 +3,7 @@ import { validContent,validSlug,type ContentPayload } from '../lib/content-rules
 import { renderArticleMarkdown } from '../lib/article-markdown';
 import { editorToolbar } from './editor-toolbar';
 import DOMPurify from 'dompurify';
+import {titleSlug,readRecovery,recoveryKey,type Recovery} from '../lib/editor-draft';
 import { editorMedia } from './editor-media';
 const root=document.querySelector<HTMLElement>('[data-editor]');
 if(root)void initialize(root);
@@ -10,17 +11,32 @@ async function initialize(root:HTMLElement){
  const client=getAuthClient();const $=<T extends HTMLElement=HTMLElement>(s:string)=>root.querySelector<T>(s)!;
  const form=$<HTMLFormElement>('[data-editor-form]'),list=$<HTMLSelectElement>('[data-editor-list]');
  let revision=0,slug='',role='',busy=false,dirty=false,published=false,signedOut=false,sessionEpoch=0,previewVersion=0,publicationDate='';
- let previewTimer:ReturnType<typeof setTimeout>;
+ let previewTimer:ReturnType<typeof setTimeout>,autoTimer:ReturnType<typeof setTimeout>,manualTimer:ReturnType<typeof setTimeout>;
+ let saving=false,blocked=false,slugManual=false,lastAttempt=0,retries=0,owner='',pendingRecovery:Recovery|null=null;
+ const reserved=new Set<string>();
+ const categorySelect=$<HTMLSelectElement>('[data-editor-category]'),newCategory=$<HTMLInputElement>('[data-editor-category-new]');
+ const initialCategories=[...categorySelect.options].map(option=>({value:option.value,text:option.text}));
+ const saveStatus=(message:string,status='idle')=>{const el=$('[data-editor-save]');if(el.textContent!==message)el.textContent=message;el.dataset.state=status;};
+ function chooseCategory(value:string){if(value&&![...categorySelect.options].some(o=>o.value===value)){categorySelect.add(new Option(value,value),categorySelect.options.length-1);}categorySelect.value=value;field('category').value=value;newCategory.value='';newCategory.required=false;$('[data-editor-category-wrap]').hidden=true;}
+ function cache(){if(!owner||signedOut||!dirty)return false;try{localStorage.setItem(recoveryKey(owner),JSON.stringify({version:1,owner,slug:revision?slug:field('slug').value,revision,published,payload:payload(),at:Date.now()}));return true;}catch{return false;}}
+ function clearCache(){if(owner)try{localStorage.removeItem(recoveryKey(owner));}catch{}}
+ function changed(){dirty=true;retries=0;const cached=cache();state();saveStatus(saving?'Kaydediliyor… Yeni değişikliklerin de sıraya alındı.':blocked?'Otomatik kayıt durdu. Sunucudaki sürümü kontrol et.':cached?'Değişiklikler bu cihazda korunuyor. Otomatik kayıt bekleniyor.':'Kaydedilmemiş değişiklikler var.',saving?'saving':blocked?'error':'pending');scheduleAuto();schedulePreview();}
+ function scheduleAuto(){clearTimeout(autoTimer);if(!dirty||signedOut||blocked||pendingRecovery)return;autoTimer=setTimeout(()=>{void save(true);},Math.max(2500,35000-(Date.now()-lastAttempt)));}
+ function generateSlug(){if(!revision&&!saving&&!slugManual)field('slug').value=titleSlug(field('title').value,reserved);}
+
  const field=(name:string)=>form.elements.namedItem(name) as HTMLInputElement;
  const tell=(s:string,error=false)=>{$('[data-editor-status]').textContent=s;$('[data-editor-status]').dataset.error=String(error);};
- const sync=()=>{root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=busy||signedOut);form.querySelector('fieldset')!.disabled=busy||signedOut;list.disabled=busy||signedOut;$<HTMLButtonElement>('[data-editor-new]').disabled=busy||signedOut;
-  $<HTMLButtonElement>('[data-editor-publish]').disabled=busy||dirty||!revision||role!=='owner';
-  $<HTMLButtonElement>('[data-editor-unpublish]').disabled=busy||!published||role!=='owner';};
+ const sync=()=>{root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=busy||signedOut);form.querySelector('fieldset')!.disabled=busy||signedOut||Boolean(pendingRecovery);list.disabled=busy||signedOut||saving||Boolean(pendingRecovery);$<HTMLButtonElement>('[data-editor-new]').disabled=busy||signedOut||saving||Boolean(pendingRecovery);
+  $<HTMLButtonElement>('[data-editor-save-button]').disabled=saving||blocked;
+  root.querySelectorAll<HTMLButtonElement>('[data-editor-recovery] button').forEach(button=>button.disabled=busy||saving||signedOut);
+  $<HTMLButtonElement>('[data-editor-slug-reset]').disabled=Boolean(revision)||saving;
+  $<HTMLButtonElement>('[data-editor-publish]').disabled=busy||saving||dirty||Boolean(pendingRecovery)||!revision||role!=='owner';
+  $<HTMLButtonElement>('[data-editor-unpublish]').disabled=busy||saving||Boolean(pendingRecovery)||!published||role!=='owner';};
  const reason=(e:{message?:string;code?:string;status?:number})=>e.message?.includes('revision_conflict')?'Yazı başka bir oturumda değişti. Metnini kopyalayarak koru; yazıyı yeniden açıp son sürümle karşılaştır.':e.message?.includes('publisher_required')?'Yayımlama için site sahibi yetkisi gerekiyor.':e.message?.includes('editor_required')||e.message?.includes('login_required')||e.code==='42501'||e.status===403?'Bu bölüm yalnızca yetkili içerik yöneticilerine açıktır.':e.message?.includes('media_not_found')?'Yazıda kullanılan bir görsel bulunamadı. Önce görseli yükleyip yeniden seç.':e.message?.includes('too_many_images')?'Bir yazıda en fazla 100 yüklü görsel kullanılabilir.':e.message?.includes('rate_limited')?'Çok sık kaydettin. Biraz bekleyip tekrar dene.':'İşlem tamamlanamadı. Alanları ve bağlantını kontrol et.';
  function payload():ContentPayload {return {title:field('title').value.trim(),description:field('description').value.trim(),body:field('body').value,category:field('category').value.trim(),tags:field('tags').value.split(',').map(s=>s.trim()).filter(Boolean),pubDate:publicationDate||new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Istanbul'}).format(new Date()),cover:field('cover').value,coverAlt:field('coverAlt').value.trim(),featured:field('featured').checked};}
  function state(){
   $('[data-editor-state]').textContent=revision?`Taslak sürümü: ${revision}. ${published?'Yayın isteği etkin.':'Yayında değil.'}${dirty?' Kaydedilmemiş değişiklikler var.':''}`:'Yeni taslak henüz kaydedilmedi.';
-  field('slug').readOnly=Boolean(revision);$('[data-editor-date]').textContent=published&&publicationDate?`İlk yayın tarihi: ${new Intl.DateTimeFormat('tr-TR',{timeZone:'Europe/Istanbul'}).format(new Date(publicationDate+'T12:00:00+03:00'))}. Düzenlemelerde bu tarih korunur.`:'Yayın tarihi ilk yayımlama anında otomatik belirlenir. Hazır olmayan yazıyı taslak olarak saklayabilirsin.';sync();
+  field('slug').readOnly=Boolean(revision)||saving;$('[data-editor-date]').textContent=published&&publicationDate?`İlk yayın tarihi: ${new Intl.DateTimeFormat('tr-TR',{timeZone:'Europe/Istanbul'}).format(new Date(publicationDate+'T12:00:00+03:00'))}. Düzenlemelerde bu tarih korunur.`:'Yayın tarihi ilk yayımlama anında otomatik belirlenir. Hazır olmayan yazıyı taslak olarak saklayabilirsin.';sync();
  }
  async function deployedState(){
   try{const response=await fetch(`${root.dataset.base}content-manifest.json`,{cache:'no-store'});if(!response.ok)return;const manifest=await response.json();const live=manifest.publications?.find((p:{slug:string})=>p.slug===slug);
@@ -29,42 +45,79 @@ async function initialize(root:HTMLElement){
   }catch{ /* Publication controls still work if status cannot be fetched. */ }
  }
  async function refreshList(){const epoch=sessionEpoch;const {data,error}=await client!.rpc('cx_editor_read');if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');role=data.role;list.replaceChildren(new Option('Yeni yazı',''));
-  for(const p of data.posts)list.add(new Option(`${p.title} — ${p.published?'yayın akışında':'taslak'}${p.published&&p.revision!==p.published_revision?' · yeni değişiklikler var':''}`,p.slug));list.value=slug;}
- async function open(value:string){
-  if(busy||signedOut)return;const epoch=sessionEpoch;if(dirty&&!window.confirm('Kaydedilmemiş değişiklikleri bırakıp devam etmek istiyor musun?')){list.value=slug;return;}
-  busy=true;sync();
-  try{previewVersion++;form.reset();field('cover').value='';$<HTMLImageElement>('[data-media-cover-preview]').removeAttribute('src');$('[data-media-cover-preview]').hidden=true;$('[data-editor-preview-box]').hidden=true;$('[data-editor-live]').hidden=true;
-   if(!value){slug='';revision=0;published=false;publicationDate='';}
-   else{const {data,error}=await client!.rpc('cx_editor_read',{p_slug:value});if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');slug=data.slug;revision=data.revision;published=data.published;
+  for(const p of data.posts){reserved.add(p.slug);list.add(new Option(`${p.title} — ${p.published?'yayın akışında':'taslak'}${p.published&&p.revision!==p.published_revision?' · yeni değişiklikler var':''}`,p.slug));}list.value=slug;}
+ async function open(value:string,discardRecovery=true){
+  if(busy||saving||signedOut||pendingRecovery)return;const epoch=sessionEpoch;if(dirty&&!window.confirm('Kaydedilmemiş değişiklikleri bırakıp devam etmek istiyor musun?')){list.value=slug;return;}
+  clearTimeout(autoTimer);clearTimeout(manualTimer);busy=true;sync();
+  try{let loaded:{slug:string;revision:number;published:boolean;payload:ContentPayload}|null=null;if(value){const {data,error}=await client!.rpc('cx_editor_read',{p_slug:value});if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');loaded=data;}
+   if(discardRecovery)clearCache();blocked=false;retries=0;slugManual=Boolean(value);previewVersion++;form.reset();field('cover').value='';$<HTMLImageElement>('[data-media-cover-preview]').removeAttribute('src');$('[data-media-cover-preview]').hidden=true;$('[data-editor-preview-box]').hidden=true;$('[data-editor-live]').hidden=true;
+   if(!value){slug='';revision=0;published=false;publicationDate='';chooseCategory('');}
+   else{const data=loaded!;slug=data.slug;revision=data.revision;published=data.published;
     publicationDate=data.payload.pubDate;
     for(const [k,v] of Object.entries(data.payload)){if(k==='featured')field(k).checked=Boolean(v);else if(field(k))field(k).value=Array.isArray(v)?v.join(', '):String(v);}
-    field('slug').value=slug;
+    field('slug').value=slug;chooseCategory(data.payload.category);
     $('[data-editor-live]').hidden=!published;$<HTMLAnchorElement>('[data-editor-live-link]').href=`${root.dataset.base}yazi/${encodeURIComponent(slug)}/`;
    }
    $('[data-media-status]').textContent=field('cover').value?'Bu yazının kayıtlı kapağı kullanılıyor. Değiştirmek için yeni bir görsel yükle.':'Bu yazının kapak görselini cihazından yükle.';
-   dirty=false;list.value=slug;await deployedState();tell('Yazı düzenlemeye hazır.');schedulePreview();
-  }catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}
+   dirty=false;list.value=slug;saveStatus(revision?'Kaydedilmiş taslak açık.':'Henüz kaydedilmemiş yeni yazı.');await deployedState();tell('Yazı düzenlemeye hazır.');schedulePreview();
+  }catch(e){if(epoch===sessionEpoch){list.value=slug;tell(reason(e as Error),true);}}finally{if(epoch===sessionEpoch){busy=false;state();if(dirty)scheduleAuto();}}
  }
  if(!client){tell('Yazı hizmeti yapılandırılmadı.',true);return;}
  const media=editorMedia(root,client,{busy:(v)=>{busy=v;sync();},alive:()=>!signedOut,
-  cover:(path,alt)=>{field('cover').value=path;field('coverAlt').value=alt;dirty=true;state();schedulePreview();},
+  cover:(path,alt)=>{field('cover').value=path;field('coverAlt').value=alt;changed();},
   inline:(images,gallery)=>{const body=field('body') as unknown as HTMLTextAreaElement;const lines=images.map(({path,alt})=>{const escaped=alt.replace(/\\/g,'\\\\').replace(/\[/g,'\\[').replace(/\]/g,'\\]').replace(/[\r\n]/g,' ');return `![${escaped}](${root.dataset.base}${path})`;});
-   const text=gallery?'> [!GALLERY]\n'+lines.map(s=>'> '+s).join('\n>\n'):lines.join('\n\n');body.setRangeText('\n\n'+text+'\n\n',body.selectionStart,body.selectionEnd,'end');dirty=true;state();schedulePreview();}
+   const text=gallery?'> [!GALLERY]\n'+lines.map(s=>'> '+s).join('\n>\n'):lines.join('\n\n');body.setRangeText('\n\n'+text+'\n\n',body.selectionStart,body.selectionEnd,'end');changed();}
 
  });
- client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'){signedOut=true;sessionEpoch++;previewVersion++;clearTimeout(previewTimer);role='';media.clear();sync();$('[data-editor-tools]').hidden=true;form.reset();field('cover').value='';$<HTMLImageElement>('[data-media-cover-preview]').removeAttribute('src');$('[data-media-cover-preview]').hidden=true;publicationDate='';$('[data-editor-preview-body]').replaceChildren();$('[data-editor-preview-title]').textContent='';$<HTMLImageElement>('[data-editor-preview-cover]').removeAttribute('src');$('[data-editor-deployed]').textContent='';list.replaceChildren();dirty=false;tell('Oturum kapatıldı. Yazıları yönetmek için tekrar giriş yap.');}});
- try{await refreshList();$('[data-editor-tools]').hidden=false;await open('');try{await media.refresh();}catch{root.querySelector('[data-media-status]')!.textContent='Görsel listesi yüklenemedi. Sayfayı yenileyerek tekrar dene.';}}catch(e){tell(reason(e as Error),true);return;}
- form.addEventListener('input',()=>{dirty=true;state();schedulePreview();});form.addEventListener('change',()=>{dirty=true;state();schedulePreview();});
- editorToolbar(root,()=>{dirty=true;state();},schedulePreview);
- form.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
-  if(busy||!form.reportValidity())return;
-  const p=payload(),id=field('slug').value.trim();if(!p.cover){tell('Önce bu yazı için bir kapak görseli yükle.',true);return;}if(!validContent(p)||!validSlug(id)){tell('Alanları kontrol et. Başlık, açıklama, etiketler ve adres geçerli olmalı.',true);return;}
-  busy=true;sync();
-  try{const {data,error}=await client.rpc('cx_editor_write',{p_action:'save',p_slug:id,p_expected:revision,p_payload:p});if(error)throw error;slug=id;revision=data.revision;publicationDate=data.pubDate||publicationDate;dirty=false;await refreshList();tell('Taslak özel olarak kaydedildi. Yayımdaki sürüm değişmedi.');}
-  catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}
+ client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||(owner&&session?.user&&session.user.id!==owner)){signedOut=true;sessionEpoch++;previewVersion++;clearTimeout(previewTimer);clearTimeout(autoTimer);clearTimeout(manualTimer);clearCache();pendingRecovery=null;owner='';saving=false;role='';revision=0;slug='';published=false;categorySelect.replaceChildren(...initialCategories.map(option=>new Option(option.text,option.value)));chooseCategory('');$('[data-editor-live]').hidden=true;$<HTMLAnchorElement>('[data-editor-live-link]').removeAttribute('href');$('[data-editor-state]').textContent='';$('[data-editor-recovery]').hidden=true;saveStatus('Oturum kapatıldı.');media.clear();sync();$('[data-editor-tools]').hidden=true;form.reset();field('cover').value='';$<HTMLImageElement>('[data-media-cover-preview]').removeAttribute('src');$('[data-media-cover-preview]').hidden=true;publicationDate='';$('[data-editor-preview-body]').replaceChildren();$('[data-editor-preview-title]').textContent='';$<HTMLImageElement>('[data-editor-preview-cover]').removeAttribute('src');$('[data-editor-deployed]').textContent='';list.replaceChildren();dirty=false;tell('Oturum kapatıldı. Yazıları yönetmek için tekrar giriş yap.');}});
+ try{const authEpoch=sessionEpoch;await refreshList();const {data:identity,error:identityError}=await client.auth.getUser();if(identityError||!identity.user)throw new Error('login_required');if(authEpoch!==sessionEpoch||signedOut)return;owner=identity.user.id;
+  let recovery:Recovery|null=null;try{recovery=readRecovery(localStorage.getItem(recoveryKey(owner)),owner);if(!recovery)clearCache();}catch{}
+  $('[data-editor-tools]').hidden=false;await open('',false);pendingRecovery=recovery;
+  if(recovery){$('[data-editor-recovery]').hidden=false;saveStatus('Yarım kalan değişiklikler var. Devam etmeyi veya vazgeçmeyi seç.','pending');sync();}
+  try{await media.refresh();}catch{root.querySelector('[data-media-status]')!.textContent='Görsel listesi yüklenemedi. Sayfayı yenileyerek tekrar dene.';}
+ }catch(e){tell(reason(e as Error),true);return;}
+ $('[data-recovery-discard]').addEventListener('click',()=>{pendingRecovery=null;clearCache();$('[data-editor-recovery]').hidden=true;state();saveStatus('Henüz kaydedilmemiş yeni yazı.');});
+ $('[data-recovery-restore]').addEventListener('click',()=>{void(async()=>{
+  const r=pendingRecovery;if(!r||busy||signedOut)return;const epoch=sessionEpoch;busy=true;sync();
+  try{let same=false;if(r.revision){const result=await client.rpc('cx_editor_read',{p_slug:r.slug});if(result.error)throw result.error;same=result.data.revision===r.revision;published=same&&result.data.published;}
+   if(epoch!==sessionEpoch)return;
+   slug=same?r.slug:'';revision=same?r.revision:0;if(!same)published=false;publicationDate=r.payload.pubDate;
+   for(const [k,v] of Object.entries(r.payload)){if(k==='featured')field(k).checked=Boolean(v);else if(field(k))field(k).value=Array.isArray(v)?v.join(', '):String(v);}
+   chooseCategory(r.payload.category);slugManual=true;field('slug').value=same?r.slug:r.revision?titleSlug(r.payload.title,reserved):reserved.has(r.slug)?titleSlug(r.slug,reserved):r.slug;
+   pendingRecovery=null;$('[data-editor-recovery]').hidden=true;blocked=false;changed();tell(r.revision&&!same?'Sunucuda daha yeni sürüm var. Kurtarılan metin ayrı bir yeni taslak olarak açıldı.':'Yarım kalan değişiklikler geri yüklendi.');
+  }catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}
  })();});
+ form.addEventListener('input',event=>{if(event.target===field('title'))generateSlug();if(event.target===field('slug'))slugManual=true;if(event.target===newCategory)field('category').value=newCategory.value;changed();});
+ form.addEventListener('change',event=>{if(event.target===categorySelect){const fresh=categorySelect.value==='__new__';$('[data-editor-category-wrap]').hidden=!fresh;newCategory.required=fresh;field('category').value=fresh?newCategory.value:categorySelect.value;if(fresh)newCategory.focus();}changed();});
+ $('[data-editor-slug-reset]').addEventListener('click',()=>{slugManual=false;generateSlug();changed();});
+ editorToolbar(root,changed,()=>{});
+ form.addEventListener('submit',event=>{event.preventDefault();void save(false);});
+ async function save(automatic:boolean){
+  if(busy||saving||signedOut||pendingRecovery||blocked){if(dirty&&!blocked)scheduleAuto();return;}
+  if(!dirty&&revision){saveStatus('Değişiklik yok. Taslak zaten kaydedildi.','saved');return;}
+  const p=payload(),id=field('slug').value.trim();
+  if(!validContent(p)||!validSlug(id)){
+   saveStatus('Otomatik kayıt için gerekli alanları tamamla. '+(cache()?'Metnin bu cihazda korunuyor.':'Henüz sunucuya kaydedilmedi.'),'pending');
+   if(!automatic){if(!p.cover)tell('Önce bu yazı için bir kapak görseli yükle.',true);else if(form.reportValidity())tell('Başlık, açıklama, kategori, etiketler ve adresi kontrol et.',true);}return;
+  }
+  if(!automatic&&Date.now()-lastAttempt<1100){clearTimeout(manualTimer);manualTimer=setTimeout(()=>{void save(false);},1100-(Date.now()-lastAttempt));saveStatus('Kaydetme sıraya alındı…','pending');return;}
+  clearTimeout(manualTimer);const epoch=sessionEpoch,snapshot=JSON.stringify(p);saving=true;lastAttempt=Date.now();saveStatus('Kaydediliyor…','saving');state();
+  try{const {data,error}=await client.rpc('cx_editor_write',{p_action:'save',p_slug:id,p_expected:revision,p_payload:p});if(error)throw error;if(epoch!==sessionEpoch)return;
+   slug=id;revision=data.revision;publicationDate=data.pubDate||p.pubDate;reserved.add(id);chooseSavedCategory(p.category);
+   dirty=JSON.stringify({...payload(),pubDate:p.pubDate})!==snapshot;retries=0;
+   if(dirty){cache();saveStatus('Önceki değişiklikler kaydedildi. Yeni değişikliklerin kaydı bekleniyor.','pending');}
+   else{clearCache();saveStatus('Kaydedildi · '+new Intl.DateTimeFormat('tr-TR',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'Europe/Istanbul'}).format(new Date()),'saved');}
+   if(!automatic)tell('Taslak özel olarak kaydedildi. Yayımdaki sürüm değişmedi.');
+   try{await refreshList();}catch{ /* Successful save remains successful if the list refresh fails. */ }
+  }catch(e){if(epoch!==sessionEpoch)return;blocked=Boolean((e as Error).message?.includes('revision_conflict'));cache();saveStatus(blocked?'Kaydedilemedi: başka bir oturum bu yazıyı değiştirdi. Otomatik kayıt durduruldu.':'Kaydedilemedi. '+(cache()?'Değişiklikler bu cihazda korunuyor.':'Metnini koruyup yeniden dene.'),'error');tell(reason(e as Error),true);if(!blocked&&++retries<=3)autoTimer=setTimeout(()=>{void save(true);},Math.max(35000,retries*30000));
+  }finally{if(epoch===sessionEpoch){saving=false;state();if(dirty&&!blocked&&retries===0)scheduleAuto();}}
+ }
+ function chooseSavedCategory(value:string){if(![...categorySelect.options].some(o=>o.value===value))categorySelect.add(new Option(value,value),categorySelect.options.length-1);if(field('category').value.trim()===value){field('category').value=value;categorySelect.value=value;newCategory.required=false;$('[data-editor-category-wrap]').hidden=true;}}
+ window.addEventListener('online',()=>{retries=0;if(dirty)scheduleAuto();});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)cache();});
+ window.addEventListener('pagehide',cache);
  async function publish(action:'publish'|'unpublish'){
-  if(busy||!revision||(action==='publish'&&dirty))return;
+  if(busy||saving||pendingRecovery||!revision||(action==='publish'&&dirty))return;
   if(!window.confirm(action==='publish'?'Kaydedilmiş sürüm herkese açık yayın akışına eklensin mi?':'Yazı yayın akışından çıkarılsın mı? Statik sayfanın kaldırılması sonraki yayın kontrolünde gerçekleşir.'))return;
   busy=true;sync();
   try{const {data,error}=await client.rpc('cx_editor_write',{p_action:action,p_slug:slug,p_expected:revision});if(error)throw error;
@@ -89,6 +142,6 @@ async function initialize(root:HTMLElement){
   }catch{if(epoch===sessionEpoch&&version===previewVersion)tell('Önizleme hazırlanamadı. Görselin yüklenmiş olduğundan emin ol.',true);}
  }
  $('[data-editor-preview]').addEventListener('click',()=>{clearTimeout(previewTimer);void preview();});
- window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
+ window.addEventListener('beforeunload',event=>{if(dirty){cache();event.preventDefault();event.returnValue='';}});
 
 }

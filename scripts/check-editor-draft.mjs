@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {titleSlug,readRecovery} from '../src/lib/editor-draft.ts';
+assert.equal(titleSlug('İşin Özü: Çığ, Şüphe & Güç!'),'isin-ozu-cig-suphe-guc');
+assert.equal(titleSlug('Aynı yazı',['ayni-yazi','ayni-yazi-2']),'ayni-yazi-3');
+assert.equal(titleSlug('!!!'),'');assert(titleSlug('Uzun başlık '.repeat(30)).length<=160);
+const now=Date.now(),owner='test-owner';const entry={version:1,owner,slug:'yeni-yazi',revision:0,published:false,at:now,payload:{title:'Eksik',description:'',body:'Kaybolmaması gereken metin.',category:'',cover:'',coverAlt:'',pubDate:'2026-10-26',tags:[],featured:false}};
+assert(readRecovery(JSON.stringify(entry),owner,now));
+assert(readRecovery(JSON.stringify({...entry,slug:'Adres henüz geçersiz',payload:{...entry.payload,tags:['x'.repeat(100)]}}),owner,now),'incomplete metadata must not discard the body');
+for(const change of [{owner:'other'},{version:2},{at:now-4*86400000},{at:now+100000},{revision:-1},{slug:'../escape',revision:1},{payload:{...entry.payload,body:'x'.repeat(100001)}},{payload:{...entry.payload,cover:'https://evil.test/x.webp'}},{payload:{...entry.payload,pubDate:'2026-02-30'}}])assert.equal(readRecovery(JSON.stringify({...entry,...change}),owner,now),null);
+assert.equal(readRecovery('invalid',owner,now),null);
+console.log('PASS: Turkish slug generation, collisions, partial draft recovery limits, identity isolation and expiry');
