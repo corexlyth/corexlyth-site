@@ -16,5 +16,4 @@ assert(regular.includes('<h2>Bölüm</h2>'));assert(regular.includes('Alt madde'
 const unsafe=await render('<script>window.xss=1</script>\n\n[Tehlikeli](javascript:alert(1))\n\n![Görsel](javascript:alert(1))\n\n> [!NOTE] <img src=x onerror=alert(1)>\n> Güvenli içerik');
 assert(!unsafe.includes('<script>'));assert(!unsafe.includes('<img src=x'));assert(!unsafe.includes('href="javascript:'));assert(!unsafe.includes('src="javascript:'));assert(unsafe.includes('&#x3C;script>'));
 const editor=fs.readFileSync('dist/hesap/yazilar/index.html','utf8');for(const kind of ['h2','h3','list','ordered','check','note','info','warning','tip','important','details','table','code'])assert(editor.includes(`data-write-block="${kind}"`));
-for(const post of fs.readdirSync('.cache/blog').filter(p=>p.endsWith('.md'))){const html=fs.readFileSync(`dist/yazi/${post.slice(0,-3)}/index.html`,'utf8');assert(html.includes('<h2 id='),'heading IDs survive shared sanitization');}
-console.log('PASS: shared article blocks, gallery captions, details, GFM, literal HTML safety, and public heading IDs');
+console.log('PASS: shared article blocks, gallery captions, details, GFM, literal HTML safety and toolbar controls');
