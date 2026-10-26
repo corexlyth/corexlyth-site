@@ -13,32 +13,27 @@ import { urlFor } from '../../../lib/posts';
         <p>Taslaklar özeldir. Yayımlama, kaydedilmiş sürümü herkese açık yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; değişikliğin sayfalara yansıması genellikle 15 dakika veya daha uzun sürebilir.</p>
         <label for="cx-editor-list">Bir yazı aç</label><select id="cx-editor-list" data-editor-list><option value="">Yeni yazı</option></select>
         <button type="button" data-editor-new>Yeni yazı</button>
+        <form id="cx-editor-form" data-editor-form method="post">
+          <fieldset disabled>
         <section class="cx-editor-media" aria-labelledby="cx-media-title">
           <h2 id="cx-media-title">Kapak görseli</h2>
-          <label>Kapak açıklaması <input data-media-alt minlength="5" maxlength="300" placeholder="Görselde ne olduğunu kısaca anlat" /></label>
+          <label>Kapak açıklaması <input name="coverAlt" data-media-alt minlength="5" maxlength="300" required placeholder="Görselde ne olduğunu kısaca anlat" /></label>
           <p>JPG, PNG, WebP, AVIF · en fazla 15 MB. Uzun kenar en fazla 1920 piksele küçültülür ve WebP olarak kaydedilir. Taslak görselleri özel alanda tutulur.</p>
           <input data-media-file type="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden />
           <div class="cx-community-actions"><button type="button" data-media-upload-cover>Kapak yükle</button></div>
-          <label for="cx-media-list">Yüklü görseller</label><select id="cx-media-list" data-media-list><option value="">Yüklü görseller</option></select>
-          <div class="cx-community-actions"><button type="button" data-media-use-cover>Kapağa uygula</button></div>
-          <p data-media-status role="status" aria-live="polite">Bir görsel yükle veya yüklü bir görsel seç.</p>
+          <input type="hidden" name="cover" value="" />
+          <img data-media-cover-preview hidden alt="" />
+          <p data-media-status role="status" aria-live="polite">Bu yazının kapak görselini cihazından yükle.</p>
         </section>
-        <form data-editor-form method="post">
-          <fieldset disabled>
             <label>Yazı adresi <input name="slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="160" required placeholder="ornek-yazi-adresi" /></label>
             <p>Kaydettikten sonra adres sabit kalır. Türkçe harf yerine düz harf ve tire kullan.</p>
             <label>Başlık <input name="title" minlength="8" maxlength="200" required /></label>
             <label>Kısa açıklama <textarea name="description" minlength="35" maxlength="220" rows="3" required></textarea></label>
-            <label>Yayın tarihi <input name="pubDate" type="date" required /></label>
-            <p>Bu sürümde ileri tarihli otomatik yayın yoktur; yayın gününde Yayımla düğmesini kullan.</p>
-            <label>Kategori <input name="category" minlength="2" maxlength="80" required /></label>
+            <p data-editor-date>Yayın tarihi ilk yayımlama anında otomatik belirlenir. Hazır olmayan yazıyı taslak olarak saklayabilirsin.</p>
+            <label>Kategori <input name="category" minlength="2" maxlength="80" required placeholder="Örneğin: Android" aria-describedby="cx-category-hint" /></label>
+            <p id="cx-category-hint">Kategori yazının ana konusudur: Android, Web geliştirme veya Uygulamalar gibi. Okuyucu bu kategoriye girerek benzer yazıları bulur. Her yazı için tek kategori yaz.</p>
             <label>Etiketler <input name="tags" required placeholder="Android, Rehber, Güvenlik" /></label>
             <p>Virgülle ayır. Her etiket 2–50 karakter; en fazla 20 etiket.</p>
-            <label>Kapak görseli <select name="cover">
-              <option value="assets/img/corexlyth-featured.svg">CoreXLyth</option><option value="assets/img/corexlyth-code.svg">Kod</option>
-              <option value="assets/img/corexlyth-apps.svg">Uygulamalar</option><option value="assets/img/corexlyth-lab.svg">Laboratuvar</option>
-            </select></label>
-            <label>Görsel açıklaması <input name="coverAlt" minlength="5" maxlength="300" required /></label>
             <label><input name="featured" type="checkbox" /> Öne çıkan yazı</label>
             <div class="cx-writing-area">
               <label for="cx-write-body">Yazı alanı</label>

@@ -64,7 +64,7 @@ begin
 end $$;
 create function cx_private.editor_write(p_action text,p_slug text,p_expected integer,p_payload jsonb default null)
 returns jsonb language plpgsql security definer set search_path='' as $$
-declare r text; u uuid:=auth.uid(); d cx_private.drafts; rev integer; k text; t jsonb;
+declare r text; u uuid:=auth.uid(); d cx_private.drafts; rev integer; k text; t jsonb; publication_date text;
 begin
  r:=cx_private.editor_role();
  if p_slug is null or p_slug !~ '^[a-z0-9]+(-[a-z0-9]+)*$' or char_length(p_slug)>160 then raise exception 'invalid_slug'; end if;
@@ -72,8 +72,12 @@ begin
  perform pg_advisory_xact_lock(hashtextextended(p_slug,526));
  select * into d from cx_private.drafts where slug=p_slug for update;
  if coalesce(d.revision,0) is distinct from p_expected then raise exception 'revision_conflict'; end if;
+ -- Dates are server-owned. Existing publications retain their original public date.
+ select payload->>'pubDate' into publication_date from cx_private.publications where slug=p_slug;
+ publication_date:=coalesce(publication_date,to_char(now() at time zone 'Europe/Istanbul','YYYY-MM-DD'));
  if p_action='save' then
   if p_payload is null or jsonb_typeof(p_payload)<>'object' or octet_length(p_payload::text)>180000 then raise exception 'invalid_content'; end if;
+  p_payload:=jsonb_set(p_payload,'{pubDate}',to_jsonb(publication_date));
   foreach k in array array['title','description','body','category','cover','coverAlt','pubDate'] loop
    if jsonb_typeof(p_payload->k) is distinct from 'string' then raise exception 'invalid_content'; end if;
   end loop;
@@ -106,9 +110,10 @@ begin
   if d.slug is null then raise exception 'draft_not_found'; end if;
   rev:=d.revision;p_payload:=d.payload;
   if p_action='publish' then
-   if (d.payload->>'pubDate')::date > (now() at time zone 'Europe/Istanbul')::date then raise exception 'future_publication_date'; end if;
-   insert into cx_private.publications(slug,payload,revision) values(p_slug,d.payload,rev)
-    on conflict(slug) do update set payload=excluded.payload,revision=excluded.revision,active=true,published_at=now();
+   p_payload:=jsonb_set(d.payload,'{pubDate}',to_jsonb(publication_date));
+   update cx_private.drafts set payload=p_payload where slug=p_slug;
+   insert into cx_private.publications(slug,payload,revision) values(p_slug,p_payload,rev)
+    on conflict(slug) do update set payload=excluded.payload,revision=excluded.revision,active=true;
    insert into cx_private.posts(slug,title,active) values(p_slug,d.payload->>'title',true)
     on conflict(slug) do update set title=excluded.title,active=true;
   else
@@ -119,7 +124,7 @@ begin
  else raise exception 'invalid_action';
  end if;
  insert into cx_private.content_history(slug,revision,action,payload,actor) values(p_slug,rev,p_action,p_payload,u);
- return jsonb_build_object('ok',true,'revision',rev);
+ return jsonb_build_object('ok',true,'revision',rev,'pubDate',p_payload->>'pubDate');
 end $$;
 create function cx_private.content_feed() returns jsonb language sql stable security definer set search_path='' as $$
  select jsonb_build_object('schema',1,'posts',coalesce(jsonb_agg(jsonb_build_object('slug',slug,'active',active,'revision',revision,

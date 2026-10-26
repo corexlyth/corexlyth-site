@@ -17,21 +17,26 @@ do $$ declare denied boolean:=false; begin
 end $$;
 select set_config('request.jwt.claims','{"sub":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa","role":"authenticated"}',true);
 do $$ declare p jsonb; denied boolean:=false; f jsonb; begin
- p:=jsonb_build_object('title','PRIVATE CANARY DRAFT','description','A valid description longer than thirty five characters.','body','SECRET_BODY_SENTINEL','category','Test','tags',jsonb_build_array('Test'),'cover','assets/img/corexlyth-code.svg','coverAlt','Test illustration','pubDate','2026-10-25','featured',false);
+ p:=jsonb_build_object('title','PRIVATE CANARY DRAFT','description','A valid description longer than thirty five characters.','body','SECRET_BODY_SENTINEL','category','Test','tags',jsonb_build_array('Test'),'cover','assets/img/corexlyth-code.svg','coverAlt','Test illustration','pubDate','2099-12-31','featured',false);
  perform public.cx_editor_write('save','cx-editor-transaction-test',0,p);
+ assert public.cx_editor_read('cx-editor-transaction-test')->'payload'->>'pubDate'=to_char(now() at time zone 'Europe/Istanbul','YYYY-MM-DD'),'client future date is ignored';
  f:=public.cx_content_feed();assert f::text not like '%SECRET_BODY_SENTINEL%','saved drafts never enter public feed';
  begin perform public.cx_editor_write('save','cx-editor-transaction-test',0,p);exception when others then denied:=sqlerrm='revision_conflict';end;
  assert denied,'stale revision cannot overwrite a draft';
  perform public.cx_editor_write('publish','cx-editor-transaction-test',1);
  assert public.cx_content_feed()::text like '%SECRET_BODY_SENTINEL%','owner publication exposes saved snapshot';
+ assert public.cx_editor_read('cx-editor-transaction-test')->'payload'->>'pubDate'=to_char(now() at time zone 'Europe/Istanbul','YYYY-MM-DD'),'first publication uses server date';
  assert public.cx_community_read('cx-editor-transaction-test')->>'likes'='0','community registry created atomically';
 end $$;
 reset role;
+-- Simulate an already-published historical article. Editing must not reset its date.
+update cx_private.publications set payload=jsonb_set(payload,'{pubDate}','"2020-01-02"'),published_at='2020-01-02T09:00:00+03:00' where slug='cx-editor-transaction-test';
 update cx_private.limits set last_at=now()-interval '1 minute' where user_id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 set local role authenticated;
 do $$ declare d jsonb; begin
  d:=public.cx_editor_read('cx-editor-transaction-test');
  perform public.cx_editor_write('save','cx-editor-transaction-test',1,jsonb_set(d->'payload','{body}','"PRIVATE_REVISION_TWO"'));
+ assert public.cx_editor_read('cx-editor-transaction-test')->'payload'->>'pubDate'='2020-01-02','editing retains original publication date';
  assert public.cx_content_feed()::text not like '%PRIVATE_REVISION_TWO%','editing a live draft does not change published snapshot';
 end $$;
 select set_config('request.jwt.claims','{"sub":"bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb","role":"authenticated"}',true);
@@ -42,6 +47,9 @@ do $$ declare denied boolean:=false; begin
 end $$;
 select set_config('request.jwt.claims','{"sub":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa","role":"authenticated"}',true);
 select public.cx_editor_write('unpublish','cx-editor-transaction-test',2);
+select public.cx_editor_write('publish','cx-editor-transaction-test',2);
+do $$ begin assert public.cx_editor_read('cx-editor-transaction-test')->'payload'->>'pubDate'='2020-01-02','republishing preserves first date'; end $$;
+select public.cx_editor_write('unpublish','cx-editor-transaction-test',2);
 do $$ declare denied boolean:=false; begin
  assert public.cx_content_feed()::text not like '%SECRET_BODY_SENTINEL%' and public.cx_content_feed()::text not like '%PRIVATE_REVISION_TWO%','withdrawal feed exposes no body';
  begin perform public.cx_community_read('cx-editor-transaction-test');exception when others then denied:=sqlerrm='post_not_found';end;
@@ -49,5 +57,20 @@ do $$ declare denied boolean:=false; begin
  denied:=false;begin execute 'select * from cx_private.drafts';exception when insufficient_privilege then denied:=true;end;
  assert denied,'direct draft table access denied';
 end $$;
-reset role;rollback;
-select 'PASS: private drafts, role isolation, optimistic revisions, immutable publication snapshot, atomic registry and withdrawal' as result;
+reset role;
+update cx_private.limits set last_at=now()-interval '1 minute' where user_id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+set local role authenticated;
+do $$ declare p jsonb; begin
+ p:=public.cx_editor_read('cx-editor-transaction-test')->'payload';
+ perform public.cx_editor_write('save','cx-editor-delay-test',0,p-'pubDate');
+end $$;
+reset role;
+-- Simulate a draft saved on an older day; it has never been published.
+update cx_private.drafts set payload=jsonb_set(payload,'{pubDate}','"2000-01-01"') where slug='cx-editor-delay-test';
+set local role authenticated;
+select public.cx_editor_write('publish','cx-editor-delay-test',1);
+do $$ begin assert public.cx_editor_read('cx-editor-delay-test')->'payload'->>'pubDate'=to_char(now() at time zone 'Europe/Istanbul','YYYY-MM-DD'),'draft age does not become publication date'; end $$;
+reset role;
+do $$ begin assert (select published_at from cx_private.publications where slug='cx-editor-transaction-test')='2020-01-02T09:00:00+03:00'::timestamptz,'publication timestamp retained'; end $$;
+rollback;
+select 'PASS: private drafts, role isolation, optimistic revisions, immutable publication snapshot, atomic registry withdrawal and server-owned first publication dates' as result;

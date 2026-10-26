@@ -3,7 +3,7 @@ type Media={id:string;asset_path:string;object_name:string;alt:string;width:numb
 type Entry={media?:Media;file?:File;input:HTMLInputElement;url?:string};
 export function editorMedia(root:HTMLElement,client:SupabaseClient,callbacks:{busy:(v:boolean)=>void;alive:()=>boolean;cover:(path:string,alt:string)=>void;inline:(images:{path:string;alt:string}[],gallery:boolean)=>void}){
  const $=<T extends HTMLElement=HTMLElement>(s:string)=>root.querySelector<T>(s)!;
- const select=$<HTMLSelectElement>('[data-media-list]'),alt=$<HTMLInputElement>('[data-media-alt]'),file=$<HTMLInputElement>('[data-media-file]');
+ const alt=$<HTMLInputElement>('[data-media-alt]'),file=$<HTMLInputElement>('[data-media-file]');
  const dialog=$<HTMLDialogElement>('[data-inline-media-dialog]'),inlineFile=$<HTMLInputElement>('[data-inline-media-file]'),existing=$<HTMLSelectElement>('[data-inline-media-list]'),queue=$('[data-inline-media-queue]');
  const records=new Map<string,Media>();let uploading=false,gallery=false,lastRegistered=0,entries:Entry[]=[];
  const tell=(s:string,error=false,inline=false)=>{const el=$(inline?'[data-inline-media-status]':'[data-media-status]');el.textContent=s;el.dataset.error=String(error);};
@@ -17,8 +17,8 @@ export function editorMedia(root:HTMLElement,client:SupabaseClient,callbacks:{bu
   row.append(label);entries.push(entry);queue.append(row);
  }
  async function refresh(){const {data,error}=await client.rpc('cx_media',{p_action:'list'});if(error)throw error;if(!callbacks.alive())return;
-  select.replaceChildren(new Option('Yüklü kapak seç',''));existing.replaceChildren();
-  for(const m of data as Media[]){records.set(m.asset_path,m);const label=`${m.alt} — ${Math.round(m.bytes/1024)} KB`;select.add(new Option(label,m.asset_path));existing.add(new Option(label,m.asset_path));}
+  existing.replaceChildren();
+  for(const m of data as Media[]){records.set(m.asset_path,m);const label=`${m.alt} — ${Math.round(m.bytes/1024)} KB`;existing.add(new Option(label,m.asset_path));}
  }
  async function lookup(path:string){if(records.has(path))return records.get(path)!;const {data,error}=await client.rpc('cx_media',{p_action:'get',p_data:{asset:path}});if(error)throw error;if(!callbacks.alive())throw new Error('image_auth');records.set(path,data);return data as Media;}
  async function previewUrl(path:string){if(!path.startsWith('assets/img/uploads/'))return `${root.dataset.base}${path}`;const m=await lookup(path);const {data,error}=await client.storage.from('cx-editor-media').createSignedUrl(m.object_name,60);if(error)throw error;return data.signedUrl;}
@@ -33,9 +33,7 @@ export function editorMedia(root:HTMLElement,client:SupabaseClient,callbacks:{bu
  }
  function setBusy(value:boolean){uploading=value;callbacks.busy(value);dialog.querySelectorAll<HTMLButtonElement>('button').forEach(b=>b.disabled=value);existing.disabled=value;inlineFile.disabled=value;}
  $('[data-media-upload-cover]').addEventListener('click',()=>{if(uploading)return;if(Array.from(alt.value.trim()).length<5){tell('Yüklemeden önce kapak açıklamasını yaz.',true);alt.focus();return;}file.click();});
- $('[data-media-use-cover]').addEventListener('click',()=>{const m=records.get(select.value);if(!m){tell('Önce yüklü bir kapak seç.',true);return;}const text=alt.value.trim()||m.alt;if(Array.from(text).length<5)return;callbacks.cover(m.asset_path,text);tell('Kapak seçildi. Değişikliği taslak olarak kaydet.');});
- select.addEventListener('change',()=>{const m=records.get(select.value);if(m)alt.value=m.alt;});
- file.addEventListener('change',()=>{void(async()=>{const source=file.files?.[0];if(!source||uploading)return;setBusy(true);try{tell('Kapak hazırlanıp özel alana yükleniyor…');const m=await upload(source,alt.value.trim());if(!callbacks.alive())return;await refresh();select.value=m.asset_path;callbacks.cover(m.asset_path,m.alt);tell(`Kapak seçildi. ${m.width}×${m.height} · ${Math.round(m.bytes/1024)} KB. Taslağı kaydet.`);}catch(e){tell(errorText(e),true);}finally{file.value='';setBusy(false);}})();});
+ file.addEventListener('change',()=>{void(async()=>{const source=file.files?.[0];if(!source||uploading)return;setBusy(true);try{tell('Kapak hazırlanıp özel alana yükleniyor…');const m=await upload(source,alt.value.trim());if(!callbacks.alive())return;await refresh();callbacks.cover(m.asset_path,m.alt);tell(`Kapak seçildi. ${m.width}×${m.height} · ${Math.round(m.bytes/1024)} KB. Taslağı kaydet.`);}catch(e){tell(errorText(e),true);}finally{file.value='';setBusy(false);}})();});
  function open(g:boolean){if(uploading)return;gallery=g;cleanQueue();existing.multiple=g;existing.size=g?4:1;existing.selectedIndex=-1;inlineFile.multiple=g;inlineFile.value='';$('[data-inline-media-title]').textContent=g?'Galeri ekle':'Yazıya görsel ekle';tell(g?'En az iki, en fazla 10 görsel seç. Her görsele bir açıklama yaz.':'Bir görsel seç ve açıklamasını yaz.',false,true);dialog.showModal();}
  $('[data-media-open-inline]').addEventListener('click',()=>open(false));$('[data-media-open-gallery]').addEventListener('click',()=>open(true));
  $('[data-inline-media-choose]').addEventListener('click',()=>inlineFile.click());
@@ -49,5 +47,5 @@ export function editorMedia(root:HTMLElement,client:SupabaseClient,callbacks:{bu
    await refresh();callbacks.inline(images,gallery);dialog.close();root.querySelector<HTMLTextAreaElement>('[name=body]')?.focus();cleanQueue();tell('Görseller yazı alanına eklendi. Taslağı kaydet.');
   }catch(e){tell(errorText(e)+' Hazırlanmış görselleri yeniden yüklemeden tekrar deneyebilirsin.',true,true);}finally{setBusy(false);}
  })();});
- return {refresh,previewUrl,clear:()=>{records.clear();select.replaceChildren(new Option('Yüklü kapak seç',''));existing.replaceChildren();alt.value='';file.value='';inlineFile.value='';cleanQueue();if(dialog.open)dialog.close();tell('Görsel alanı kapatıldı.');}};
+ return {refresh,previewUrl,clear:()=>{records.clear();existing.replaceChildren();alt.value='';file.value='';inlineFile.value='';cleanQueue();if(dialog.open)dialog.close();tell('Görsel alanı kapatıldı.');}};
 }
