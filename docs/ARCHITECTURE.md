@@ -25,3 +25,7 @@ Contents use rendered h2/h3 headings and native details. Native image dialogs su
 ## Rollout
 
 Membership remains in closed test. Music is postponed. Backup work is omitted at the user’s request. Custom SMTP, public-launch spam controls and Blogger migration remain separate steps. Managed cover/inline image uploads use private Storage and publication-scoped RLS; see PUBLISHING.md. Publishing is eventually reflected on the static site; GitHub scheduling may exceed the nominal 15-minute check interval. Publication is not proof that the new static pages have deployed; the editor reads the deployed manifest separately.
+
+## Referans kartları ve kayıt akışı
+
+Yazı içi çerçeveler üst sağ ve alt solda kademeli kırılan, çok noktalı kesim kullanır. Ana sayfadaki kategori kartlarında kapak tüm yüzeyi doldurur; ayrı parlaklık düşürme filtresi yoktur, metin bölgesinde tek gradyan karartma vardır. Tarih ve kategori üst sırada, vurgu çizgisi açıklamanın altındadır. Kayıt satırları da tam yüzey kapak taşır. Ana sayfa ilk beş kaydı gösterir; ek kayıtlar düğmeyle açılır. Beşten fazla kayıt yoksa düğme pasiftir ve bunu açıklar. JavaScript kapalıysa tüm kayıtlar görünür. Sayılar ve bağlantılar gerçek yayın koleksiyonundan üretilir.
