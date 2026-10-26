@@ -12,7 +12,7 @@ on:
       - 'scripts/**'
       - '.github/workflows/astro-publish-root.yml'
   schedule:
-    - cron: '7,22,37,52 * * * *'
+    - cron: '2,7,12,17,22,27,32,37,42,47,52,57 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -26,7 +26,7 @@ concurrency:
 jobs:
   publish:
     name: Compile checked Astro files into the existing Pages root
-    if: github.repository == 'corexlyth/corexlyth-site' && github.actor != 'github-actions[bot]'
+    if: github.repository == 'corexlyth/corexlyth-site' && (github.event_name != 'push' || github.actor != 'github-actions[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

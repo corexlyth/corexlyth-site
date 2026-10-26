@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {publicationState,pageMatchesPublication} from '../src/lib/publication-state.ts';
+const post={slug:'yazi',title:'Örnek yazı',revision:4,published:true,published_revision:2};
+assert.equal(publicationState({...post,published:false},{slug:'yazi',revision:2,active:true},true).key,'withdrawing');
+assert.equal(publicationState(post).key,'queued');
+assert.equal(publicationState(post,{slug:'other',revision:2,active:true},true).key,'queued');
+assert.equal(publicationState(post,{slug:'yazi',revision:1,active:true}).key,'updating');
+assert.equal(publicationState(post,{slug:'yazi',revision:2,active:true}).key,'ready');
+assert.equal(publicationState(post,{slug:'yazi',revision:2,active:true},true).key,'live');
+assert(pageMatchesPublication('<meta name="cx-publication" content="yazi:2">','yazi',2));
+assert(!pageMatchesPublication('<meta name="cx-publication" content="yazi:1">','yazi',2));
+assert(!pageMatchesPublication('<h1>Kayıt bulunamadı</h1>','yazi',2));
+assert(!pageMatchesPublication('<meta name="cx-publication" content="baska-yazi:2">','yazi',2));
+console.log('PASS: queued/live/draft states, published versus draft revisions and actual page identity checks');

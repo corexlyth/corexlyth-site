@@ -40,6 +40,7 @@ const structuredData = {
   publishedTime={post.data.pubDate.toISOString()}
   structuredData={structuredData}
 >
+  {post.data.publicationRevision && <meta slot="head" name="cx-publication" content={`${post.id}:${post.data.publicationRevision}`} />}
   <main id="home" class="cx-reading-shell">
     <nav class="cx-breadcrumb" aria-label="İçerik yolu">
       <a href={urlFor('')}>COREXLYTH</a><span>/</span>

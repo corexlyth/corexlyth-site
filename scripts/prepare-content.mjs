@@ -24,12 +24,13 @@ await mkdir('public/assets/img',{recursive:true});await rm('public/assets/img/up
 const records=new Map();
 for(const file of await readdir('src/content/blog'))if(file.endsWith('.md'))records.set(file.slice(0,-3),await readFile('src/content/blog/'+file,'utf8'));
 for(const post of feed.posts){
+ if(!Number.isInteger(post.revision)||post.revision<1)throw new Error('Invalid publication revision');
  if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug)||post.slug.length>160)throw new Error('Invalid publication slug');
  if(!post.active){records.delete(post.slug);continue;}
  const p=post.payload;
  if(!validContent(p))throw new Error('Invalid published payload for '+post.slug);
  if(!existsSync('public/'+p.cover))throw new Error('Missing cover asset for '+post.slug);
- const meta={...p};delete meta.body;meta.draft=false;
+ const meta={...p,publicationRevision:post.revision};delete meta.body;meta.draft=false;
  const front=Object.entries(meta).map(([k,v])=>`${k}: ${JSON.stringify(v)}`).join('\n');
  records.set(post.slug,`---\n${front}\n---\n\n${p.body}\n`);
 }
