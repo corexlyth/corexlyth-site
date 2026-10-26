@@ -24,7 +24,7 @@ Contents use rendered h2/h3 headings and native details. Native image dialogs su
 
 ## Rollout
 
-Membership remains in closed test. Music is postponed. Backup work is omitted at the user’s request. Custom SMTP, public-launch spam controls and Blogger migration remain separate steps. Managed cover/inline image uploads use private Storage and publication-scoped RLS; see PUBLISHING.md. Publishing is eventually reflected on the static site; GitHub scheduling may exceed the nominal 15-minute check interval. Publication is not proof that the new static pages have deployed; the editor reads the deployed manifest separately.
+Membership remains in closed test. Music is postponed. Backup work is omitted at the user’s request. Custom SMTP, public-launch spam controls and Blogger migration remain separate steps. Managed cover/inline image uploads use private Storage and publication-scoped RLS; see PUBLISHING.md. Publishing is eventually reflected on the static site; GitHub scheduling may exceed the nominal five-minute check interval. Publication is not proof that the new static pages have deployed; the editor reads the deployed manifest separately.
 
 ## Referans kartları ve kayıt akışı
 

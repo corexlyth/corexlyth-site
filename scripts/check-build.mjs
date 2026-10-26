@@ -106,5 +106,11 @@ if(!authSettings.publicLaunch) {
  assert(signup.includes('Üyelik sistemi kapalı test aşamasında.'),'Closed test status visible on signup');
 }
 
+const publicationManifest=JSON.parse(readFileSync(join(dist,'content-manifest.json'),'utf8'));
+for(const entry of publicationManifest.publications.filter(p=>p.active)){
+ const path=join(dist,'yazi',entry.slug,'index.html');
+ assert(existsSync(path)&&readFileSync(path,'utf8').includes(`name="cx-publication" content="${entry.slug}:${entry.revision}"`),`Publication page matches manifest: ${entry.slug}`);
+}
+
 if(failures){console.error(`CoreXLyth verification failed: ${failures} errors`);process.exitCode=1;}
 else console.log('CoreXLyth content build verified.');

@@ -63,3 +63,11 @@ Zorunlu alanlar tamamlanınca, kısa bir yazma arasından sonra özel taslak kay
 Eksik alanlar ve henüz sunucuya yazılmamış değişiklikler, yalnızca yetkili kullanıcının UUID'sine bağlı tek bir cihaz kurtarma kaydında tutulur. Bu kayıt gizli pencere/depolama engeli ya da kullanıcı tarafından silinme halinde kullanılamaz. Yeniden açılınca geri yükleme seçimi sunulur; üç günden eski veya geçersiz kayıt reddedilir. Başarılı tam kayıt, vazgeçme ve site içindeki herhangi bir sayfadan çıkış bu geçici kaydı temizler. Normal üyeye veya farklı hesaba bu taslak açılmaz.
 
 Sürüm çakışması otomatik kayıt döngüsünü durdurur. Kurtarmada sunucu sürümü ilerlemişse metin ayrı yeni taslak olarak açılır; güncel yazının üzerine yazılmaz. Ağ hatalarında sınırlı tekrar yapılır; kaydedilemeyen metin ve hata durumu görünür kalır.
+
+## Yayın durumu ve yazı arşivi
+
+Yazılar ve Taslaklar, kategori filtresi ve başlık araması olan ayrı kart listeleridir. Yayımlanmış yazının yeni özel düzenlemeleri “yayımlanmamış değişiklik” olarak işaretlenir. `db/editor-library.sql` özel editör okumasına kategori ve kısa açıklama metadata'sını ekler; rol/erişim sınırları değişmez.
+
+Yayın isteği ile canlı sayfa ayrı durumlardır. Editör, canlı sitedeki manifesti ve seçili sayfanın HTTP sonucunu/`cx-publication` sürüm işaretini doğrular. Eksik ya da eski sayfa için görüntüleme bağlantısı açılmaz. Manifestteki yayın sürümü karşılaştırılır; daha yeni özel taslak sürümünün olması, mevcut yayının bozuk olduğu anlamına gelmez. Durum görünür sekmede 30 saniyede bir ve elle yenilenebilir.
+
+Zamanlanmış yayın kontrolünün hedef aralığı 5 dakikadır; GitHub schedule işleri gecikebilir ve kesin süre taahhüdü yoktur. Bot döngüsü koruması yalnızca push olayına uygulanır; zamanlanmış işler bot aktör nedeniyle atlanmaz. Derleme kontrolü her etkin manifest kaydının gerçekten aynı sürümlü HTML sayfası bulunduğunu doğrular.

@@ -19,6 +19,7 @@ select set_config('request.jwt.claims','{"sub":"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa
 do $$ declare p jsonb; denied boolean:=false; f jsonb; begin
  p:=jsonb_build_object('title','PRIVATE CANARY DRAFT','description','A valid description longer than thirty five characters.','body','SECRET_BODY_SENTINEL','category','Test','tags',jsonb_build_array('Test'),'cover','assets/img/corexlyth-code.svg','coverAlt','Test illustration','pubDate','2099-12-31','featured',false);
  perform public.cx_editor_write('save','cx-editor-transaction-test',0,p);
+ assert public.cx_editor_read()->'posts' @> '[{"slug":"cx-editor-transaction-test","category":"Test"}]'::jsonb,'private library includes category metadata';
  assert public.cx_editor_read('cx-editor-transaction-test')->'payload'->>'pubDate'=to_char(now() at time zone 'Europe/Istanbul','YYYY-MM-DD'),'client future date is ignored';
  f:=public.cx_content_feed();assert f::text not like '%SECRET_BODY_SENTINEL%','saved drafts never enter public feed';
  begin perform public.cx_editor_write('save','cx-editor-transaction-test',0,p);exception when others then denied:=sqlerrm='revision_conflict';end;
