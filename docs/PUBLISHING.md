@@ -5,14 +5,14 @@ Panel: `/hesap/yazilar/`. Hesabım bölümünde bağlantı yalnızca içerik yet
 ## Günlük akış
 
 1. Yeni yazı aç veya listeden bir yazı seç.
-2. Adres, başlık, açıklama, tarih, kategori, etiket, mevcut kapak ve Markdown gövdesini düzenle.
+2. Adres, başlık, açıklama, kategori, etiket ve Markdown gövdesini düzenle; kapak görselini üstteki tek alandan yükle. Yayın tarihi ilk yayında otomatik atanır.
 3. Önizleme tarayıcıda hazırlanır; taslağı yayımlamaz. HTML/tehlikeli URL'ler güvenli hale getirilir. Statik yayın ayrıca Markdown AST/HTML temizliğinden geçer.
 4. Taslağı kaydet. Bu veri yalnızca özel DB'dedir; GitHub'a/derleme çıktısına gönderilmez.
 5. Kaydedilmiş sürümü yayımla. Yalnızca açıkça yayımlanan kopya herkese açık `cx_content_feed` akışına eklenir. Sonraki taslak düzenlemeleri yayındaki kopyayı değiştirmez.
 6. Site UTC dakikaları 7,22,37,52'de yayın değişikliklerini kontrol eder. GitHub zamanlamayı geciktirebilir; 15 dakika kesin süre değildir. Manuel hızlandırma için GitHub Actions > Publish verified Astro output > Run workflow kullanılabilir. Zamanlanmış işlerin uzun repo hareketsizliğinde durması da GitHub'ın sınırları arasındadır.
 7. Paneldeki 'sitede derlenen sürüm' bilgisi, gerçekten yayımlanan manifestten okunur. Yayın akışı ile statik sitenin hazır olması ayrı durumlardır.
 
-Kaydedilmemiş değişiklik varken yayımlama kapalıdır. Başka sekme aynı yazıyı değiştirirse revision kontrolü eski kaydın yenisini ezmesini reddeder; metni kopyalayıp son sürümle karşılaştırmak gerekir. Adres ilk kayıttan sonra panelde sabittir. İleri tarihli otomatik yayın ve sürüm geçmişinden tek düğmeyle geri dönüş bu sürüme dahil değildir. Değişiklik geçmişi özel DB'de tutulur.
+Kaydedilmemiş değişiklik varken yayımlama kapalıdır. Başka sekme aynı yazıyı değiştirirse revision kontrolü eski kaydın yenisini ezmesini reddeder; metni kopyalayıp son sürümle karşılaştırmak gerekir. Adres ilk kayıttan sonra panelde sabittir. Yayın tarihi seçilmez: ilk yayımlamada sunucu Türkiye gününü atar; taslağın beklediği süre tarihi sabitlemez. Sonraki düzenleme ve yeniden yayında ilk tarih korunur. Mevcut yayımlanmış içeriklerin tarihi korunur. İleri tarihli planlama ve sürüm geçmişinden tek düğmeyle geri dönüş bu sürüme dahil değildir. Değişiklik geçmişi özel DB'de tutulur.
 
 ## Veri / güvenlik
 
@@ -32,7 +32,7 @@ Zamanlanmış iş, manifest hash değişmediyse Astro derlemesini atlar. Gerçek
 
 ## Görseller
 
-Kapak ve yazı içi görsel yükleme eklendi. JPEG/PNG/WebP/AVIF kaynak en fazla 15 MB; tarayıcı uzun kenarı en fazla 1920 piksele indirir, meta verilerini taşımadan WebP üretir ve 2 MB çıktı sınırı uygular. SVG/GIF kabul edilmez. Yüklenen görsel tekrar seçilip kapakta veya birden fazla yazıda kullanılabilir; açıklama metni kapağın alt alanına veya Markdown alt metnine yazılır. Önizleme 60 saniyelik imzalı özel adres kullanır; bu adres metne kaydedilmez.
+Kapak ve yazı içi görsel yükleme eklendi. JPEG/PNG/WebP/AVIF kaynak en fazla 15 MB; tarayıcı uzun kenarı en fazla 1920 piksele indirir, meta verilerini taşımadan WebP üretir ve 2 MB çıktı sınırı uygular. SVG/GIF kabul edilmez. Kapak cihazdan yüklenir; üstte eski görsel seçimi veya ikinci bir kapak alanı yoktur. Yazı içi görseller daha önce yüklenenlerden seçilebilir; açıklama metni kapağın alt alanına veya Markdown alt metnine yazılır. Önizleme 60 saniyelik imzalı özel adres kullanır; bu adres metne kaydedilmez.
 
 `cx-editor-media` özel Storage bucket'ıdır. Sadece doğrulanmış ve engellenmemiş içerik yetkilileri yükleyebilir/seçebilir. Normal üyeler ve yalnızca yorum moderatörü olan hesaplar erişemez. Dosya yolu kullanıcı UUID'si ve rastgele dosya UUID'sidir; üzerine yazma yoktur. Kaydı oluşmuş dosyalar istemciden silinemez. Başarısız kayıt sonrasında yalnızca kendi kayıtsız yüklemesini temizleme hakkı vardır.
 
@@ -44,10 +44,12 @@ Derleme public feed'deki etkin dosyaları indirir; boyut ve WebP imzasını doğ
 
 ## Yazı alanı araçları ve bloklar
 
-Üstteki görsel alanı yalnızca kapağı seçer. Yazı alanındaki **Görsel ekle** ve **Galeri ekle** düğmeleri imlecin bulunduğu yere içerik ekler. Dosya seçebilir veya daha önce yüklenen görselleri yeniden kullanabilirsin. Galeri bir defada 2–10 görsel alır; her görselin kendi zorunlu açıklaması vardır. Galeride yarıda kalan yüklemeyi yeniden denemek başarılı dosyaları tekrar yüklemez.
+Üstteki tek kapak alanından dosya ve açıklaması yüklenir; mevcut yazı açılınca kayıtlı kapağı korunur. Yazı alanındaki **Görsel ekle** ve **Galeri ekle** düğmeleri imlecin bulunduğu yere içerik ekler. Dosya seçebilir veya daha önce yüklenen görselleri yeniden kullanabilirsin. Galeri bir defada 2–10 görsel alır; her görselin kendi zorunlu açıklaması vardır. Galeride yarıda kalan yüklemeyi yeniden denemek başarılı dosyaları tekrar yüklemez.
 
 Araç çubuğu Markdown metnini hazırlar; metni seçerek başlık, kalın/vurgulu, bağlantı, madde/numara/kontrol listesi, alıntı, kod, tablo, ayırıcı, not, bilgi, uyarı, ipucu, önemli ve açılır kutu ekleyebilirsin. Altındaki canlı önizleme yazdıkça güncellenir; taslağı kaydetmez veya yayımlamaz. Kaydetme ve yayımlama ayrı işlemlerdir.
 
 Önizleme ve statik yayın aynı blok dönüştürücülerini kullanır. Başlıklar ve listeler temalı çerçeve alır. Tek başına duran Markdown görseli açıklamalı fotoğraf çerçevesine dönüşür. Galeri, görselleri tek grupta gösterir; yayımlanan yazıda görseller mevcut büyütme/ileri/geri kontrolleriyle açılır.
 
 Elle düzenlerken blok işaretleri `> [!NOTE]`, `> [!INFO]`, `> [!WARNING]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!DETAILS]` ve `> [!GALLERY]` biçimindedir. İçerik sonraki `> ` satırlarındadır. İşaretten sonra aynı satırda özel kutu başlığı yazılabilir. Galeri en az iki görsel içerir; araya başka metin karışırsa metni kaybetmeden normal alıntı olarak gösterilir. Ham HTML çalıştırılmaz; literal metin olarak gösterilir ve güvenli HTML filtresinden geçer.
+
+`db/editor-publication-date.sql` mevcut kurulumda sunucu tarih kuralını uygular. İstemciden gelen tarih kayıtta yok sayılır; ilk yayında tekrar sunucu zamanı alınır. Başlık, liste, kutu, galeri, fotoğraf, alıntı, tablo ve kod çerçeveleri aynı kesik köşeli HUD dilini ve küçük vurgu farklarını kullanır.
