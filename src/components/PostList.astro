@@ -1,17 +1,19 @@
 ---
 import type { Post } from '../lib/posts';
-import { coverFor, dateTR, postUrl, categoryUrl } from '../lib/posts';
-interface Props { posts: Post[]; }
-const { posts } = Astro.props;
+import { coverFor, dateTR, postUrl } from '../lib/posts';
+interface Props { posts: Post[]; id?:string; initialCount?:number; }
+const { posts, id, initialCount=posts.length } = Astro.props;
+const accents=['#9a6cff','#76e8bd','#58eaff'];
 ---
-<div class="cx-record-list">
-  {posts.map((post) => (
-    <a class="cx-record-row" href={postUrl(post)}>
+<div id={id} class="cx-record-list">
+  {posts.map((post,index) => (
+    <a class:list={["cx-record-row", {"cx-record-row--extra":index>=initialCount}]} style={`--cx-row-accent:${accents[index%accents.length]}`} href={postUrl(post)}>
       <time class="cx-record-date" datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time>
       <span class="cx-record-copy">
         <b>{post.data.title}</b>
         <small>{post.data.description}</small>
       </span>
+      <span class="cx-record-channel">{post.data.category}</span>
       <img src={coverFor(post)} alt="" loading="lazy" />
     </a>
   ))}

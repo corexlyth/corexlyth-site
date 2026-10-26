@@ -144,13 +144,22 @@ document.querySelectorAll(".cx-toc a").forEach(link => {
 
 console.info("CoreXLyth // system online");
 
-const expandButton = document.querySelector(".cx-expand-btn");
-const recordList = document.querySelector(".cx-record-list");
-expandButton?.addEventListener("click", () => {
-  const expanded = recordList?.classList.toggle("is-expanded") ?? false;
-  expandButton.setAttribute("aria-expanded", String(expanded));
-  expandButton.innerHTML = expanded ? 'AKIŞI DARALT <span>↑</span>' : 'AKIŞI GENİŞLET <span>↓</span>';
-});
+const expandButton = document.querySelector("[data-records-expand]");
+const recordList = document.getElementById(expandButton?.getAttribute("aria-controls") || "");
+if (expandButton && recordList) {
+  const extraRows = [...recordList.querySelectorAll(".cx-record-row--extra")];
+  expandButton.hidden = false;
+  expandButton.disabled = extraRows.length === 0;
+  expandButton.title = extraRows.length ? "Diğer kayıtları göster" : "Tüm kayıtlar zaten gösteriliyor";
+  const setExpanded = (expanded) => {
+    extraRows.forEach(row => row.hidden = !expanded);
+    expandButton.setAttribute("aria-expanded", String(expanded));
+    expandButton.innerHTML = expanded ? 'AKIŞI DARALT <span>↑</span>' : 'AKIŞI GENİŞLET <span>↓</span>';
+  };
+  setExpanded(false);
+  if (!extraRows.length) expandButton.removeAttribute("aria-expanded");
+  expandButton.addEventListener("click", () => setExpanded(expandButton.getAttribute("aria-expanded") !== "true"));
+}
 
 document.querySelectorAll(".cx-panel-carousel").forEach((carousel) => {
   carousel.addEventListener("wheel", (event) => {

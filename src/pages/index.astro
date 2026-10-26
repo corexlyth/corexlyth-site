@@ -56,8 +56,8 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
       <div class="cx-hud-notch" aria-hidden="true"></div>
       <header class="cx-category-panel__head">
         <div><div class="cx-category-panel__title-row">
-          <h3>{category.toLocaleUpperCase('tr-TR')}</h3><span>{entries.length} YAYIN</span><em>// AUTO</em>
-        </div><p>“{category}” kanalından en yeni kayıtlar.</p><b>ADAPTİF KANAL</b></div>
+          <h3>{category.toLocaleUpperCase('tr-TR')}</h3><span>{String(entries.length).padStart(2,"0")} YAYIN</span><em>// AUTO</em>
+        </div><p>“{category}” kategorisiyle eşleşen son içerikler.</p><b>ADAPTİF KANAL</b></div>
         <a class="cx-explore-btn" href={categoryUrl(category)}>KEŞFET <span>→</span></a>
       </header>
       <div class="cx-panel-carousel" tabindex="0" aria-label={`${category} içerikleri`}>
@@ -70,10 +70,11 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
  <div class="cx-hud-notch" aria-hidden="true"></div>
  <header class="cx-records-head">
   <div class="cx-records-title"><h2>TÜM KAYITLAR</h2><span>{posts.length} YAYIN</span></div>
-  <p>Ne var ne yok, sisteme düşen her şey burada. Yeni yayınlardan başlayan gerçek içerik akışı.</p>
-  <a class="cx-expand-btn cx-expand-link" href={urlFor('arsiv/')}>TÜM ARŞİVİ AÇ <span>→</span></a>
+  <p>Ne var ne yok, sisteme düşen her şey burada. En yenisinden en eskisine bütün kayıtlar tek akışta.</p>
+  <button class="cx-expand-btn" type="button" data-records-expand aria-controls="cx-home-records" aria-expanded="false" hidden>AKIŞI GENİŞLET <span>↓</span></button>
+  <noscript><a class="cx-expand-btn cx-expand-link" href={urlFor('arsiv/')}>TÜM ARŞİVİ AÇ <span>→</span></a></noscript>
  </header>
- <PostList posts={posts.slice(0,5)} />
+ <PostList posts={posts} id="cx-home-records" initialCount={5} />
 </section>
     <section class="cx-info-grid" id="hakkinda">
       <article class="cx-info cx-frame">
