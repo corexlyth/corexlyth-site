@@ -1,6 +1,7 @@
 import { getAuthClient } from '../lib/supabase-client';
 import { validContent,validSlug,type ContentPayload } from '../lib/content-rules';
-import { marked } from 'marked';
+import { renderArticleMarkdown } from '../lib/article-markdown';
+import { editorToolbar } from './editor-toolbar';
 import DOMPurify from 'dompurify';
 import { editorMedia } from './editor-media';
 const root=document.querySelector<HTMLElement>('[data-editor]');
@@ -8,7 +9,8 @@ if(root)void initialize(root);
 async function initialize(root:HTMLElement){
  const client=getAuthClient();const $=<T extends HTMLElement=HTMLElement>(s:string)=>root.querySelector<T>(s)!;
  const form=$<HTMLFormElement>('[data-editor-form]'),list=$<HTMLSelectElement>('[data-editor-list]');
- let revision=0,slug='',role='',busy=false,dirty=false,published=false,signedOut=false,sessionEpoch=0;
+ let revision=0,slug='',role='',busy=false,dirty=false,published=false,signedOut=false,sessionEpoch=0,previewVersion=0;
+ let previewTimer:ReturnType<typeof setTimeout>;
  const field=(name:string)=>form.elements.namedItem(name) as HTMLInputElement;
  const tell=(s:string,error=false)=>{$('[data-editor-status]').textContent=s;$('[data-editor-status]').dataset.error=String(error);};
  const sync=()=>{root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=busy||signedOut);form.querySelector('fieldset')!.disabled=busy||signedOut;list.disabled=busy||signedOut;$<HTMLButtonElement>('[data-editor-new]').disabled=busy||signedOut;
@@ -31,7 +33,7 @@ async function initialize(root:HTMLElement){
  async function open(value:string){
   if(busy||signedOut)return;const epoch=sessionEpoch;if(dirty&&!window.confirm('Kaydedilmemiş değişiklikleri bırakıp devam etmek istiyor musun?')){list.value=slug;return;}
   busy=true;sync();
-  try{form.reset();$('[data-editor-preview-box]').hidden=true;$('[data-editor-live]').hidden=true;
+  try{previewVersion++;form.reset();$('[data-editor-preview-box]').hidden=true;$('[data-editor-live]').hidden=true;
    if(!value){slug='';revision=0;published=false;field('pubDate').value=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Istanbul'}).format(new Date());field('coverAlt').value='CoreXLyth teknoloji illüstrasyonu';}
    else{const {data,error}=await client!.rpc('cx_editor_read',{p_slug:value});if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');slug=data.slug;revision=data.revision;published=data.published;
     if(data.payload.cover.startsWith('assets/img/uploads/')&&!Array.from((field('cover') as unknown as HTMLSelectElement).options).some(o=>o.value===data.payload.cover))(field('cover') as unknown as HTMLSelectElement).add(new Option('Yüklenen kapak',data.payload.cover));
@@ -39,17 +41,20 @@ async function initialize(root:HTMLElement){
     field('slug').value=slug;
     $('[data-editor-live]').hidden=!published;$<HTMLAnchorElement>('[data-editor-live-link]').href=`${root.dataset.base}yazi/${encodeURIComponent(slug)}/`;
    }
-   dirty=false;list.value=slug;await deployedState();tell('Yazı düzenlemeye hazır.');
+   dirty=false;list.value=slug;await deployedState();tell('Yazı düzenlemeye hazır.');schedulePreview();
   }catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}
  }
  if(!client){tell('Yazı hizmeti yapılandırılmadı.',true);return;}
- const media=editorMedia(root,client,{busy:(v)=>{busy=v;sync();root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=v);},alive:()=>!signedOut,
-  cover:(path,alt)=>{const cover=field('cover') as unknown as HTMLSelectElement;if(!Array.from(cover.options).some(o=>o.value===path))cover.add(new Option('Yüklenen kapak',path));cover.value=path;field('coverAlt').value=alt;dirty=true;state();},
-  inline:(path,alt)=>{const body=field('body') as unknown as HTMLTextAreaElement;const escaped=alt.replace(/\\/g,'\\\\').replace(/\[/g,'\\[').replace(/\]/g,'\\]').replace(/[\r\n]/g,' ');body.setRangeText(`\n\n![${escaped}](${root.dataset.base}${path})\n\n`,body.selectionStart,body.selectionEnd,'end');dirty=true;state();}
+ const media=editorMedia(root,client,{busy:(v)=>{busy=v;sync();},alive:()=>!signedOut,
+  cover:(path,alt)=>{const cover=field('cover') as unknown as HTMLSelectElement;if(!Array.from(cover.options).some(o=>o.value===path))cover.add(new Option('Yüklenen kapak',path));cover.value=path;field('coverAlt').value=alt;dirty=true;state();schedulePreview();},
+  inline:(images,gallery)=>{const body=field('body') as unknown as HTMLTextAreaElement;const lines=images.map(({path,alt})=>{const escaped=alt.replace(/\\/g,'\\\\').replace(/\[/g,'\\[').replace(/\]/g,'\\]').replace(/[\r\n]/g,' ');return `![${escaped}](${root.dataset.base}${path})`;});
+   const text=gallery?'> [!GALLERY]\n'+lines.map(s=>'> '+s).join('\n>\n'):lines.join('\n\n');body.setRangeText('\n\n'+text+'\n\n',body.selectionStart,body.selectionEnd,'end');dirty=true;state();schedulePreview();}
+
  });
- client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'){signedOut=true;sessionEpoch++;role='';media.clear();sync();$('[data-editor-tools]').hidden=true;form.reset();$('[data-editor-preview-body]').replaceChildren();$('[data-editor-preview-title]').textContent='';$<HTMLImageElement>('[data-editor-preview-cover]').removeAttribute('src');$('[data-editor-deployed]').textContent='';list.replaceChildren();dirty=false;tell('Oturum kapatıldı. Yazıları yönetmek için tekrar giriş yap.');}});
+ client.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT'){signedOut=true;sessionEpoch++;previewVersion++;clearTimeout(previewTimer);role='';media.clear();sync();$('[data-editor-tools]').hidden=true;form.reset();$('[data-editor-preview-body]').replaceChildren();$('[data-editor-preview-title]').textContent='';$<HTMLImageElement>('[data-editor-preview-cover]').removeAttribute('src');$('[data-editor-deployed]').textContent='';list.replaceChildren();dirty=false;tell('Oturum kapatıldı. Yazıları yönetmek için tekrar giriş yap.');}});
  try{await refreshList();$('[data-editor-tools]').hidden=false;await open('');try{await media.refresh();}catch{root.querySelector('[data-media-status]')!.textContent='Görsel listesi yüklenemedi. Sayfayı yenileyerek tekrar dene.';}}catch(e){tell(reason(e as Error),true);return;}
- form.addEventListener('input',()=>{dirty=true;state();});form.addEventListener('change',()=>{dirty=true;state();});
+ form.addEventListener('input',()=>{dirty=true;state();schedulePreview();});form.addEventListener('change',()=>{dirty=true;state();schedulePreview();});
+ editorToolbar(root,()=>{dirty=true;state();},schedulePreview);
  form.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
   if(busy||!form.reportValidity())return;
   const p=payload(),id=field('slug').value.trim();if(!validContent(p)||!validSlug(id)){tell('Alanları kontrol et. Başlık, açıklama, etiketler ve adres geçerli olmalı.',true);return;}
@@ -68,14 +73,20 @@ async function initialize(root:HTMLElement){
  }
  $('[data-editor-publish]').addEventListener('click',()=>{void publish('publish');});$('[data-editor-unpublish]').addEventListener('click',()=>{void publish('unpublish');});
  $('[data-editor-new]').addEventListener('click',()=>{void open('');});list.addEventListener('change',()=>{void open(list.value);});
- $('[data-editor-preview]').addEventListener('click',()=>{void(async()=>{const epoch=sessionEpoch;$('[data-editor-preview-title]').textContent=field('title').value;
-  const rendered=await marked.parse(field('body').value);if(epoch!==sessionEpoch)return;
-  const fragment=DOMPurify.sanitize(rendered,{RETURN_DOM_FRAGMENT:true,USE_PROFILES:{html:true},FORBID_TAGS:['form','input','button','iframe'],FORBID_ATTR:['id','name']});
-  for(const img of fragment.querySelectorAll('img')){const raw=img.getAttribute('src')||'';const match=raw.match(/assets\/img\/uploads\/[0-9a-f-]{36}\.webp/);if(match)img.src=await media.previewUrl(match[0]);}
-  const coverUrl=await media.previewUrl(field('cover').value);if(epoch!==sessionEpoch)return;
-  const cover=$<HTMLImageElement>('[data-editor-preview-cover]');cover.src=coverUrl;cover.alt=field('coverAlt').value;cover.hidden=false;
-  $('[data-editor-preview-body]').replaceChildren(fragment);$('[data-editor-preview-box]').hidden=false;
- })().catch(()=>tell('Önizleme hazırlanamadı. Görselin yüklenmiş olduğundan emin ol.',true));});
+ function schedulePreview(){previewVersion++;clearTimeout(previewTimer);previewTimer=setTimeout(()=>{void preview();},320);}
+ async function preview(){
+  const epoch=sessionEpoch,version=++previewVersion;const p=payload();if(!p.body.trim()&&!p.title.trim()){$('[data-editor-preview-box]').hidden=true;return;}
+  try{
+   const rendered=await renderArticleMarkdown(p.body);if(epoch!==sessionEpoch||version!==previewVersion)return;
+   const fragment=DOMPurify.sanitize(rendered,{RETURN_DOM_FRAGMENT:true,USE_PROFILES:{html:true},FORBID_TAGS:['form','button','iframe'],FORBID_ATTR:['id','name']});
+   for(const img of fragment.querySelectorAll('img')){const raw=img.getAttribute('src')||'';const match=raw.match(/assets\/img\/uploads\/[0-9a-f-]{36}\.webp/);if(match)img.src=await media.previewUrl(match[0]);}
+   const coverUrl=await media.previewUrl(p.cover);if(epoch!==sessionEpoch||version!==previewVersion)return;
+   $('[data-editor-preview-title]').textContent=p.title;
+   const cover=$<HTMLImageElement>('[data-editor-preview-cover]');cover.src=coverUrl;cover.alt=p.coverAlt;cover.hidden=false;
+   $('[data-editor-preview-body]').replaceChildren(fragment);$('[data-editor-preview-box]').hidden=false;
+  }catch{if(epoch===sessionEpoch&&version===previewVersion)tell('Önizleme hazırlanamadı. Görselin yüklenmiş olduğundan emin ol.',true);}
+ }
+ $('[data-editor-preview]').addEventListener('click',()=>{clearTimeout(previewTimer);void preview();});
  window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
 
 }

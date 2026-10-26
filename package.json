@@ -8,7 +8,7 @@
     "dev": "node scripts/prepare-content.mjs && astro dev",
     "build": "node scripts/prepare-content.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
-    "verify": "node scripts/check-build.mjs && node scripts/check-auth-rules.mjs && node scripts/check-community.mjs && node scripts/check-editor.mjs && node scripts/check-media.mjs"
+    "verify": "node scripts/check-build.mjs && node scripts/check-auth-rules.mjs && node scripts/check-community.mjs && node scripts/check-editor.mjs && node scripts/check-media.mjs && node scripts/check-article-blocks.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
@@ -25,6 +25,11 @@
     "dompurify": "3.4.17",
     "gray-matter": "4.0.3",
     "marked": "18.1.1",
-    "rehype-sanitize": "6.0.0"
+    "rehype-sanitize": "6.0.0",
+    "rehype-stringify": "10.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "remark-rehype": "11.1.2",
+    "unified": "11.0.5"
   }
 }
