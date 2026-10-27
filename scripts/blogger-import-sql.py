@@ -19,7 +19,7 @@ begin
   perform pg_advisory_xact_lock(hashtextextended(slug_value,526));
   select * into existing from cx_private.drafts where slug=slug_value for update;
   if found then
-   if existing.payload=payload and exists(select 1 from cx_private.content_history where slug=slug_value and action='blogger_import' and payload->>'sourceId'=row->>'sourceId') then continue;end if;
+   if existing.payload=payload and exists(select 1 from cx_private.content_history h where h.slug=slug_value and h.action='blogger_import' and h.payload->>'sourceId'=row->>'sourceId') then continue;end if;
    raise exception 'Existing draft would be overwritten: %',slug_value;
   end if;
   insert into cx_private.drafts(slug,payload,revision,updated_by) values(slug_value,payload,1,owner_id);
