@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#050812"><meta name="description" content="Daha kendi uygulamalarını yüklemeden telefonda onlarca şey hazır…"><title>Android&#39;de Root Olmadan Sistem Uygulamalarını Kaldırma: Shizuku + Canta Rehberi | CoreXLyth</title><link rel="canonical" href="https://corexlyth.github.io/corexlyth-site/yazi/android-root-olmadan-sistem-uygulamalari-shizuku-canta/"><link rel="alternate" type="application/rss+xml" title="CoreXLyth RSS" href="/corexlyth-site/rss.xml"><link rel="sitemap" type="application/xml" href="/corexlyth-site/sitemap-index.xml"><meta property="og:type" content="article"><meta property="og:locale" content="tr_TR"><meta property="og:site_name" content="CoreXLyth"><meta property="og:title" content="Android'de Root Olmadan Sistem Uygulamalarını Kaldırma: Shizuku + Canta Rehberi | CoreXLyth"><meta property="og:description" content="Daha kendi uygulamalarını yüklemeden telefonda onlarca şey hazır…"><meta property="og:url" content="https://corexlyth.github.io/corexlyth-site/yazi/android-root-olmadan-sistem-uygulamalari-shizuku-canta/"><meta property="og:image" content="https://corexlyth.github.io/corexlyth-site/assets/img/blogger/ec9ab15f990c76eb57ccc64c.webp"><meta property="article:published_time" content="2026-10-03T00:00:00.000Z"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Android'de Root Olmadan Sistem Uygulamalarını Kaldırma: Shizuku + Canta Rehberi","description":"Daha kendi uygulamalarını yüklemeden telefonda onlarca şey hazır…","inLanguage":"tr-TR","datePublished":"2026-10-03T00:00:00.000Z","dateModified":"2026-10-03T00:00:00.000Z","image":"https://corexlyth.github.io/corexlyth-site/assets/img/blogger/ec9ab15f990c76eb57ccc64c.webp","mainEntityOfPage":"https://corexlyth.github.io/corexlyth-site/yazi/android-root-olmadan-sistem-uygulamalari-shizuku-canta/","author":{"@type":"Organization","name":"CoreXLyth"},"publisher":{"@type":"Organization","name":"CoreXLyth","url":"https://corexlyth.github.io/corexlyth-site/"},"articleSection":"Teknoloji","keywords":"Android, Rehber, Teknoloji, uygulama"}</script><link rel="stylesheet" href="/corexlyth-site/assets/css/main.css?v=blogger-import-1"><noscript><style>.cx-boot{display:none!important}</style></noscript><meta name="cx-publication" content="android-root-olmadan-sistem-uygulamalari-shizuku-canta:1"></head><body><a class="cx-skip-link" href="#home">Ana içeriğe geç</a><div class="cx-boot" aria-hidden="true"><div class="cx-boot__core"><span class="cx-boot__kicker">COREXLYTH // BOOT</span><strong class="cx-boot__logo" data-text="CoreXLyth">CoreXLyth</strong><span class="cx-boot__bar"><i></i></span></div></div><div class="cx-ambient" aria-hidden="true"><i class="cx-ambient__orb cx-ambient__orb--a"></i><i class="cx-ambient__orb cx-ambient__orb--b"></i><i class="cx-ambient__grid"></i><i class="cx-ambient__scan"></i></div><header class="cx-header"><div class="cx-header__inner"><a class="cx-brand" href="/corexlyth-site/" aria-label="CoreXLyth ana sayfa"><span class="cx-brand__node">NODE://CX</span><span class="cx-brand__name" data-text="CoreXLyth">CoreXLyth</span><span class="cx-brand__dot" aria-hidden="true"></span></a><button class="cx-menu-button" type="button" aria-expanded="false" aria-controls="cx-nav"><span></span><span></span><span></span><b>MENU</b></button><nav class="cx-nav" id="cx-nav" aria-label="Ana menü"><a href="/corexlyth-site/">Başlangıç</a><a href="/corexlyth-site/arsiv/">Yazılar</a><a href="/corexlyth-site/ara/">⌕ Ara</a><a href="/corexlyth-site/#kanallar">Kanallar</a><a href="/corexlyth-site/#hakkinda">Hakkında</a></nav></div></header><main id="home" class="cx-reading-shell"><nav class="cx-breadcrumb" aria-label="İçerik yolu"><a href="/corexlyth-site/">COREXLYTH</a><span>/</span><a href="/corexlyth-site/arsiv/">KAYITLAR</a><span>/</span><a href="/corexlyth-site/kategori/teknoloji/">TEKNOLOJİ</a></nav><article class="cx-article cx-hud-frame" data-pagefind-body><header class="cx-article__head"><p class="cx-kicker">COREXLYTH // EDITORIAL RECORD</p><h1>Android&#39;de Root Olmadan Sistem Uygulamalarını Kaldırma: Shizuku + Canta Rehberi</h1><p class="cx-article__summary">Daha kendi uygulamalarını yüklemeden telefonda onlarca şey hazır…</p><div class="cx-article__meta"><time datetime="2026-10-03">03.10.2026</time><a href="/corexlyth-site/kategori/teknoloji/">Teknoloji</a></div></header><figure class="cx-article-cover"><img src="/corexlyth-site/assets/img/blogger/ec9ab15f990c76eb57ccc64c.webp" alt="Android'de Root Olmadan Sistem Uygulamalarını Kaldırma: Shizuku + Canta Rehberi" loading="eager"></figure><details class="cx-toc" open data-pagefind-ignore><summary>İÇİNDEKİLER</summary><nav aria-label="Yazının içindekileri"><ol><li><a href="#01--önce-mantığı-anlayalım-shizuku-nedir">01 — Önce Mantığı Anlayalım: Shizuku Nedir?</a></li><li><a href="#02--canta-ne-yapıyor">02 — Canta Ne Yapıyor?</a></li><li><a href="#03--shizukuyu-i̇lk-açtığımızda">03 — Shizuku’yu İlk Açtığımızda</a></li><li><a href="#04--geliştirici-seçeneklerini-açmak">04 — Geliştirici Seçeneklerini Açmak</a></li><li><a href="#05--wi-fi-neden-gerekli">05 — Wi-Fi Neden Gerekli?</a></li><li><a href="#06--shizuku-ile-telefonu-eşleştirmek">06 — Shizuku ile Telefonu Eşleştirmek</a></li><li><a href="#07--shizuku-bildirim-i̇zni-i̇stiyorsa">07 — Shizuku Bildirim İzni İstiyorsa</a></li><li><a href="#08--eşleştirme-başarılı-olduğunu-nasıl-anlarız">08 — Eşleştirme Başarılı Olduğunu Nasıl Anlarız?</a></li><li><a href="#09--xiaomi--poco-kullanıyorsanız-bu-uyarıyı-görebilirsiniz">09 — Xiaomi / POCO Kullanıyorsanız Bu Uyarıyı Görebilirsiniz</a></li><li><a href="#10--shizuku-çalışıyor">10 — Shizuku Çalışıyor</a></li><li><a href="#11--cantayı-açıyoruz">11 — Canta’yı Açıyoruz</a></li><li><a href="#12--bir-uygulamanın-ne-olduğunu-kontrol-etmek">12 — Bir Uygulamanın Ne Olduğunu Kontrol Etmek</a></li><li><a href="#13--canta-shizuku-i̇zni-i̇stiyor">13 — Canta Shizuku İzni İstiyor</a></li><li><a href="#14--uygulama-kaldırma-ekranı">14 — Uygulama Kaldırma Ekranı</a></li><li><a href="#15--sistem-uygulamasını-kaldırmak-tam-olarak-ne-demek">15 — “Sistem Uygulamasını Kaldırmak” Tam Olarak Ne Demek?</a></li><li><a href="#16--hangi-uygulamalara-dokunmamalıyız">16 — Hangi Uygulamalara Dokunmamalıyız?</a></li><li><a href="#17--cantadaki-recommended-etiketi-ne-kadar-güvenilir">17 — Canta’daki RECOMMENDED Etiketi Ne Kadar Güvenilir?</a></li><li><a href="#18--telefon-gerçekten-hızlanır-mı">18 — Telefon Gerçekten Hızlanır mı?</a></li><li><a href="#19--shizuku-telefon-yeniden-başlayınca-ne-oluyor">19 — Shizuku Telefon Yeniden Başlayınca Ne Oluyor?</a></li><li><a href="#20--peki-root-yerine-shizuku-kullanmak-aynı-şey-mi">20 — Peki Root Yerine Shizuku Kullanmak Aynı Şey mi?</a></li><li><a href="#21--shizuku--canta-kimler-i̇çin-mantıklı">21 — Shizuku + Canta Kimler İçin Mantıklı?</a></li><li><a href="#22--i̇ndirme-bağlantıları">22 — İndirme Bağlantıları</a></li><li><a href="#23--sonuç">23 — Sonuç</a></li></ol></nav></details><div class="cx-article__content"><p>Yeni bir Android telefon alıyorsun.</p>
+<p>Kutudan çıkarıyorsun.</p>
+<p>Daha kendi uygulamalarını yüklemeden telefonda onlarca şey hazır bekliyor.</p>
+<p>Üreticinin mağazası.</p>
+<p>Asistanı.</p>
+<p>Öneri servisi.</p>
+<p>Hiç kullanmadığın Google bileşenleri.</p>
+<p>Operatör uygulamaları.</p>
+<p>Ve bazen ne işe yaradığını anlamadığın bir sürü sistem paketi.</p>
+<p>Normal uygulamalarda çözüm basit:</p>
+<p><strong>Kaldır.</strong></p>
+<p>Ama sistem uygulamasına geldiğimizde Android:</p>
+<p><strong>“O kadar da değil.”</strong> 😅</p>
+<p>der ve kaldırma düğmesini ortadan kaldırır.</p>
+<p>İşte bu rehberde <strong>root atmadan</strong>, bilgisayara ihtiyaç duymadan ve Android’in ADB yetkilerini kullanarak sistem uygulamalarını yönetebileceğimiz iki açık kaynak aracı kullanacağız:</p>
+<p><strong>Shizuku + Canta.</strong></p>
+<p>Shizuku bize gerekli yetki katmanını sağlayacak.</p>
+<p>Canta ise bu yetkiyi kullanarak telefondaki uygulamaları anlaşılır bir arayüz üzerinden yönetmemizi sağlayacak.</p>
+<p>Üstelik bunu gerçekten kurup denedik.</p>
+<p>Bu rehberde göreceğiniz ekranların tamamı işlem sırasında alınmış gerçek Android ekran görüntüleridir.</p>
+<aside class="cx-callout cx-callout--warning" role="note">
+<p class="cx-callout__title">Uyarı</p>
+<p>Bu rehber sistem uygulamalarına müdahale içerir. Canta bazı uygulamaları “Recommended” olarak işaretlese bile hiçbir sınıflandırma her cihaz için yüzde yüz güvenlik garantisi değildir. Kritik bir sistem bileşeninin kaldırılması işlev kaybına, hatalara veya açılış döngüsüne neden olabilir. Ne olduğunu bilmediğiniz bir paketi yalnızca “gereksiz görünüyor” diye kaldırmayın.</p>
+</aside>
+<h2 id="01--önce-mantığı-anlayalım-shizuku-nedir">01 — Önce Mantığı Anlayalım: Shizuku Nedir?</h2>
+<p>Shizuku klasik anlamda bir “telefon temizleme uygulaması” değil.</p>
+<p>Kendisi uygulama kaldırmıyor.</p>
+<p>RAM temizlemiyor.</p>
+<p>Telefonu hızlandırdığını iddia eden sihirli düğmeler de sunmuyor.</p>
+<p>Shizuku’nun yaptığı iş daha temel.</p>
+<p>Android’de normal uygulamaların erişemediği bazı sistem API’lerine, <strong>ADB veya root üzerinden kazanılan daha yüksek yetkilerle</strong> erişebilmesini sağlayan bir aracı katman oluşturuyor.</p>
+<p>Basit anlatımla:</p>
+<p>Normal bir uygulama Android’e:</p>
+<p>“Şunu yapabilir miyim?”</p>
+<p>diye soruyor.</p>
+<p>Android:</p>
+<p>“Yetkin yok.”</p>
+<p>diyor.</p>
+<p>Shizuku ise uygun şekilde başlatıldığında, destekleyen uygulamalara ADB seviyesindeki belirli yetkileri kullanabilecekleri bir köprü sağlıyor.</p>
+<p>Burada önemli ayrıntı şu:</p>
+<p><strong>Shizuku root değildir.</strong></p>
+<p>Rootlu cihazlarda da çalışabilir ama rootsuz kullanım için Android’in ADB mekanizmasını kullanabiliyor.</p>
+<p>Android 11 ve üzerindeki cihazlarda bunun en kullanışlı yolu <strong>Kablosuz hata ayıklama</strong>.</p>
+<p>Resmi proje:</p>
+<p><a href="https://shizuku.rikka.app/">Shizuku resmi sitesi</a></p>
+<p>Resmi GitHub:</p>
+<p><a href="https://github.com/RikkaApps/Shizuku">RikkaApps / Shizuku</a></p>
+<h2 id="02--canta-ne-yapıyor">02 — Canta Ne Yapıyor?</h2>
+<p>Canta ise Shizuku’nun sağladığı yetkiyi kullanan asıl uygulama yöneticimiz.</p>
+<p>Projenin amacı oldukça net:</p>
+<p><strong>Root gerektirmeden ön yüklü veya kullanıcı tarafından yüklenmiş Android uygulamalarını kaldırabilmek.</strong></p>
+<p>Canta bunun yanında Universal Debloat List verilerini kullanıyor.</p>
+<p>Böylece listede gördüğünüz paketlerin yanında yalnızca karmaşık paket isimleri bulunmuyor.</p>
+<p>Aynı zamanda bazı uygulamalar için:</p>
+<p><strong>RECOMMENDED</strong></p>
+<p><strong>ADVANCED</strong></p>
+<p><strong>EXPERT</strong></p>
+<p><strong>UNSAFE</strong></p>
+<p>gibi yol gösterici sınıflandırmalar da görebiliyorsunuz.</p>
+<p>Bunları birazdan gerçek cihaz üzerinde göreceğiz.</p>
+<p>Canta resmi GitHub:</p>
+<p><a href="https://github.com/samolego/Canta">samolego / Canta</a></p>
+<p>Canta F-Droid:</p>
+<p><a href="https://f-droid.org/packages/io.github.samolego.canta/">Canta — F-Droid</a></p>
+<p>Bu yazı hazırlanırken güncel kararlı Canta sürümü <strong>v3.2.2</strong>.</p>
+<p>Proje Android <strong>9.0 ve üzerini</strong> destekliyor.</p>
+<h2 id="03--shizukuyu-i̇lk-açtığımızda">03 — Shizuku’yu İlk Açtığımızda</h2>
+<p>Shizuku’yu kurup ilk kez açtığımızda karşımıza şu ekran geliyor:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/40a4af0f5fbfec4e4c350e7a.webp" alt="Shizuku çalışmıyor ve kablosuz hata ayıklama ile başlat seçenekleri"><figcaption>Shizuku çalışmıyor ve kablosuz hata ayıklama ile başlat seçenekleri</figcaption></figure>
+<p>En üstte durum açık:</p>
+<p><strong>Shizuku çalışmıyor.</strong></p>
+<p>Alt tarafta ise üç farklı başlangıç yöntemi görüyoruz.</p>
+<p><strong>Kablosuz hata ayıklama ile başlat</strong></p>
+<p><strong>Bilgisayara bağlanarak başlat</strong></p>
+<p><strong>Rootlu cihazlar için başlat</strong></p>
+<p>Bizim cihazımız rootsuz ve bilgisayar kullanmak istemiyoruz.</p>
+<p>Bu nedenle ilk yöntemi kullanacağız:</p>
+<p><strong>Kablosuz hata ayıklama.</strong></p>
+<h2 id="04--geliştirici-seçeneklerini-açmak">04 — Geliştirici Seçeneklerini Açmak</h2>
+<p>Kablosuz hata ayıklama Android’in normal kullanıcı ayarlarında açık duran bir özellik değil.</p>
+<p>Öncelikle <strong>Geliştirici seçenekleri</strong> aktif olmalı.</p>
+<p>Markaya göre menü isimleri değişebilir ancak Xiaomi / POCO / HyperOS tarafında genel olarak:</p>
+<p><strong>Ayarlar → Telefon hakkında</strong></p>
+<p>bölümüne girip işletim sistemi / yapı sürümüne birkaç kez dokunarak geliştirici modu etkinleştirilebilir.</p>
+<p>Ardından:</p>
+<p><strong>Ayarlar → Ek ayarlar → Geliştirici seçenekleri</strong></p>
+<p>üzerinden ilgili menüye ulaşabilirsiniz.</p>
+<p>Burada aradığımız bölüm:</p>
+<p><strong>Kablosuz hata ayıklama.</strong></p>
+<p>İlk açtığımızda bizde durum şöyleydi:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/5f03c26d2e4c13858f52cbd2.webp" alt="Android Kablosuz hata ayıklama kapalı ekranı"><figcaption>Android Kablosuz hata ayıklama kapalı ekranı</figcaption></figure>
+<p>Üstteki anahtar kapalı.</p>
+<p>Alt taraftaki cihaz eşleştirme seçenekleri de bu nedenle kullanılamıyor.</p>
+<h2 id="05--wi-fi-neden-gerekli">05 — Wi-Fi Neden Gerekli?</h2>
+<p>Burada bizim de kurulum sırasında takıldığımız küçük bir ayrıntı var. 😅</p>
+<p>Kablosuz hata ayıklamayı kullanabilmek için telefonun bir <strong>Wi-Fi ağına bağlı</strong> olması gerekiyor.</p>
+<p>Bu ağın mutlaka internete çıkması şart değil.</p>
+<p>Android’in aktif bir WLAN bağlantısı görmesi gerekiyor.</p>
+<p>Telefonun kendi hotspot’una kendi kendisini bağlamak mümkün olmadığı için, Wi-Fi erişiminiz yoksa bu yöntem o anda kullanılamayabilir.</p>
+<p>Bir kablosuz ağa bağlandıktan sonra Kablosuz hata ayıklamayı açabiliyoruz.</p>
+<h2 id="06--shizuku-ile-telefonu-eşleştirmek">06 — Shizuku ile Telefonu Eşleştirmek</h2>
+<p>Kablosuz hata ayıklamayı açtıktan sonra:</p>
+<p><strong>Eşleme kodu ile cihaz eşle</strong></p>
+<p>seçeneğine dokunuyoruz.</p>
+<p>Android bize altı basamaklı geçici bir eşleştirme kodu gösteriyor.</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/e9d411138754d72aa7a8fe7e.webp" alt="Android kablosuz hata ayıklama Shizuku eşleştirme kodu ekranı"><figcaption>Android kablosuz hata ayıklama Shizuku eşleştirme kodu ekranı</figcaption></figure>
+<p>Bu kod kalıcı bir parola değil.</p>
+<p>Sadece mevcut ADB eşleştirme işlemi için kullanılan geçici kod.</p>
+<p>Shizuku’nun amacı da bu kodu kullanarak Android’in kablosuz ADB servisiyle eşleşmek.</p>
+<h2 id="07--shizuku-bildirim-i̇zni-i̇stiyorsa">07 — Shizuku Bildirim İzni İstiyorsa</h2>
+<p>Biz eşleştirme işlemine geçtiğimizde Shizuku şu uyarıyı gösterdi:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/a84451d1e145ae9ad726ec34.webp" alt="Shizuku eşleştirme için bildirim izni uyarısı"><figcaption>Shizuku eşleştirme için bildirim izni uyarısı</figcaption></figure>
+<p>Bunun nedeni eşleştirme kodunun Shizuku tarafından gönderilen bildirim üzerinden girilmesi.</p>
+<p>Dolayısıyla Shizuku’nun bildirim göndermesine izin vermek gerekiyor.</p>
+<p>Xiaomi / POCO kullananların burada dikkat etmesi gereken bir ayrıntı daha var.</p>
+<p>Resmi Shizuku rehberi, bazı MIUI sürümlerinde bildirim stilinin <strong>Android</strong> olarak ayarlanması gerekebileceğini belirtiyor.</p>
+<p>Aksi halde bildirim üzerinden kod giriş alanı düzgün çalışmayabiliyor.</p>
+<p>İzni verdikten sonra Shizuku’nun kendi adım adım rehberi karşımıza çıkıyor:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/5f5b2c49fab602912ee02e8e.webp" alt="Shizuku kablosuz hata ayıklama eşleştirme rehberi"><figcaption>Shizuku kablosuz hata ayıklama eşleştirme rehberi</figcaption></figure>
+<p>Akış aslında üç adımdan ibaret:</p>
+<p>Kablosuz hata ayıklama ekranına gir.</p>
+<p>Altı basamaklı eşleştirme kodunu al.</p>
+<p>Kodu Shizuku bildirimine gir.</p>
+<p>Sonra Shizuku’ya dönüp servisi başlat.</p>
+<h2 id="08--eşleştirme-başarılı-olduğunu-nasıl-anlarız">08 — Eşleştirme Başarılı Olduğunu Nasıl Anlarız?</h2>
+<p>Eşleştirme tamamlandıktan sonra Android’in Kablosuz hata ayıklama ekranında Shizuku artık eşlenen cihazlar arasında görünmeye başladı.</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/888f513f91b4abbd9ad34076.webp" alt="Kablosuz hata ayıklamada Shizuku eşlenmiş cihaz olarak görünüyor"><figcaption>Kablosuz hata ayıklamada Shizuku eşlenmiş cihaz olarak görünüyor</figcaption></figure>
+<p>Altta:</p>
+<p><strong>shizuku</strong></p>
+<p>görüyorsanız ADB eşleştirme aşamasını geçmişsiniz demektir.</p>
+<p>Buradan sonra Shizuku’ya dönüp <strong>Başlat</strong> butonuna basabiliriz.</p>
+<h2 id="09--xiaomi--poco-kullanıyorsanız-bu-uyarıyı-görebilirsiniz">09 — Xiaomi / POCO Kullanıyorsanız Bu Uyarıyı Görebilirsiniz</h2>
+<p>Bizim kurulum burada küçük bir sürpriz yaptı.</p>
+<p>Shizuku çalışmaya başladı ama ana ekranda kırmızı bir uyarı çıktı:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/c8a131ac7a203462a3af46ab.webp" alt="Shizuku Xiaomi POCO ADB izinleri kısıtlı uyarısı"><figcaption>Shizuku Xiaomi POCO ADB izinleri kısıtlı uyarısı</figcaption></figure>
+<p>Uyarının özü şu:</p>
+<p><strong>Cihaz üreticisi ADB izinlerini kısıtladığı için Shizuku kullanan uygulamalar düzgün çalışmayabilir.</strong></p>
+<p>Bu özellikle Xiaomi / POCO tarafında önemli.</p>
+<p>Çünkü geliştirici seçeneklerinde normal:</p>
+<p><strong>USB hata ayıklama</strong></p>
+<p>seçeneğinin yanında ayrıca:</p>
+<p><strong>USB hata ayıklama (Güvenlik ayarları)</strong></p>
+<p>adında ikinci bir seçenek bulunabiliyor.</p>
+<p>İkisi aynı şey değil.</p>
+<p>Biz de ilk başta yanlış ayara bakmışız. 😅</p>
+<p>Resmi Shizuku dokümantasyonu Xiaomi / POCO cihazlarda ADB yetkileri kısıtlı görünüyorsa özellikle <strong>USB debugging (Security options)</strong> seçeneğinin açılmasını öneriyor.</p>
+<p>Bu ayarı açıp Shizuku’yu yeniden başlattığımızda kırmızı yetki uyarısı ortadan kalktı.</p>
+<aside class="cx-callout cx-callout--warning" role="note">
+<p class="cx-callout__title">Uyarı</p>
+<p>Xiaomi / POCO cihazlarda “USB hata ayıklama (Güvenlik ayarları)” seçeneğini açarken cihaz ek bir güvenlik doğrulaması, SIM kart veya Mi hesabı doğrulaması isteyebilir. Menü isimleri HyperOS / MIUI sürümüne göre değişebilir.</p>
+</aside>
+<h2 id="10--shizuku-çalışıyor">10 — Shizuku Çalışıyor</h2>
+<p>Doğru ayarları yaptıktan sonra ana ekranımız şu hale geldi:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/354061c4eb58558c8bfe2e26.webp" alt="Shizuku servisinin çalıştığı ana ekran"><figcaption>Shizuku servisinin çalıştığı ana ekran</figcaption></figure>
+<p>En önemli satır:</p>
+<p><strong>Shizuku çalışıyor.</strong></p>
+<p>Bu noktada altyapımız hazır.</p>
+<p>Shizuku tek başına pek heyecan verici görünmeyebilir.</p>
+<p>Çünkü asıl olay, Shizuku yetkisini kullanabilen uygulamaları açtığımızda başlıyor.</p>
+<p>Bizim örneğimiz:</p>
+<p><strong>Canta.</strong></p>
+<p>Bu arada resmi GitHub’daki güncel kararlı Shizuku sürümü bu yazı hazırlanırken <strong>v13.6.0</strong>.</p>
+<p>Bu sürümün resmi değişiklik notlarında Android 16 QPR1 desteği de bulunuyor.</p>
+<p>Ekran görüntülerindeki çalışan servis / uygulama sürüm numaraları cihazda kurulu dağıtıma göre farklı görünebilir.</p>
+<h2 id="11--cantayı-açıyoruz">11 — Canta’yı Açıyoruz</h2>
+<p>Canta’yı açtığımızda doğrudan telefonda bulunan uygulamaların listesi geliyor:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/782a7a5a1e3a08b089e7a42b.webp" alt="Canta sistem uygulamaları ve öneri kategorileri ana ekranı"><figcaption>Canta sistem uygulamaları ve öneri kategorileri ana ekranı</figcaption></figure>
+<p>Ve işte Canta’yı kullanışlı yapan bölüm burada.</p>
+<p>Sadece:</p>
+<p><strong>com.android.birsey.birsey</strong></p>
+<p>gibi anlamsız görünen paket isimlerini göstermiyor.</p>
+<p>Uygulamanın adını, paket adını ve Universal Debloat List’ten gelen değerlendirme kategorisini birlikte görebiliyoruz.</p>
+<p>Örneğin ekranda:</p>
+<p><strong>RECOMMENDED</strong></p>
+<p><strong>ADVANCED</strong></p>
+<p><strong>EXPERT</strong></p>
+<p><strong>UNSAFE</strong></p>
+<p>etiketleri bulunuyor.</p>
+<p>Burada renkli bir etiketi “otomatik karar mekanizması” olarak görmemek gerekiyor.</p>
+<p>Bu sınıflandırmalar bize yol gösterir.</p>
+<p>Son karar yine hangi paketin ne yaptığını araştırarak verilmelidir.</p>
+<p>Özellikle <strong>UNSAFE</strong>, <strong>EXPERT</strong> ve sistemin temel işlevleriyle ilişkili uygulamalara rastgele dokunmamak lazım.</p>
+<h2 id="12--bir-uygulamanın-ne-olduğunu-kontrol-etmek">12 — Bir Uygulamanın Ne Olduğunu Kontrol Etmek</h2>
+<p>Listede uygulamanın adına dokunduğumuzda küçük bir bilgi penceresi açılıyor.</p>
+<p>Biz örnek olarak Xiaomi tarafındaki:</p>
+<p><strong>Akıllı uygulama asistanı</strong></p>
+<p>paketine baktık.</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/53c957db9acf10c67212a1d7.webp" alt="Canta Akıllı uygulama asistanı paket detay ekranı"><figcaption>Canta Akıllı uygulama asistanı paket detay ekranı</figcaption></figure>
+<p>Burada görünen paket adı:</p>
+<p><strong>com.miui.thirdappassistant</strong></p>
+<p>Ayrıca boyut bilgisi ve kısa bir açıklama da gösteriliyor.</p>
+<p>Alt tarafta:</p>
+<p><strong>Uygulama bilgileri</strong></p>
+<p>seçeneği var.</p>
+<p>Bu oldukça önemli.</p>
+<p>Bir uygulamayı kaldırmadan önce:</p>
+<p>paket adını kontrol edin,</p>
+<p>ne işe yaradığını araştırın,</p>
+<p>telefonunuzun marka ve modelinde gerekli olup olmadığına bakın.</p>
+<p>Canta’nın açıklamaları her paket için mükemmel veya ayrıntılı olmayabilir.</p>
+<p>Bazı açıklamalar kısa, İngilizce veya topluluk listesinden gelen basit notlar olabilir.</p>
+<p>Bu yüzden yalnızca açıklamadaki bir cümleye bakıp karar vermemek daha sağlıklı.</p>
+<h2 id="13--canta-shizuku-i̇zni-i̇stiyor">13 — Canta Shizuku İzni İstiyor</h2>
+<p>Bir uygulamayı seçip kaldırma işlemine geçtiğimizde Canta ilk kez Shizuku yetkisine ihtiyaç duyduğunu açıkça gösterdi:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/1622c08d53f84a6066a9dd99.webp" alt="Canta Shizuku erişim izni gerekli ekranı"><figcaption>Canta Shizuku erişim izni gerekli ekranı</figcaption></figure>
+<p>Ekranda kontrol listesi bulunuyor.</p>
+<p>Shizuku kurulu.</p>
+<p>Shizuku servisi çalışıyor.</p>
+<p>Eksik olan:</p>
+<p><strong>Shizuku’dan Canta’ya izin verin.</strong></p>
+<p>Bu noktada Canta’ya Shizuku üzerinden yetki verdiğimizde uygulama gerekli sistem işlemlerini yapabilir hale geliyor.</p>
+<p>Shizuku’nun güzel taraflarından biri de burada ortaya çıkıyor.</p>
+<p>Her desteklenen uygulamaya otomatik ve sınırsız erişim açmak yerine, hangi uygulamanın Shizuku kullanabileceğini kontrol edebiliyorsunuz.</p>
+<p>Shizuku ana ekranındaki:</p>
+<p><strong>Yetkilendirilmiş uygulamalar</strong></p>
+<p>bölümünden bunları daha sonra yönetebilirsiniz.</p>
+<h2 id="14--uygulama-kaldırma-ekranı">14 — Uygulama Kaldırma Ekranı</h2>
+<p>Yetkiyi verdikten sonra seçtiğimiz uygulama için gerçek kaldırma onay ekranına ulaştık:</p>
+<figure class="cx-figure"><img src="/corexlyth-site/assets/img/blogger/4f993a5198ac9763e8365b45.webp" alt="Canta uygulama kaldırma onay ekranı"><figcaption>Canta uygulama kaldırma onay ekranı</figcaption></figure>
+<p>Burada:</p>
+<p><strong>1 adet uygulamayı kaldırmak istediğinizden emin misiniz?</strong></p>
+<p>uyarısı geliyor.</p>
+<p>Ayrıca:</p>
+<p><strong>Fabrika sürümüne sıfırla</strong></p>
+<p>seçeneği bulunuyor.</p>
+<p>Biz rehber amacıyla bu noktaya kadar geldik ve işlemi iptal ettik.</p>
+<p>Çünkü sistem uygulaması kaldırmak sadece ekran görüntüsü almak için yapılacak bir işlem değil.</p>
+<p>Gerçekten kaldırmak istediğiniz uygulamayı önceden araştırmak gerekiyor.</p>
+<h2 id="15--sistem-uygulamasını-kaldırmak-tam-olarak-ne-demek">15 — “Sistem Uygulamasını Kaldırmak” Tam Olarak Ne Demek?</h2>
+<p>Burada önemli bir kavram farkı var.</p>
+<p>Telefon üreticisinin ROM’una gömülü bir sistem uygulaması söz konusu olduğunda, rootsuz ADB tabanlı kaldırma çoğu durumda sistem bölümündeki orijinal APK’yı fiziksel olarak silmez.</p>
+<p>Uygulama mevcut kullanıcı için kaldırılmış / devre dışı bırakılmış hale gelir.</p>
+<p>Bu nedenle bazı ön yüklü uygulamalar fabrika ayarlarına dönüldüğünde yeniden ortaya çıkabilir.</p>
+<p>Bu aslında kötü bir şey değil.</p>
+<p>Root kullanmadan sistem bölümüne doğrudan müdahale etmediğimiz için risk alanımız bir miktar daralıyor.</p>
+<p>Ama:</p>
+<p><strong>“Nasıl olsa tamamen silinmiyor, istediğimi kaldırabilirim.”</strong></p>
+<p>sonucu da çıkmamalı.</p>
+<p>Canta’nın kendi proje açıklaması kritik uygulamaların kaldırılmasının <strong>bootloop</strong> oluşturabileceğini ve cihazı fabrika ayarlarına döndürmek zorunda bırakabileceğini açıkça söylüyor.</p>
+<p>Yani hâlâ sistemin çalışan kullanıcı ortamına müdahale ediyoruz.</p>
+<h2 id="16--hangi-uygulamalara-dokunmamalıyız">16 — Hangi Uygulamalara Dokunmamalıyız?</h2>
+<p>Tek tek her Android üreticisi için evrensel bir “bunları kaldırabilirsiniz” listesi vermek doğru olmaz.</p>
+<p>Samsung’un sistem yapısıyla Xiaomi’nin sistemi aynı değil.</p>
+<p>HyperOS ile Pixel Android aynı paketleri kullanmıyor.</p>
+<p>Hatta aynı üreticinin farklı modellerinde bile paketlerin işlevi değişebiliyor.</p>
+<p>Ama genel olarak şu kategorilerde çok daha dikkatli olmak gerekir:</p>
+<p>Android System UI bileşenleri,</p>
+<p>ağ ve Network Stack bileşenleri,</p>
+<p>Package Installer / paket yükleyiciler,</p>
+<p>telefon ve arama servisleri,</p>
+<p>Bluetooth / Wi-Fi altyapısı,</p>
+<p>hesap ve kimlik doğrulama servisleri,</p>
+<p>cihaz kurulum sihirbazı,</p>
+<p>Google Play Services gibi başka uygulamaların yoğun biçimde bağımlı olduğu servisler,</p>
+<p>güvenlik ve şifreleme bileşenleri.</p>
+<p>Örneğin bizim Canta ekranımızda:</p>
+<p><strong>Ağ yöneticisi — UNSAFE</strong></p>
+<p><strong>Anahtarlık — UNSAFE</strong></p>
+<p>gibi paketler görülebiliyor.</p>
+<p>Bu tür bileşenler “ben bunu hiç açmıyorum” mantığıyla değerlendirilemez.</p>
+<p>Çünkü bunlar arka planda başka uygulamaların kullandığı sistem servisleri olabilir.</p>
+<aside class="cx-callout cx-callout--warning" role="note">
+<p class="cx-callout__title">Uyarı</p>
+<p>Uygulama adını tanımıyor olmanız, onun gereksiz olduğu anlamına gelmez. Özellikle paket adı `com.android.*`, `com.google.android.*` veya üreticinin temel servislerine ait bir ad taşıyorsa kaldırmadan önce işlevini mutlaka doğrulayın.</p>
+</aside>
+<h2 id="17--cantadaki-recommended-etiketi-ne-kadar-güvenilir">17 — Canta’daki RECOMMENDED Etiketi Ne Kadar Güvenilir?</h2>
+<p>Canta, Universal Debloat List verilerini kullanarak uygulamalar hakkında öneriler sunuyor.</p>
+<p>Bu çok faydalı.</p>
+<p>Çünkü yüzlerce paket arasında tamamen kör ilerlemiyorsunuz.</p>
+<p>Ama bu önerileri:</p>
+<p><strong>“Yeşil gördüm, sil.”</strong></p>
+<p>şeklinde kullanmak doğru değil.</p>
+<p>RECOMMENDED daha çok:</p>
+<p><strong>“Bu paket genel debloat bağlamında kaldırılabilir kabul edilmiş; yine de cihazındaki işlevini kontrol et.”</strong></p>
+<p>diye düşünülmeli.</p>
+<p>Örneğin bir özellik size gereksiz gelebilir ama başka bir kullanıcı o özelliği aktif olarak kullanıyor olabilir.</p>
+<p>Debloat işlemi tamamen kullanım şekline bağlı.</p>
+<h2 id="18--telefon-gerçekten-hızlanır-mı">18 — Telefon Gerçekten Hızlanır mı?</h2>
+<p>Burada internette çok abartılan bir konu var.</p>
+<p>“20 sistem uygulaması kaldırdım, telefon roket oldu.”</p>
+<p>Her zaman böyle çalışmıyor. 😅</p>
+<p>Kaldırdığınız uygulama zaten hiç çalışmıyorsa performans kazancı neredeyse sıfır olabilir.</p>
+<p>Ama bazı üretici uygulamaları:</p>
+<p>arka planda servis çalıştırıyorsa,</p>
+<p>bildirim gönderiyorsa,</p>
+<p>senkronizasyon yapıyorsa,</p>
+<p>ağ trafiği oluşturuyorsa</p>
+<p>veya sürekli süreç başlatıyorsa,</p>
+<p>kullanmadığınız bu bileşenleri kaldırmak arka plan yükünü azaltabilir.</p>
+<p>Asıl kazanç çoğu zaman:</p>
+<p>daha temiz uygulama listesi,</p>
+<p>daha az gereksiz servis,</p>
+<p>daha az bildirim,</p>
+<p>daha az üretici yazılımı</p>
+<p>ve cihaz üzerinde daha fazla kontrol hissidir.</p>
+<p>Yani Canta’yı bir “performans hızlandırıcı” değil, <strong>sistem yönetim aracı</strong> olarak görmek daha doğru.</p>
+<h2 id="19--shizuku-telefon-yeniden-başlayınca-ne-oluyor">19 — Shizuku Telefon Yeniden Başlayınca Ne Oluyor?</h2>
+<p>Rootsuz kablosuz hata ayıklama yöntemiyle çalışan Shizuku’nun önemli bir sınırı var.</p>
+<p>Telefon tamamen yeniden başlatıldığında çalışan ADB tabanlı Shizuku servisi sona erer.</p>
+<p>Bu durumda Shizuku’yu yeniden başlatmanız gerekebilir.</p>
+<p>Eşleştirme ise normal şartlarda her seferinde baştan yapılmak zorunda değildir.</p>
+<p>Shizuku v13.6.0 sürüm notlarında Android 13+ cihazlarda güvenilir bir WLAN’a bağlanıldığında rootsuz otomatik başlatma desteği de bulunuyor.</p>
+<p>Ancak üreticiye ait arka plan kısıtlamaları bu davranışı etkileyebilir.</p>
+<p>Xiaomi / POCO kullanıcılarının Shizuku’nun arka planda çalışmasına izin vermesi özellikle önemli.</p>
+<p>Resmi Shizuku rehberi ayrıca:</p>
+<p>Geliştirici seçeneklerini kapatmamanızı,</p>
+<p>USB hata ayıklamayı açık tutmanızı,</p>
+<p>ve üreticinin pil optimizasyonunun Shizuku’yu öldürmediğinden emin olmanızı</p>
+<p>öneriyor.</p>
+<h2 id="20--peki-root-yerine-shizuku-kullanmak-aynı-şey-mi">20 — Peki Root Yerine Shizuku Kullanmak Aynı Şey mi?</h2>
+<p>Hayır.</p>
+<p>Bu ikisi birbirine karıştırılmamalı.</p>
+<p>Root erişimi cihaz üzerinde çok daha geniş yetkiler sağlayabilir.</p>
+<p>Shizuku’nun rootsuz çalışma biçiminde ise yetkiler ADB kullanıcısının sahip olduğu izinlerle sınırlıdır.</p>
+<p>Bu nedenle Shizuku destekleyen bir uygulama root gerektiren her işlemi yapamaz.</p>
+<p>Ama tam da bu nedenle Shizuku çok kullanışlı bir orta yol oluşturuyor.</p>
+<p>Bootloader açmadan,</p>
+<p>Magisk kurmadan,</p>
+<p>sistem bölümünü rootlamadan,</p>
+<p>normal Android uygulamalarından daha güçlü araçlar kullanabiliyoruz.</p>
+<p>Canta bunun güzel örneklerinden biri.</p>
+<h2 id="21--shizuku--canta-kimler-i̇çin-mantıklı">21 — Shizuku + Canta Kimler İçin Mantıklı?</h2>
+<p>Telefonunda üreticinin yüklediği çok sayıda uygulama varsa,</p>
+<p>kullanmadığın sistem uygulamalarını yönetmek istiyorsan,</p>
+<p>root atmak istemiyorsan,</p>
+<p>ADB komutlarını tek tek Termux veya bilgisayardan yazmak istemiyorsan,</p>
+<p>ve hangi paketin ne olduğunu araştırabilecek kadar dikkatli davranacaksan</p>
+<p>bu ikili gerçekten kullanışlı.</p>
+<p>Özellikle Canta’nın paketleri tek ekranda göstermesi, paket adlarını vermesi ve debloat önerilerini yanına eklemesi klasik:</p>
+<p><strong>adb shell pm uninstall…</strong></p>
+<p>komutlarını elle yazmaktan çok daha rahat.</p>
+<p>Ama kolay arayüz riskin ortadan kalktığı anlamına gelmiyor.</p>
+<p>Çöp kutusuna basmak kolaylaştı.</p>
+<p>Hangi çöpü attığını bilmek hâlâ sana kalıyor. 😅</p>
+<h2 id="22--i̇ndirme-bağlantıları">22 — İndirme Bağlantıları</h2>
+<p>Bu tür araçlarda rastgele APK sitelerine gitmemek özellikle önemli.</p>
+<p>Shizuku resmi sitesi:</p>
+<p><a href="https://shizuku.rikka.app/">https://shizuku.rikka.app/</a></p>
+<p>Shizuku resmi GitHub Releases:</p>
+<p><a href="https://github.com/RikkaApps/Shizuku/releases">https://github.com/RikkaApps/Shizuku/releases</a></p>
+<p>Canta resmi GitHub Releases:</p>
+<p><a href="https://github.com/samolego/Canta/releases">https://github.com/samolego/Canta/releases</a></p>
+<p>Canta F-Droid:</p>
+<p><a href="https://f-droid.org/packages/io.github.samolego.canta/">https://f-droid.org/packages/io.github.samolego.canta/</a></p>
+<p>Bu yazı hazırlanırken resmi GitHub üzerindeki güncel kararlı sürümler:</p>
+<p><strong>Shizuku v13.6.0</strong></p>
+<p><strong>Canta v3.2.2</strong></p>
+<p>Shizuku kaynak kodu Apache License 2.0 altında yayınlanıyor.</p>
+<p>Canta deposundaki lisans ise GNU Lesser General Public License v3.0.</p>
+<h2 id="23--sonuç">23 — Sonuç</h2>
+<p>Android’de “root atmadan sistem uygulaması yönetmek” eskiden daha çok:</p>
+<p>PC’yi aç,</p>
+<p>ADB kur,</p>
+<p>telefonu USB ile bağla,</p>
+<p>paket adını bul,</p>
+<p>komutu elle yaz</p>
+<p>işiydi.</p>
+<p>Shizuku + Canta bunu çok daha ulaşılabilir hale getiriyor.</p>
+<p>Shizuku sistem yetkilerine kontrollü bir köprü oluşturuyor.</p>
+<p>Canta da o köprüyü normal bir uygulama arayüzüne çeviriyor.</p>
+<p>Bizim kurulumda da süreç oldukça net oldu:</p>
+<p>Kablosuz hata ayıklamayı açtık.</p>
+<p>Shizuku’yu eşleştirdik.</p>
+<p>Xiaomi / POCO’ya özgü güvenlik ayarını düzelttik.</p>
+<p>Shizuku servisini çalıştırdık.</p>
+<p>Canta’ya izin verdik.</p>
+<p>Ve gerçek sistem uygulamalarını kaldırma onay ekranına kadar ulaştık.</p>
+<p>Üstelik:</p>
+<p><strong>root yok.</strong></p>
+<p><strong>bilgisayar yok.</strong></p>
+<p><strong>terminal komutu yok.</strong></p>
+<p>Ama buradaki en önemli araç aslında Shizuku veya Canta değil.</p>
+<p><strong>Araştırmak.</strong></p>
+<p>Bir sistem paketini kaldırmadan önce ne yaptığını öğreniyorsan bu araçlar çok güçlü.</p>
+<p>Sadece yeşil etikete bakıp çöp kutusuna basıyorsan aynı güç baş ağrısına dönüşebilir. 😅</p>
+<p>Kısacası:</p>
+<p><strong>Kontrol senin elinde.</strong></p>
+<p>Ama neyi kontrol ettiğini bilerek kullan.</p>
+<aside class="cx-callout cx-callout--info" role="note">
+<p class="cx-callout__title">Bilgi</p>
+<p>AMAÇ: Root olmadan Android uygulama / sistem paketi yönetimi | SHIZUKU: v13.6.0 (02.10.2026 kontrolü) | CANTA: v3.2.2 (02.10.2026 kontrolü) | ANDROID: Canta için Android 9.0+ | YETKİ YÖNTEMİ: Shizuku + ADB / Kablosuz hata ayıklama | ROOT: Gerekli değil | PC: Android 11+ kablosuz hata ayıklama yönteminde gerekli değil | VERİ KAYNAĞI: Universal Debloat List entegrasyonu | SHIZUKU LİSANSI: Apache-2.0 | CANTA LİSANSI: LGPL-3.0</p>
+</aside></div><footer class="cx-article__foot"><p class="cx-kicker">TAGS // RELATED SIGNALS</p><div class="cx-tag-links"><a href="/corexlyth-site/etiket/android/">#Android</a><a href="/corexlyth-site/etiket/rehber/">#Rehber</a><a href="/corexlyth-site/etiket/teknoloji/">#Teknoloji</a><a href="/corexlyth-site/etiket/uygulama/">#uygulama</a></div><a class="cx-link" href="/corexlyth-site/arsiv/">← TÜM KAYITLARA DÖN</a></footer></article><section class="cx-community cx-hud-frame" data-community="article" data-post="android-root-olmadan-sistem-uygulamalari-shizuku-canta" data-base="/corexlyth-site/" data-pagefind-ignore><p class="cx-kicker">COREXLYTH // TOPLULUK</p><h2>Yorumlar ve etkileşim</h2><p data-community-status role="status" aria-live="polite">Topluluk yükleniyor…</p><p data-community-login hidden>Katılmak için <a href="/corexlyth-site/hesap/giris/">giriş yap</a>. Yeni bir hesap için <a href="/corexlyth-site/hesap/kayit/">kayıt ol</a>.</p><div class="cx-community-actions"><button type="button" data-like disabled aria-pressed="false">Beğen <span data-like-count>0</span></button><button type="button" data-bookmark disabled aria-pressed="false">Yazıyı kaydet</button><a href="/corexlyth-site/hesap/">Kaydettiklerim</a></div><p>Yorumlar incelendikten sonra yayımlanır. E-posta adresin yorumlarda gösterilmez.</p><form data-comment-form method="post" hidden><fieldset disabled><p data-reply-status>Yeni yorum</p><button type="button" data-cancel-reply hidden>Yanıttan vazgeç</button><label>Yorumun <textarea name="comment" rows="4" minlength="1" maxlength="2000" required></textarea></label><p>En fazla 2000 karakter. Gönderimler arasında 30 saniye bekle; saatte en fazla 10 yorum gönderebilirsin.</p><button type="submit">Yayınla</button></fieldset></form><div data-comment-list aria-label="Yorumlar"></div><button type="button" data-more hidden>Daha fazla yükle</button><p><button type="button" data-community-refresh>Yenile</button> </p><noscript>Topluluk işlemleri için JavaScript gerekir. Yazıyı giriş yapmadan okuyabilirsin.</noscript></section><script type="module" src="/corexlyth-site/_astro/Community.astro_astro_type_script_index_0_lang.RK0R0cZc.js"></script><section class="cx-related cx-hud-frame" aria-label="Benzer içerikler"><p class="cx-kicker">FURTHER READING</p><h2>İlgini çekebilir</h2><div class="cx-record-list"><a class="cx-record-row" style="--cx-row-accent:#9a6cff" href="/corexlyth-site/yazi/android-izinlerini-kontrol-et/"><time class="cx-record-date" datetime="2026-10-25">25.10.2026</time><span class="cx-record-copy"><b>Android uygulama izinleri: Gereksiz erişimleri nasıl azaltırsın?</b><small>Android telefonunda kamera, mikrofon, konum ve diğer uygulama izinlerini nasıl kontrol edeceğini öğren; güvenlik ile kullanım kolaylığını dengele.</small></span><span class="cx-record-channel">Rehberler</span><img src="/corexlyth-site/assets/img/corexlyth-code.svg" alt="" loading="lazy"></a><a class="cx-record-row" style="--cx-row-accent:#76e8bd" href="/corexlyth-site/yazi/localsend-ile-dosya-aktarimi/"><time class="cx-record-date" datetime="2026-10-25">25.10.2026</time><span class="cx-record-copy"><b>LocalSend ile telefon ve bilgisayar arasında dosya gönderme</b><small>LocalSend nasıl çalışır? Android ile Windows, macOS veya Linux arasında aynı ağ üzerinden dosya aktarmak için temel kurulum ve sorun giderme rehberi.</small></span><span class="cx-record-channel">Uygulamalar</span><img src="/corexlyth-site/assets/img/corexlyth-apps.svg" alt="" loading="lazy"></a><a class="cx-record-row" style="--cx-row-accent:#58eaff" href="/corexlyth-site/yazi/app-manager-android-uygulama-analiz-rehberi-0696268111/"><time class="cx-record-date" datetime="2026-10-04">04.10.2026</time><span class="cx-record-copy"><b>Android Uygulamalarının İçini Gör: App Manager ile Detaylı Uygulama Analizi</b><small>Telefonunda bir uygulama var. Açıyorsun, kullanıyorsun, kapatıyorsun. Çoğumuz için uygulamayla olan ilişki burada…</small></span><span class="cx-record-channel">Teknoloji</span><img src="/corexlyth-site/assets/img/blogger/47c50cd1239eb012e4d3c858.webp" alt="" loading="lazy"></a></div></section></main><footer class="cx-footer cx-footer--neural"><div class="cx-footer-neural"><span class="cx-footer-neural__node">COREXLYTH • NEURAL INTERFACE <i></i></span><strong>EXPLORE <b>•</b> CREATE <b>•</b> EVOLVE</strong><p>Fikirler <b>•</b> deneyimler <b>•</b> projeler</p><small>Bağlantı kararlı • CoreXLyth</small><nav class="cx-footer-links" aria-label="Ek bağlantılar"><a href="/corexlyth-site/ara/">ARAMA</a><a href="/corexlyth-site/arsiv/">ARŞİV</a><a href="/corexlyth-site/rss.xml">RSS</a></nav></div></footer><button class="cx-music-toggle" type="button" disabled title="Müzik oynatıcı ileride eklenecek" aria-label="Müzik oynatıcı yakında eklenecek">♫ MUSIC • <b>YAKINDA</b></button><button class="cx-to-top" type="button" aria-label="Sayfanın başına dön">↑</button><dialog class="cx-lightbox" aria-label="Görsel önizleme"><button class="cx-lightbox__close" type="button" aria-label="Görsel önizlemeyi kapat" autofocus>×</button><figure><img alt=""><figcaption id="cx-lightbox-caption" aria-live="polite"></figcaption></figure><div class="cx-lightbox__controls"><button type="button" data-lightbox-prev aria-label="Önceki görsel">← Önceki</button><span data-lightbox-count aria-live="polite"></span><button type="button" data-lightbox-next aria-label="Sonraki görsel">Sonraki →</button></div></dialog><script src="/corexlyth-site/assets/js/main.js?v=blogger-import-1"></script></body></html>
