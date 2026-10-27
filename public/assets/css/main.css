@@ -848,3 +848,8 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-article__content .cx-callout--warning .cx-callout__title{text-transform:uppercase;letter-spacing:.14em;color:#f07896}
 .cx-article__content .cx-callout--warning .cx-callout__title::after{content:'!';position:absolute;right:21px;top:22px;width:32px;height:30px;display:grid;place-items:center;background:#e7375f;color:#120a11;font:bold 22px/1 sans-serif;clip-path:polygon(50% 0,100% 100%,0 100%);padding-top:7px;box-sizing:border-box}
 @media(max-width:500px){.cx-article__content .cx-callout--warning{padding:22px 48px 22px 20px}}
+
+/* Dark, fine-lined heading panels from the original Blogger article. */
+.cx-article__content :is(h2,h3,h4,h5,h6)::before{background:linear-gradient(100deg,rgba(77,146,158,.38),rgba(105,96,158,.24) 64%,rgba(111,68,120,.30))}
+.cx-article__content :is(h2,h3,h4,h5,h6)::after{background:linear-gradient(115deg,#080f19,#080b15 65%,#0c0914)}
+.cx-article__content :is(.cx-callout,blockquote,pre,.cx-figure,.cx-gallery,.cx-table-scroll):focus-within,.cx-article__content .cx-reveal:target,.cx-article__content .cx-reveal:focus-within{opacity:1;transform:none}

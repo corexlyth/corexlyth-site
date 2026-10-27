@@ -1,5 +1,5 @@
 import {defaultSchema} from 'rehype-sanitize';
-const labels={NOTE:'Not',INFO:'Bilgi',TIP:'İpucu',WARNING:'Uyarı',IMPORTANT:'Önemli',DETAILS:'Ayrıntılar',GALLERY:'Görsel galerisi'};
+const labels={NOTE:'Not',INFO:'Bilgi',TIP:'İpucu',WARNING:'Öncelikli uyarı',IMPORTANT:'Önemli',DETAILS:'Ayrıntılar',GALLERY:'Görsel galerisi'};
 export function literalHtml(){return tree=>{const visit=node=>{if(node.type==='html')node.type='text';for(const child of node.children||[])visit(child);};visit(tree);};}
 const paragraph=text=>({type:'paragraph',children:[{type:'text',value:text}]});
 function figure(image,gallery=false){return {type:'paragraph',data:{hName:'figure',hProperties:{className:[gallery?'cx-gallery__item':'cx-figure']}},children:[image,...(image.alt?[{...paragraph(image.alt),data:{hName:'figcaption'}}]:[])]};}

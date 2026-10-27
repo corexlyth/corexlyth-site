@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {renderArticleMarkdown as render} from '../src/lib/article-markdown.ts';
 const image='![Birinci fotoğraf](/corexlyth-site/assets/img/corexlyth-lab.svg)';
-for(const [type,label] of Object.entries({NOTE:'Not',INFO:'Bilgi',TIP:'İpucu',WARNING:'Uyarı',IMPORTANT:'Önemli',DETAILS:'Ayrıntılar'})){
+for(const [type,label] of Object.entries({NOTE:'Not',INFO:'Bilgi',TIP:'İpucu',WARNING:'Öncelikli uyarı',IMPORTANT:'Önemli',DETAILS:'Ayrıntılar'})){
  const html=await render(`> [!${type}]\n> Açıklama **vurgulu**\n>\n> - İç madde`);
  assert(html.includes(`cx-callout--${type.toLowerCase()}`));assert(html.includes(label));assert(html.includes('<strong>vurgulu</strong>'));assert(html.includes('<li>İç madde</li>'));assert(!html.includes(`[!${type}]`));
  if(type==='DETAILS')assert(html.includes('<summary'));
