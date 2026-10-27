@@ -860,3 +860,17 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-article__content :is(.cx-callout,blockquote,pre,.cx-figure,.cx-gallery,.cx-gallery__item,.cx-table-scroll),.cx-article__content :is(ul,ol):not(li *),.cx-article-cover{clip-path:polygon(0 10px,10px 0,84% 0,88% 5px,100% 5px,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
 .cx-article__content :is(h2,h3,h4,h5,h6){clip-path:polygon(0 18px,18px 0,68% 0,72% 6px,100% 6px,100% calc(100% - 18px),calc(100% - 18px) 100%,30% 100%,26% calc(100% - 6px),0 calc(100% - 6px))}
 .cx-article__content :is(h2,h3,h4,h5,h6)::before{background:linear-gradient(100deg,color-mix(in srgb,var(--frame-accent) 35%,#14212b),#283141 65%,#403149)}
+
+/* Blogger article panels: the same fine outline and cut edges for every block. */
+.cx-article__content :is(.cx-callout,blockquote,pre,.cx-figure,.cx-gallery,.cx-gallery__item,.cx-table-scroll):not(.cx-callout--warning)::before,
+.cx-article__content :is(ul,ol):not(li *)::before,.cx-article-cover::before{
+ background:linear-gradient(110deg,color-mix(in srgb,var(--frame-accent) 28%,#18222c),#242638 65%,#3b253d);
+}
+.cx-article__content :is(.cx-callout,blockquote,pre,.cx-figure,.cx-gallery,.cx-gallery__item,.cx-table-scroll):not(.cx-callout--warning)::after,
+.cx-article__content :is(ul,ol):not(li *)::after,.cx-article-cover::after{
+ background:radial-gradient(circle at 96% 7%,color-mix(in srgb,var(--frame-accent) 4%,transparent),transparent 25%),linear-gradient(125deg,#08101d,#0b0816);
+}
+.cx-article__content :is(.cx-callout,blockquote,pre):not(.cx-callout--warning)::after{
+ border-left:3px solid color-mix(in srgb,var(--frame-accent) 78%,transparent);
+}
+.cx-article__content .cx-callout__title{text-transform:uppercase;letter-spacing:.12em;font-weight:800}
