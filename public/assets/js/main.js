@@ -44,7 +44,7 @@ function upgradeImages(root = document) {
 }
 upgradeImages();
 
-const revealNodes = document.querySelectorAll(".cx-channel,.cx-featured,.cx-log-card,.cx-info");
+const revealNodes = document.querySelectorAll(".cx-channel,.cx-featured,.cx-log-card,.cx-info,.cx-category-panel,.cx-all-records,.cx-article__content > p,.cx-article__content > h2,.cx-article__content > h3,.cx-article__content > aside,.cx-article__content > figure,.cx-article__content > ul,.cx-article__content > ol,.cx-article__content > blockquote");
 if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   document.documentElement.classList.add("cx-motion");
   revealNodes.forEach((node) => node.classList.add("cx-reveal"));
@@ -54,7 +54,7 @@ if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-mot
       entry.target.classList.add("is-in");
       obs.unobserve(entry.target);
     });
-  }, {threshold: .1});
+  }, {threshold: 0, rootMargin: "0px 0px 40px 0px"});
   revealNodes.forEach((node) => observer.observe(node));
 }
 

@@ -841,3 +841,10 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 
 /* Keep the mobile hero inside its grid track, including the search input. */
 .cx-hero__copy,.cx-terminal{min-width:0}
+
+/* Blogger-inspired article frames */
+.cx-article__content .cx-callout--warning{--block-accent:#eb3b63;--frame-accent:#eb3b63;padding:26px 58px 26px 24px;color:#f4dce5;font-family:var(--cx-mono);font-weight:700;line-height:1.75}
+.cx-article__content .cx-callout--warning::after{background:linear-gradient(115deg,#120d1c,#0b0913);border-left:4px solid #e5395d}
+.cx-article__content .cx-callout--warning .cx-callout__title{text-transform:uppercase;letter-spacing:.14em;color:#f07896}
+.cx-article__content .cx-callout--warning .cx-callout__title::after{content:'!';position:absolute;right:21px;top:22px;width:32px;height:30px;display:grid;place-items:center;background:#e7375f;color:#120a11;font:bold 22px/1 sans-serif;clip-path:polygon(50% 0,100% 100%,0 100%);padding-top:7px;box-sizing:border-box}
+@media(max-width:500px){.cx-article__content .cx-callout--warning{padding:22px 48px 22px 20px}}
