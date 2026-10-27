@@ -170,3 +170,15 @@ document.querySelectorAll(".cx-panel-carousel").forEach((carousel) => {
   }, {passive:false});
 });
 
+
+// Reading progress tracks the article, not comments or related posts.
+const progressBar=document.querySelector('.cx-reading-progress span');
+const readingArticle=document.querySelector('.cx-article');
+if(progressBar && readingArticle){
+ let queued=false;
+ const update=()=>{queued=false;const end=readingArticle.getBoundingClientRect().bottom+window.scrollY;const distance=Math.max(1,end-window.innerHeight);const value=Math.max(0,Math.min(1,window.scrollY/distance));progressBar.style.transform=`scaleX(${value})`;};
+ const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(update);}};
+ addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule,{passive:true});
+ if('ResizeObserver' in window)new ResizeObserver(schedule).observe(readingArticle);
+ update();
+}
