@@ -54,6 +54,7 @@ jobs:
         if: github.event_name != 'schedule' || steps.content.outputs.changed == 'true'
         run: |
           rm -rf -- yazi kategori etiket arsiv ara hesap _astro pagefind assets
+          node scripts/clean-blogger-aliases.mjs
           cp -a dist/. .
           test -f .nojekyll || touch .nojekyll
           git add -A -- .

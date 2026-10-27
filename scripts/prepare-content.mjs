@@ -2,6 +2,7 @@ import { readFile, writeFile, readdir, mkdir, rm, rename, appendFile } from 'nod
 import { existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
+import { bloggerRedirects } from './lib/blogger-redirects.mjs';
 import { validContent } from '../src/lib/content-rules.ts';
 const config=JSON.parse(await readFile('src/config/public-auth.json','utf8'));
 const client=createClient(config.url,config.publishableKey,{auth:{persistSession:false,autoRefreshToken:false}});
@@ -37,6 +38,7 @@ for(const post of feed.posts){
 await mkdir('.cache',{recursive:true});await rm('.cache/blog-next',{recursive:true,force:true});await mkdir('.cache/blog-next');
 for(const [slug,body] of records)await writeFile(`.cache/blog-next/${slug}.md`,body);
 await rm('.cache/blog',{recursive:true,force:true});await rename('.cache/blog-next','.cache/blog');
+if(existsSync('src/config/blogger-import.json'))await bloggerRedirects(JSON.parse(await readFile('src/config/blogger-import.json','utf8')),records);
 const hash=createHash('sha256').update(JSON.stringify(feed)).digest('hex');
 let previous;try{previous=JSON.parse(await readFile('public/content-manifest.json','utf8')).hash;}catch{}
 await writeFile('public/content-manifest.json',JSON.stringify({schema:1,hash,publications:feed.posts.map(({slug,revision,active})=>({slug,revision,active}))})+'\n');

@@ -374,7 +374,7 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 
 @media(max-width:900px){
   .cx-channel-grid,.cx-card-grid{grid-template-columns:1fr 1fr}
-  .cx-hero{grid-template-columns:1fr;min-height:auto}
+  .cx-hero{grid-template-columns:minmax(0,1fr);min-height:auto}
   .cx-terminal{max-width:520px}
   .cx-featured{grid-template-columns:1fr}
   .cx-media-frame--featured{min-height:280px;aspect-ratio:16/9}
@@ -417,7 +417,7 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
   main{width:min(100% - 18px,1180px);margin-top:12px}
   .cx-frame{backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 10px 28px rgba(0,0,0,.20)}
   .cx-hero{padding:42px 17px;gap:26px}
-  .cx-hero h1{font-size:clamp(3rem,16vw,4.9rem)}
+  .cx-hero h1{font-size:clamp(2.3rem,12vw,4.2rem);overflow-wrap:anywhere}
   .cx-home-meta{font-size:9px}
   .cx-section-heading{align-items:flex-start}
   .cx-section-heading>span{display:none}
@@ -838,3 +838,6 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-editor .cx-editor-entry[aria-current=true]{border-color:#82edfa;box-shadow:inset 3px 0 #58eaff}
 @media(max-width:600px){.cx-editor-library{padding:12px}.cx-editor-library__filters{grid-template-columns:1fr;gap:0}.cx-editor [data-library-items]{grid-template-columns:1fr;max-height:380px}.cx-editor-library__tabs button{padding:10px;font-size:.9rem}}
 .cx-editor-entry__state[data-state=withdrawing]{border-color:#a7804e;color:#ffdb9e}
+
+/* Keep the mobile hero inside its grid track, including the search input. */
+.cx-hero__copy,.cx-terminal{min-width:0}

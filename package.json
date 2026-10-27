@@ -8,7 +8,7 @@
     "dev": "node scripts/prepare-content.mjs && astro dev",
     "build": "node scripts/prepare-content.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
-    "verify": "node scripts/check-build.mjs && node scripts/check-auth-rules.mjs && node scripts/check-community.mjs && node scripts/check-editor.mjs && node scripts/check-media.mjs && node scripts/check-article-blocks.mjs && node scripts/check-editor-draft.mjs && node scripts/check-publication-state.mjs"
+    "verify": "node scripts/check-build.mjs && node scripts/check-auth-rules.mjs && node scripts/check-community.mjs && node scripts/check-editor.mjs && node scripts/check-media.mjs && node scripts/check-article-blocks.mjs && node scripts/check-editor-draft.mjs && node scripts/check-publication-state.mjs && node scripts/check-blogger-build.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
