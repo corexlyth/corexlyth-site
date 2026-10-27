@@ -101,7 +101,7 @@ assert(!readFileSync(join(dist,'sitemap-0.xml'),'utf8').includes('/hesap/'),'Acc
 const authSettings=JSON.parse(readFileSync(join(root,'src/config/public-auth.json'),'utf8'));
 if(!authSettings.publicLaunch) {
  const home=readFileSync(join(dist,'index.html'),'utf8');
- assert(!home.includes('href="/corexlyth-site/hesap/"'),'Closed test account menu hidden on homepage');
+ assert(home.includes('href="/corexlyth-site/hesap/giris/"') && home.includes('href="/corexlyth-site/hesap/kayit/"'),'Sign-in and registration navigation available');
  const signup=readFileSync(join(dist,'hesap/kayit/index.html'),'utf8');
  assert(signup.includes('Üyelik sistemi kapalı test aşamasında.'),'Closed test status visible on signup');
 }

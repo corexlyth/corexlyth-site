@@ -1,5 +1,5 @@
 ---
-import { authConfigured, authPublicLaunch } from '../config/auth';
+import { authConfigured } from '../config/auth';
 interface Props { title?: string; description?: string; noindex?: boolean; image?: string; article?: boolean; publishedTime?: string; structuredData?: Record<string, unknown>; }
 const { title = 'CoreXLyth — Dijital keşif alanı',
 description = 'CoreXLyth: teknoloji, Android uygulamaları, rehberler ve dijital dünyadan bağımsız yayınlar.',
@@ -29,8 +29,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
 <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
 {structuredData && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
-<link rel="stylesheet" href={`${base}assets/css/main.css?v=blogger-all-frames-1`} />
-<noscript><style is:inline>.cx-boot{display:none!important}</style></noscript>
+<link rel="stylesheet" href={`${base}assets/css/main.css?v=navigation-1`} />
+<noscript><style is:inline>.cx-boot{display:none!important}@media(max-width:700px){.cx-menu-button{display:none!important}.cx-nav{display:flex!important;position:static!important;box-shadow:none!important}.cx-header__inner{flex-wrap:wrap}.cx-nav{width:100%}}</style></noscript>
 <slot name="head" />
 </head>
 <body>
@@ -58,18 +58,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
         <span class="cx-brand__dot" aria-hidden="true"></span>
       </a>
 
-      <button class="cx-menu-button" type="button" aria-expanded="false" aria-controls="cx-nav">
-        <span></span><span></span><span></span>
-        <b>MENU</b>
+      <button class="cx-menu-button" type="button" aria-expanded="false" aria-controls="cx-nav" aria-label="Ana menüyü aç veya kapat">
+        <span class="cx-menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        <b>MENÜ</b>
       </button>
 
       <nav class="cx-nav" id="cx-nav" aria-label="Ana menü">
-        <a href={base}>Başlangıç</a>
+        <a href={base}>Ana sayfa</a>
         <a href={`${base}arsiv/`}>Yazılar</a>
         <a href={`${base}ara/`}>⌕ Ara</a>
         <a href={`${base}#kanallar`}>Kanallar</a>
         <a href={`${base}#hakkinda`}>Hakkında</a>
-        {authConfigured && authPublicLaunch && <a href={`${base}hesap/`}>Hesabım</a>}
+        {authConfigured && <>
+          <a href={`${base}hesap/giris/`}>Giriş yap</a>
+          <a href={`${base}hesap/kayit/`}>Kayıt ol</a>
+          <a href={`${base}hesap/`}>Hesabım</a>
+        </>}
       </nav>
     </div>
   </header>
@@ -105,6 +109,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
     </div>
   </dialog>
 
-<script is:inline src={`${base}assets/js/main.js?v=blogger-all-frames-1`}></script>
+<script is:inline src={`${base}assets/js/main.js?v=navigation-1`}></script>
 </body>
 </html>
