@@ -1,13 +1,15 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import { categoriesFrom, coverFor, dateTR, getPosts, postUrl, urlFor } from '../../lib/posts';
+import { categoriesFrom, getPosts } from '../../lib/posts';
+import VaultCard from '../../components/VaultCard.astro';
 const posts = await getPosts();
 const categories = categoriesFrom(posts);
 ---
 <SiteLayout title="Tüm Kayıtlar | CoreXLyth" description="CoreXLyth yazılarını siber arşivde keşfet.">
-  <link slot="head" rel="stylesheet" href={urlFor('assets/css/archive-vault.css?v=1')} />
   <main id="home" class="cx-vault" data-vault>
-    <div class="cx-vault__backdrop" aria-hidden="true"></div>
+    <div class="cx-vault__backdrop" aria-hidden="true">
+      <div class="cx-orbit cx-vault__background-core"><canvas class="cx-particle-core" data-particle-core></canvas><div class="cx-orbit__ring cx-orbit__ring--outer"></div><div class="cx-orbit__ring cx-orbit__ring--inner"></div><div class="cx-orbit__axis"></div><div class="cx-orbit__core"><span>CX</span><i></i></div></div>
+    </div>
     <div class="cx-vault__inner">
       <header class="cx-vault__header">
         <p class="cx-vault__eyebrow">COREXLYTH <span>✦</span> SİBER ARŞİV</p>
@@ -23,24 +25,12 @@ const categories = categoriesFrom(posts);
       </div>
       <p class="cx-vault__count" aria-live="polite" data-vault-count>{posts.length} yayın</p>
       <section class="cx-vault__stage" aria-label="Arşivdeki yazılar">
-        <div class="cx-vault__orbit" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="cx-vault__platform" aria-hidden="true"></div>
         <div class="cx-vault__cards" data-vault-cards>
-          {posts.map((post,index) => <a class="cx-vault-card" href={postUrl(post)} data-vault-card data-category={post.data.category} data-date={post.data.pubDate.toISOString()} data-title={post.data.title} style={`--vault-delay:${Math.min(index,8)*55}ms`}>
-            <div class="cx-vault-card__inner">
-              <div class="cx-vault-card__image"><img src={coverFor(post)} alt="" loading={index < 3 ? 'eager' : 'lazy'} /></div>
-              <div class="cx-vault-card__body">
-                <div class="cx-vault-card__meta"><time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time><span>•</span><span>{post.data.category}</span></div>
-                <h2>{post.data.title}</h2>
-                <p>{post.data.description}</p>
-                <span class="cx-vault-card__link">Devamını oku <b aria-hidden="true">→</b></span>
-              </div>
-            </div>
-          </a>)}
+          {posts.map((post,index) => <VaultCard post={post} index={index} />)}
         </div>
         <p class="cx-vault__empty" hidden>Bu kategoride henüz yazı bulunmuyor.</p>
       </section>
     </div>
   </main>
 </SiteLayout>
-<script>import '../../scripts/archive-vault';</script>
+<script>import '../../scripts/archive-vault'; import '../../scripts/particle-core';</script>

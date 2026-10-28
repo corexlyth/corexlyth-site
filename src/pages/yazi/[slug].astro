@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import Community from '../../components/Community.astro';
+import VaultCard from '../../components/VaultCard.astro';
 import { categoryUrl, coverFor, dateTR, getPosts, postUrl, tagUrl, urlFor } from '../../lib/posts';
 import type { Post } from '../../lib/posts';
 
@@ -99,10 +100,7 @@ const structuredData = {
       {related.length > 0 && <section class="cx-article__related" aria-label="Benzer içerikler" data-pagefind-ignore>
         <h2>İlgili Yazılar</h2>
         <div class="cx-article__related-list">
-          {related.map(item => <a class="cx-article__related-card" href={postUrl(item)}>
-            <img src={coverFor(item)} alt="" loading="lazy" />
-            <span><small>{item.data.category}</small><strong>{item.data.title}</strong></span>
-          </a>)}
+          {related.map((item, index) => <VaultCard post={item} kind="related" index={index} />)}
         </div>
       </section>}
     </article>

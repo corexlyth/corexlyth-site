@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
+import VaultCard from '../components/VaultCard.astro';
 import PostList from '../components/PostList.astro';
 import { categoryUrl, categoriesFrom, getPosts, urlFor, coverFor, postUrl } from '../lib/posts';
 const posts = await getPosts();
@@ -36,10 +37,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 <section class="cx-home-featured" aria-labelledby="cx-featured-title">
   <div class="cx-home-section-heading"><div><p class="cx-kicker">COREXLYTH // SEÇİLİ YAYINLAR</p><h2 id="cx-featured-title">Öne çıkan yazılar</h2></div><a href={urlFor('arsiv/')}>Tüm yazılara göz at <span aria-hidden="true">→</span></a></div>
   <div class="cx-home-featured-grid">
-    {featuredPosts.map(post => <a class="cx-featured-card" href={postUrl(post)}>
-      <img src={coverFor(post)} alt="" loading="lazy" />
-      <div class="cx-featured-card__content"><span>{post.data.category}</span><h3>{post.data.title}</h3><p>{post.data.description}</p><b aria-hidden="true">↗</b></div>
-    </a>)}
+    {featuredPosts.map((post, index) => <VaultCard post={post} kind="featured" index={index} />)}
   </div>
 </section>
 
