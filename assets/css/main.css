@@ -923,3 +923,11 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 @media(prefers-reduced-motion:reduce){.cx-account-surface :is(button,a),.cx-account-surface :is(button,a)::after{transition:none}.cx-account-surface :is(button,a):is(:hover,:focus-visible){transform:none}}
 
 .cx-account-links[hidden]{display:none!important}
+
+/* Account settings and personal activity: same angular, restrained HUD language. */
+.cx-account-surface .cx-settings,.cx-account-surface [data-personal-names],.cx-account-surface [data-personal-comments]{margin:20px 0;padding:18px;border:1px solid #325262;background:linear-gradient(130deg,#081721,#0d0b1b);clip-path:polygon(0 10px,10px 0,84% 0,88% 5px,100% 5px,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
+.cx-account-surface .cx-settings summary,.cx-account-surface details[data-personal-names] summary,.cx-account-surface details[data-personal-comments] summary{color:#b5f4fb;font-weight:750;cursor:pointer;min-height:44px;display:flex;align-items:center;gap:10px}
+.cx-account-surface details summary::before{content:'+';color:#ad8cff}.cx-account-surface details[open] summary::before{content:'−'}
+.cx-account-surface .cx-settings form{padding:12px 0;border-top:1px solid #263d4a}.cx-account-surface [data-settings-password-rules]{padding-left:20px;color:#aabac2}.cx-account-surface [data-settings-password-rules] [data-valid=true]{color:#78e3b8}
+.cx-account-surface [data-personal-comments-list],.cx-account-surface [data-personal-names-list]{padding-left:22px}.cx-account-surface [data-personal-comments-list] li{margin:16px 0;padding-bottom:12px;border-bottom:1px solid #243944;overflow-wrap:anywhere}
+.cx-account-surface [data-personal-comments-list] p{margin:6px 0}.cx-account-surface [data-personal-comments-list] small{color:#9db1ba}
