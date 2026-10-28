@@ -236,3 +236,24 @@ if(progressBar && readingArticle){
   for(const type of ['touchstart','pointerdown','keydown'])window.addEventListener(type,stop,{passive:true});
   motion.addEventListener?.('change',stop);
 })();
+
+
+// Decorative background follows page progress without blocking native scrolling.
+const signalDepth = document.querySelector('[data-signal-depth]');
+if (signalDepth) {
+ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+ let pending = false;
+ const updateSignal = () => {
+  pending = false;
+  if (reduced.matches) { signalDepth.style.removeProperty('--signal-y'); signalDepth.style.removeProperty('--signal-turn'); return; }
+  const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+  const progress = Math.max(0, Math.min(1, scrollY / max));
+  signalDepth.style.setProperty('--signal-y', `${Math.round(progress * -150)}px`);
+  signalDepth.style.setProperty('--signal-turn', `${(progress * 38).toFixed(1)}deg`);
+ };
+ const scheduleSignal = () => { if (!pending) { pending = true; requestAnimationFrame(updateSignal); } };
+ addEventListener('scroll', scheduleSignal, {passive:true});
+ addEventListener('resize', scheduleSignal, {passive:true});
+ reduced.addEventListener?.('change', scheduleSignal);
+ scheduleSignal();
+}
