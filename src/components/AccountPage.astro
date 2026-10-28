@@ -51,16 +51,15 @@ const newPassword = ['signup','reset'].includes(mode);
       <div data-account-details hidden>
         <p>E-posta: <strong data-account-email></strong></p>
         <p data-account-verification></p>
-        <a href={urlFor('hesap/sifre-yenile/')}>Şifremi değiştir</a>
         <button type="button" data-signout>Çıkış yap</button>
       </div>
-      <nav class="cx-account-links" aria-label="Hesap işlemleri">
-        <a href={urlFor('hesap/giris/')}>Giriş yap</a>
-        <a href={urlFor('hesap/kayit/')}>Hesap oluştur</a>
-        <a href={urlFor('hesap/sifremi-unuttum/')}>Şifremi unuttum</a>
+      <nav class="cx-account-links" data-account-links hidden={['account','confirm'].includes(mode)} aria-label="Hesap işlemleri">
+        {mode !== 'login' && <a href={urlFor('hesap/giris/')}>Giriş yap</a>}
+        {mode !== 'signup' && <a href={urlFor('hesap/kayit/')}>Hesap oluştur</a>}
+        {mode !== 'forgot' && <a href={urlFor('hesap/sifremi-unuttum/')}>Şifremi unuttum</a>}
         <a href={urlFor('')}>Ana sayfa</a>
       </nav>
-      <noscript><p>Hesap işlemleri için tarayıcında JavaScript açık olmalı. Yazıları giriş yapmadan okuyabilirsin.</p></noscript>
+      <noscript><style is:inline>.cx-account-links[hidden]{display:flex!important}</style><p>Hesap işlemleri için tarayıcında JavaScript açık olmalı. Yazıları giriş yapmadan okuyabilirsin.</p></noscript>
     </section>
     {['account','confirm'].includes(mode) && <Community mode="account" />}
   </main>
