@@ -921,3 +921,5 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button):disabled{opacity:.5;cursor:not-allowed}
 .cx-account-surface .cx-account-links{gap:10px}.cx-account-surface .cx-account [data-account-details] button{display:flex}
 @media(prefers-reduced-motion:reduce){.cx-account-surface :is(button,a),.cx-account-surface :is(button,a)::after{transition:none}.cx-account-surface :is(button,a):is(:hover,:focus-visible){transform:none}}
+
+.cx-account-links[hidden]{display:none!important}

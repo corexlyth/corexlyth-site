@@ -11,6 +11,7 @@ async function initialize(root: HTMLElement) {
   const form = root.querySelector<HTMLFormElement>('[data-auth-form]');
   const fields = form?.querySelector('fieldset');
   const details = root.querySelector<HTMLElement>('[data-account-details]')!;
+  const accountLinks = root.querySelector<HTMLElement>('[data-account-links]');
   const base = root.dataset.base!;
   const destination = (path: string) => new URL(`${base}hesap/${path}`, location.origin).href;
   let busy = false;
@@ -66,12 +67,15 @@ async function initialize(root: HTMLElement) {
     validateInputs();
   });
   validateInputs();
-  if (!authConfigured) return;
+  if (!authConfigured) { if (accountLinks) accountLinks.hidden = false; return; }
 
   try {
     const client = getAuthClient()!;
     const maySubmit = () => !busy && !redirecting && (mode !== 'reset' || signedIn);
-    const syncFields = () => { if (fields) fields.disabled = !maySubmit(); };
+    const syncFields = () => {
+      if (fields) fields.disabled = !maySubmit();
+      if (accountLinks && (mode === 'account' || mode === 'confirm')) accountLinks.hidden = signedIn;
+    };
     const authError = (error: { code?: string; status?: number }) => {
       if (error.status === 429 || error.code === 'over_email_send_rate_limit' || error.code === 'over_request_rate_limit') return 'Çok fazla deneme yapıldı. Bir süre bekleyip tekrar dene.';
       if (error.code === 'email_address_not_authorized') return 'Üyelik kapalı test aşamasında. Bu e-posta adresi için kayıt henüz açık değil.';
@@ -193,6 +197,7 @@ async function initialize(root: HTMLElement) {
       finally { button.disabled = false; }
     });
   } catch {
+    if (accountLinks && (mode === 'account' || mode === 'confirm')) accountLinks.hidden = false;
     if (fields) fields.disabled = true;
     message('Hesap hizmetine bağlanılamadı. Sayfayı yenileyip tekrar dene.', true);
   }
