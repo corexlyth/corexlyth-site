@@ -11,6 +11,9 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props as { post: Post };
+const titleWords = post.data.title.trim().split(/\s+/);
+const titleEnding = titleWords.length > 1 ? titleWords.pop() : '';
+const titleStart = titleWords.join(' ');
 const { Content, headings } = await render(post);
 const contents = headings.filter(heading => heading.depth === 2 || heading.depth === 3);
 const related = (await getPosts()).filter(p => p.id !== post.id && (p.data.category === post.data.category || p.data.tags.some(t => post.data.tags.includes(t)))).slice(0,3);
@@ -49,9 +52,10 @@ const structuredData = {
         <a href={categoryUrl(post.data.category)}>{post.data.category}</a><span>›</span>
         <span aria-current="page">{post.data.title}</span>
       </nav>
+      <div class="cx-article__intro">
       <header class="cx-article__head">
         <a class="cx-article__category" href={categoryUrl(post.data.category)}>{post.data.category}</a>
-        <h1>{post.data.title}</h1>
+        <h1>{titleStart}{titleEnding && <> <span>{titleEnding}</span></>}</h1>
         <p class="cx-article__summary">{post.data.description}</p>
         <div class="cx-article__meta">
           <time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time>
@@ -62,9 +66,10 @@ const structuredData = {
       <figure class="cx-article-cover">
         <img src={coverFor(post)} alt={post.data.coverAlt} loading="eager" />
       </figure>
+      </div>
 
       {contents.length >= 2 && <details class="cx-toc" open data-pagefind-ignore>
-        <summary>İÇİNDEKİLER</summary>
+        <summary>İçindekiler</summary>
         <nav aria-label="Yazının içindekileri">
           <ol>
             {contents.map(heading => <li class:list={{ 'cx-toc__sub': heading.depth === 3 }}>
@@ -74,20 +79,23 @@ const structuredData = {
         </nav>
       </details>}
 
+      {post.data.tags.length > 0 && <aside class="cx-article__topics" aria-label="Bu yazının konusu" data-pagefind-ignore>
+        <h2>Bu yazının konusu</h2>
+        <div class="cx-tag-links">
+          {post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}
+        </div>
+      </aside>}
+
       <div class="cx-article__content">
         <Content />
       </div>
 
       <footer class="cx-article__foot">
-        <p class="cx-kicker">TAGS // RELATED SIGNALS</p>
-        <div class="cx-tag-links">
-          {post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}
-        </div>
         <a class="cx-link" href={urlFor('arsiv/')}>← TÜM KAYITLARA DÖN</a>
       </footer>
 
       {related.length > 0 && <section class="cx-article__related" aria-label="Benzer içerikler" data-pagefind-ignore>
-        <h2>İlgini çekebilir</h2>
+        <h2>İlgili Yazılar</h2>
         <div class="cx-article__related-list">
           {related.map(item => <a class="cx-article__related-card" href={postUrl(item)}>
             <img src={coverFor(item)} alt="" loading="lazy" />
