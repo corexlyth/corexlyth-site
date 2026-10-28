@@ -1008,3 +1008,12 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-ambient__stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(144,244,255,.45) 1px,transparent 2px),radial-gradient(circle,rgba(189,145,255,.35) 1px,transparent 2px);background-size:173px 191px,229px 257px;background-position:31px 42px,87px 115px;opacity:.4}
 @media(max-width:700px){.cx-ambient__depth{opacity:.55}.cx-ambient__halo{width:90vw;right:-50%;top:26%}.cx-ambient__circuit{width:55%}}
 @media(prefers-reduced-motion:reduce){.cx-ambient__depth{transform:none!important}.cx-ambient__halo{transform:none!important}}
+
+/* Particle core: orbital fallback stays visible until canvas is ready. */
+.cx-orbit{width:min(100%,310px)}
+.cx-particle-core{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity .6s ease}
+.cx-orbit.is-particles-ready .cx-particle-core{opacity:1}
+.cx-orbit.is-particles-ready :is(.cx-orbit__ring,.cx-orbit__axis,.cx-orbit__core){opacity:0}
+.cx-orbit.is-particles-ready::before,.cx-orbit.is-particles-ready::after{opacity:.3}
+@media(max-width:700px){.cx-orbit{width:min(70vw,260px)}}
+@media(prefers-reduced-motion:reduce){.cx-particle-core{transition:none}}
