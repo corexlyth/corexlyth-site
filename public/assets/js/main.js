@@ -9,6 +9,21 @@ window.addEventListener("load", () => {
 
 const menuButton = document.querySelector(".cx-menu-button");
 const nav = document.querySelector(".cx-nav");
+function markCurrentNavigation() {
+  if (!nav) return;
+  const current=new URL(location.href);
+  let match=null;
+  for (const link of nav.querySelectorAll('a')) {
+    const target=new URL(link.href,location.href);
+    const pathMatch=target.pathname.replace(/\/$/,'')===current.pathname.replace(/\/$/,'') || (current.pathname.includes('/yazi/') && target.pathname.endsWith('/arsiv/'));
+    if(pathMatch && (target.hash ? target.hash===current.hash : !current.hash)) match=link;
+    link.removeAttribute('aria-current');
+  }
+  match?.setAttribute('aria-current','page');
+}
+markCurrentNavigation();
+window.addEventListener('hashchange',markCurrentNavigation);
+
 menuButton?.addEventListener("click", () => {
   const open = nav?.classList.toggle("is-open") ?? false;
   menuButton.setAttribute("aria-expanded", String(open));
