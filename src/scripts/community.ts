@@ -115,6 +115,8 @@ async function start(root:HTMLElement) {
     }
     const editorLink=find('[data-editor-link]');
     if(editorLink){editorLink.hidden=true;if(state.signedIn){const capability=await client.rpc('cx_editor_read');if(current!==request)return;editorLink.hidden=Boolean(capability.error);}}
+    const adminLink=find('[data-admin-link]');
+    if(adminLink){adminLink.hidden=true;if(state.signedIn){const capability=await client.rpc('cx_staff_admin',{p_action:'list'});if(current!==request)return;adminLink.hidden=Boolean(capability.error);}}
     sync();
     tell(state.blocked?'Hesabının topluluk gönderimleri kısıtlandı.':mode==='moderation'?'Yorumları inceleyebilir, yayımlayabilir veya silebilirsin.':'Topluluk güncel.');
   }

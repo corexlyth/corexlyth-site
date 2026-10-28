@@ -931,3 +931,13 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-account-surface .cx-settings form{padding:12px 0;border-top:1px solid #263d4a}.cx-account-surface [data-settings-password-rules]{padding-left:20px;color:#aabac2}.cx-account-surface [data-settings-password-rules] [data-valid=true]{color:#78e3b8}
 .cx-account-surface [data-personal-comments-list],.cx-account-surface [data-personal-names-list]{padding-left:22px}.cx-account-surface [data-personal-comments-list] li{margin:16px 0;padding-bottom:12px;border-bottom:1px solid #243944;overflow-wrap:anywhere}
 .cx-account-surface [data-personal-comments-list] p{margin:6px 0}.cx-account-surface [data-personal-comments-list] small{color:#9db1ba}
+.cx-staff-user {
+  margin: 1.25rem 0;
+  padding: 1.1rem;
+  border: 1px solid rgba(105, 216, 233, .3);
+  background: linear-gradient(135deg, rgba(18, 43, 55, .55), rgba(15, 11, 29, .72));
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+.cx-staff-user p { overflow-wrap: anywhere; }
+.cx-staff-user label { display: block; margin: 1rem 0; }
+.cx-staff-user select { display: block; max-width: 100%; margin-top: .5rem; }
