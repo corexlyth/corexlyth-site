@@ -10,10 +10,8 @@ import { urlFor } from '../../../lib/posts';
    <p><a class="cx-account-back" href={urlFor('hesap/')}>Hesabıma dön</a></p>
    <p data-staff-status role="status" aria-live="polite">Yetki kontrol ediliyor…</p>
    <div class="cx-admin-section" data-staff-content hidden>
-    <h2>Üyeler</h2>
-    <p>Üyeleri görebilir ve gerektiğinde yorum yapmalarını kısıtlayabilirsin.</p>
-    <div data-staff-users></div>
-    <button type="button" data-staff-refresh>Listeyi yenile</button>
+    <div class="cx-admin-section__heading"><div><p class="cx-admin-section__kicker">TOPLULUK // ÜYELER</p><h2>Üye yönetimi</h2><p>Üyeleri görüntüle ve yorum kısıtlamalarını yönet.</p></div><button type="button" data-staff-refresh>Listeyi yenile</button></div>
+    <div class="cx-staff-list" data-staff-users></div>
    </div>
   </section>
  </main>
