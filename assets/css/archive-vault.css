@@ -53,3 +53,5 @@
  .cx-article__related-list{gap:24px}
 }
 @media(max-width:410px){.cx-vault__cards{gap:26px}}
+/* Leave the forming initials a clear strip between the title and the controls. */
+.cx-vault__header>p:last-child{margin-top:clamp(78px,13vw,175px)}
