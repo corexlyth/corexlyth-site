@@ -4,7 +4,7 @@ export function editorLibrary(root:HTMLElement,onSelect:(slug:string)=>void){
  const items=$('[data-library-items]'),category=$<HTMLSelectElement>('[data-library-category]'),query=$<HTMLInputElement>('[data-library-query]');
  let posts:EditorEntry[]=[],selected='',disabled=false;const versions=new Map<string,PublishedVersion>(),checked=new Map<string,number>();
  function render(){
-  const group=posts;
+  const group=posts.filter(post=>post.published);
   const previous=category.value;category.replaceChildren(new Option('Tüm kategoriler',''));
   for(const value of [...new Set(group.map(p=>p.category||'Kategorisiz'))].sort((a,b)=>a.localeCompare(b,'tr')))category.add(new Option(value,value));
   if([...category.options].some(o=>o.value===previous))category.value=previous;

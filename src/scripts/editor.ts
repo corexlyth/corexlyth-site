@@ -11,7 +11,8 @@ const root=document.querySelector<HTMLElement>('[data-editor]');
 if(root)void initialize(root);
 async function initialize(root:HTMLElement){
  const client=getAuthClient();const $=<T extends HTMLElement=HTMLElement>(s:string)=>root.querySelector<T>(s)!;
- const form=$<HTMLFormElement>('[data-editor-form]'),list=editorLibrary(root,value=>{void open(value);});
+ const form=$<HTMLFormElement>('[data-editor-form]'),list=editorLibrary(root,value=>{void (async()=>{if(await open(value))showMode('edit',true);})();});
+ function showMode(mode:'new'|'edit',workspace:boolean){root.querySelectorAll<HTMLButtonElement>('[data-editor-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.editorMode===mode)));$('[data-editor-library]').hidden=mode!=='edit';$('[data-editor-workspace]').hidden=!workspace;$('[data-editor-intro]').hidden=!workspace;}
  let revision=0,slug='',role='',busy=false,dirty=false,published=false,signedOut=false,sessionEpoch=0,previewVersion=0,publicationDate='',publishedRevision=0,publicationStage='draft',publicationCheck=0;
  let publicationTimer:ReturnType<typeof setInterval>|undefined;
  let previewTimer:ReturnType<typeof setTimeout>,autoTimer:ReturnType<typeof setTimeout>,manualTimer:ReturnType<typeof setTimeout>;
@@ -29,7 +30,7 @@ async function initialize(root:HTMLElement){
 
  const field=(name:string)=>form.elements.namedItem(name) as HTMLInputElement;
  const tell=(s:string,error=false)=>{$('[data-editor-status]').textContent=s;$('[data-editor-status]').dataset.error=String(error);};
- const sync=()=>{root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=busy||signedOut);form.querySelector('fieldset')!.disabled=busy||signedOut||Boolean(pendingRecovery);list.disabled=busy||signedOut||saving||Boolean(pendingRecovery);$<HTMLButtonElement>('[data-editor-new]').disabled=busy||signedOut||saving||Boolean(pendingRecovery);
+ const sync=()=>{root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=busy||signedOut);form.querySelector('fieldset')!.disabled=busy||signedOut||Boolean(pendingRecovery);list.disabled=busy||signedOut||saving||Boolean(pendingRecovery);root.querySelectorAll<HTMLButtonElement>('[data-editor-mode]').forEach(button=>button.disabled=busy||signedOut||saving||Boolean(pendingRecovery));
   root.querySelectorAll<HTMLButtonElement>('[data-editor-recovery] button').forEach(button=>button.disabled=busy||saving||signedOut);
   $<HTMLButtonElement>('[data-editor-slug-reset]').disabled=Boolean(revision)||saving;
   $<HTMLButtonElement>('[data-editor-publish]').disabled=busy||saving||Boolean(pendingRecovery)||role!=='owner';
@@ -60,8 +61,8 @@ async function initialize(root:HTMLElement){
  async function refreshList(){const epoch=sessionEpoch;const {data,error}=await client!.rpc('cx_editor_read');if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');role=data.role;list.setPosts(data.posts);
   for(const p of data.posts)reserved.add(p.slug);const current=data.posts.find((p:{slug:string})=>p.slug===slug);if(current){published=Boolean(current.published);publishedRevision=current.published_revision??(published?current.revision:0);}list.value=slug;}
  async function open(value:string,discardRecovery=true){
-  if(busy||saving||signedOut||pendingRecovery)return;const epoch=sessionEpoch;if(dirty&&!window.confirm('Kaydedilmemiş değişiklikleri bırakıp devam etmek istiyor musun?')){list.value=slug;return;}
-  clearTimeout(autoTimer);clearTimeout(manualTimer);busy=true;sync();
+  if(busy||saving||signedOut||pendingRecovery)return false;const epoch=sessionEpoch;if(dirty&&!window.confirm('Kaydedilmemiş değişiklikleri bırakıp devam etmek istiyor musun?')){list.value=slug;return false;}
+  clearTimeout(autoTimer);clearTimeout(manualTimer);busy=true;sync();let opened=false;
   try{let loaded:{slug:string;revision:number;published:boolean;publishedRevision?:number;payload:ContentPayload}|null=null;if(value){const {data,error}=await client!.rpc('cx_editor_read',{p_slug:value});if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');loaded=data;}
    if(discardRecovery)clearCache();blocked=false;retries=0;slugManual=Boolean(value);previewVersion++;form.reset();field('cover').value='';$<HTMLImageElement>('[data-media-cover-preview]').removeAttribute('src');$('[data-media-cover-preview]').hidden=true;$('[data-editor-preview-box]').hidden=true;$('[data-editor-live]').hidden=true;
    if(!value){slug='';revision=0;published=false;publicationDate='';publishedRevision=0;publicationStage='draft';chooseCategory('');}
@@ -71,8 +72,9 @@ async function initialize(root:HTMLElement){
     field('slug').value=slug;chooseCategory(data.payload.category);
    }
    $('[data-media-status]').textContent=field('cover').value?'Bu yazının kayıtlı kapağı kullanılıyor. Değiştirmek için yeni bir görsel yükle.':'Bu yazının kapak görselini cihazından yükle.';
-   dirty=false;list.value=slug;saveStatus(revision?'Kayıtlı yazı açık.':'Henüz yayımlanmamış yeni yazı.');void deployedState();tell('Yazı düzenlemeye hazır.');schedulePreview();
+   dirty=false;list.value=slug;saveStatus(revision?'Kayıtlı yazı açık.':'Henüz yayımlanmamış yeni yazı.');void deployedState();tell('Yazı düzenlemeye hazır.');schedulePreview();opened=true;
   }catch(e){if(epoch===sessionEpoch){list.value=slug;tell(reason(e as Error),true);}}finally{if(epoch===sessionEpoch){busy=false;state();if(dirty)scheduleAuto();}}
+  return opened;
  }
  if(!client){tell('Yazı hizmeti yapılandırılmadı.',true);return;}
  const media=editorMedia(root,client,{busy:(v)=>{busy=v;sync();},alive:()=>!signedOut,
@@ -96,7 +98,7 @@ async function initialize(root:HTMLElement){
    slug=same?r.slug:'';revision=same?r.revision:0;if(!same)published=false;publicationDate=r.payload.pubDate;
    for(const [k,v] of Object.entries(r.payload)){if(k==='featured')field(k).checked=Boolean(v);else if(field(k))field(k).value=Array.isArray(v)?v.join(', '):String(v);}
    chooseCategory(r.payload.category);slugManual=true;field('slug').value=same?r.slug:r.revision?titleSlug(r.payload.title,reserved):reserved.has(r.slug)?titleSlug(r.slug,reserved):r.slug;
-   pendingRecovery=null;$('[data-editor-recovery]').hidden=true;blocked=false;publicationStage=published?'queued':'draft';list.value=slug;changed();void deployedState();tell(r.revision&&!same?'Sunucuda daha yeni sürüm var. Kurtarılan metin yeni bir yazı olarak açıldı.':'Yarım kalan değişiklikler geri yüklendi.');
+   pendingRecovery=null;$('[data-editor-recovery]').hidden=true;blocked=false;publicationStage=published?'queued':'draft';list.value=slug;showMode(same?'edit':'new',true);changed();void deployedState();tell(r.revision&&!same?'Sunucuda daha yeni sürüm var. Kurtarılan metin yeni bir yazı olarak açıldı.':'Yarım kalan değişiklikler geri yüklendi.');
   }catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}
  })();});
  form.addEventListener('input',event=>{if(event.target===field('title'))generateSlug();if(event.target===field('slug'))slugManual=true;if(event.target===newCategory)field('category').value=newCategory.value;changed();});
@@ -120,7 +122,7 @@ async function initialize(root:HTMLElement){
    published=action==='publish';publishedRevision=published?revision:0;publicationStage=published?'queued':'draft';$('[data-editor-live]').hidden=true;await refreshList();list.reveal(slug);void deployedState();tell(published?'Yayın isteğin alındı. Aktarım tamamlanınca yazın sitede görünecek.':'Yazı yayından kaldırılmak üzere işaretlendi. Site güncellenince sayfası kaldırılacak.');
   }catch(e){if(epoch===sessionEpoch){cache();tell(reason(e as Error),true);}}finally{if(epoch===sessionEpoch){busy=false;state();}}
  }
- $('[data-editor-new]').addEventListener('click',()=>{void open('');});
+ root.querySelectorAll<HTMLButtonElement>('[data-editor-mode]').forEach(button=>button.addEventListener('click',()=>{void(async()=>{const mode=button.dataset.editorMode as 'new'|'edit';if(await open(''))showMode(mode,mode==='new');})();}));
  publicationTimer=setInterval(()=>{if(!document.hidden&&!signedOut)void deployedState();},30000);
  function schedulePreview(){previewVersion++;clearTimeout(previewTimer);previewTimer=setTimeout(()=>{void preview();},320);}
  async function preview(){
