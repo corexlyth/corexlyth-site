@@ -1,6 +1,6 @@
 import { getAuthClient } from '../lib/supabase-client';
 
-type User = {id:string;email:string|null;display_name:string|null;role:'admin'|'moderator'|'author'|null;blocked:boolean};
+type User = {id:string;email:string|null;display_name:string|null;role:'admin'|'moderator'|'author'|null;blocked:boolean;banned_until:string|null;comment_restricted:boolean;comment_restriction_until:string|null};
 const root=document.querySelector<HTMLElement>('[data-staff-admin]');
 if(root){
  const client=getAuthClient(), status=root.querySelector<HTMLElement>('[data-staff-status]')!, content=root.querySelector<HTMLElement>('[data-staff-content]')!, list=root.querySelector<HTMLElement>('[data-staff-users]')!, refresh=root.querySelector<HTMLButtonElement>('[data-staff-refresh]')!;
@@ -24,7 +24,8 @@ if(root){
    const select=node('select');select.setAttribute('aria-label',`${u.email||'Kullanıcı'} rolü`);
    for(const [value,name] of [['','Üye'],['author','Yazar'],['moderator','Moderatör'],['admin','Admin']])select.add(new Option(name,value));
    select.value=u.role||'';select.disabled=u.id===currentUser;label.append(select);
-   card.append(title,email,node('p',u.blocked?'Topluluk gönderimleri engelli':'Hesap aktif'),label);
+   const banned=Boolean(u.banned_until && new Date(u.banned_until).getTime()>Date.now());
+   card.append(title,email,node('p',banned?`Hesap banlı · ${new Date(u.banned_until!).toLocaleString('tr-TR')}`:'Hesap banı yok'),node('p',u.blocked?'Topluluk gönderimleri engelli':'Topluluk engeli yok'),node('p',u.comment_restricted?(u.comment_restriction_until?`Yorum kısıtlı · ${new Date(u.comment_restriction_until).toLocaleString('tr-TR')}`:'Yorum süresiz kısıtlı'):'Yorum kısıtlaması yok'),label);
    if(u.id!==currentUser){
     const button=node('button','Rolü kaydet');button.type='button';
     button.addEventListener('click',()=>{void(async()=>{
@@ -43,7 +44,7 @@ if(root){
      const release=restriction.value==='release';
      const result=await client.rpc('cx_comment_restriction_set',{p_target:u.id,p_minutes:release||restriction.value==='permanent'?null:Number(restriction.value),p_release:release});
      busy=false;if(changeEpoch!==epoch)return;restrictButton.disabled=false;
-     tell(result.error?'Yorum kısıtlaması değiştirilemedi.':'Yorum kısıtlaması güncellendi ve işlem kaydedildi.');
+     if(result.error){tell('Yorum kısıtlaması değiştirilemedi.');return;}await load();if(changeEpoch+1===epoch)tell('Yorum kısıtlaması güncellendi ve işlem kaydedildi.');
     })();});card.append(restrictionLabel,restrictButton);
    }
    list.append(card);
