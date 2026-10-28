@@ -8,5 +8,13 @@ import { urlFor } from '../../../lib/posts';
     <h1>Topluluk yönetimi</h1>
     <p><a class="cx-account-back" href={urlFor('hesap/')}>Hesabıma dön</a></p>
     <Community mode="moderation" />
+    <section class="cx-account cx-hud-frame" data-staff-posts>
+      <p class="cx-kicker">COREXLYTH // YAYIN YÖNETİMİ</p>
+      <h2>Yazı yönetimi</h2>
+      <p data-staff-posts-status role="status">Yetki kontrol ediliyor…</p>
+      <div data-staff-posts-list></div>
+      <button type="button" data-staff-posts-refresh hidden>Yazıları yenile</button>
+    </section>
   </main>
 </SiteLayout>
+<script>import '../../../scripts/staff-posts';</script>
