@@ -6,7 +6,7 @@ const { mode = 'article', post = '' } = Astro.props;
 ---
 <section class="cx-community cx-hud-frame" hidden={mode === 'account'} data-community={mode} data-post={post} data-base={urlFor('')} data-pagefind-ignore>
   <p class="cx-kicker">COREXLYTH // TOPLULUK</p>
-  <h2>{mode === 'article' ? 'Yorumlar ve etkileşim' : mode === 'account' ? 'Profilim ve kaydettiklerim' : 'Yorum moderasyonu'}</h2>
+  <h2>{mode === 'article' ? 'Yorumlar ve etkileşim' : mode === 'account' ? 'Profilim' : 'Yorum moderasyonu'}</h2>
   <p data-community-status role="status" aria-live="polite">{authConfigured ? 'Topluluk yükleniyor…' : 'Topluluk henüz kullanıma açılmadı.'}</p>
   {mode !== 'article' && <p data-community-login hidden><a class="cx-community-login" href={urlFor('hesap/giris/')}>Giriş yap</a></p>}
   {mode === 'article' && <>
@@ -26,7 +26,9 @@ const { mode = 'article', post = '' } = Astro.props;
   </form>}
   {mode === 'account' && <>
     <p><a data-editor-link href={urlFor('hesap/yazilar/')} hidden>Yazı yönetimi</a></p>
-    <h3>Kaydedilen yazılar</h3>
+    <details data-personal-names><summary>Önceki takma adlarım</summary><p>Bu özellik açıldıktan sonra değiştirdiğin adlar burada görünür.</p><p data-personal-names-status role="status"></p><ul data-personal-names-list></ul><button type="button" data-personal-names-more hidden>Daha fazla göster</button></details>
+    <details data-personal-comments><summary>Yorumlarım</summary><p data-personal-comments-status role="status"></p><ul data-personal-comments-list></ul><button type="button" data-personal-comments-more hidden>Daha fazla göster</button></details>
+    <h3>Kaydettiğim yazılar</h3>
     <p>En son kaydettiğin 100 yazı burada görünür.</p>
     <ul data-saved-list></ul>
   </>}
