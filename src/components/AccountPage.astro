@@ -15,10 +15,12 @@ const newPassword = ['signup','reset'].includes(mode);
   <meta slot="head" name="referrer" content="no-referrer" />
   <main id="home" class:list={['cx-reading-shell', 'cx-account-surface', `cx-account-surface--${mode}`]}>
     <section class="cx-account cx-hud-frame" data-auth-page={mode} data-base={urlFor('')}>
+      <div class="cx-account-hero">
       <p class="cx-account-brand">Core<span>XLyth</span></p>
       <p class="cx-kicker">COREXLYTH // {mode === 'account' ? 'HESAP AYARLARI' : 'HESAP'}</p>
-      <h1>{titles[mode]}</h1>
+      <h1>{mode === 'login' ? 'Tekrar hoş geldiniz' : mode === 'account' ? 'Hesap Ayarları' : titles[mode]}</h1>
       <p class="cx-account-intro">{mode === 'account' ? 'Hesap bilgilerini ve güvenlik ayarlarını buradan yönet.' : mode === 'login' ? 'Hesabına giriş yaparak CoreXLyth topluluğuna katıl.' : mode === 'signup' ? 'Hesabını oluştur ve CoreXLyth topluluğuna katıl.' : 'Hesabına güvenli şekilde erişmek için aşağıdaki adımları izle.'}</p>
+      </div>
       {!authPublicLaunch && <p>Üyelik sistemi kapalı test aşamasında.</p>}
       <p id="cx-auth-status" role="status" aria-live="polite">{authConfigured ? 'Bağlantı kontrol ediliyor…' : 'Hesap sistemi henüz kullanıma açılmadı.'}</p>
       {['login','signup','forgot','reset'].includes(mode) && <form data-auth-form method="post">

@@ -1256,3 +1256,33 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
  .cx-account-surface--account .cx-settings{grid-column:2;grid-row:2}
  .cx-account-surface--account [data-signout]{grid-column:2;grid-row:3;justify-self:start}
 }
+
+/* Account reference: layered cut-corner frames, luminous edges and compact forms. */
+.cx-account-surface :is(.cx-account,.cx-community,.cx-editor){position:relative;isolation:isolate;border:0;background:transparent;clip-path:polygon(0 20px,20px 0,calc(100% - 20px) 0,100% 20px,100% calc(100% - 20px),calc(100% - 20px) 100%,20px 100%,0 calc(100% - 20px));filter:drop-shadow(0 0 10px rgba(19,202,255,.32))}
+.cx-account-surface :is(.cx-account,.cx-community,.cx-editor)::before{content:"";display:block;position:absolute;inset:0;width:auto;height:auto;z-index:-2;clip-path:inherit;background:linear-gradient(135deg,#67eeff 0%,#2082ae 22%,#385389 52%,#a562ff 82%,#4defff 100%);box-shadow:none;animation:cx-account-border 5s ease-in-out infinite alternate}
+.cx-account-surface :is(.cx-account,.cx-community,.cx-editor)::after{content:"";display:block;position:absolute;inset:2px;width:auto;height:auto;z-index:-1;clip-path:inherit;background:linear-gradient(145deg,rgba(3,14,31,.94),rgba(4,15,36,.91));opacity:1}
+.cx-account-surface--login,.cx-account-surface--signup,.cx-account-surface--forgot,.cx-account-surface--reset{width:min(480px,calc(100% - 32px));padding-top:clamp(24px,4vh,50px)}
+.cx-account-surface--login .cx-account,.cx-account-surface--signup .cx-account,.cx-account-surface--forgot .cx-account,.cx-account-surface--reset .cx-account{padding:clamp(28px,4vw,42px)}
+.cx-account-surface--login .cx-kicker,.cx-account-surface--signup .cx-kicker{display:none}
+.cx-account-surface--login .cx-account-brand,.cx-account-surface--signup .cx-account-brand{font-size:1.75rem;margin:0 0 30px;color:#f9fcff;letter-spacing:-.035em}
+.cx-account-brand span{background:linear-gradient(90deg,#50ebff,#b868ff);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cx-account-surface--login .cx-account h1,.cx-account-surface--signup .cx-account h1{font-size:1.6rem;margin:0 0 10px}
+.cx-account-surface--login .cx-account-intro,.cx-account-surface--signup .cx-account-intro{max-width:310px;font-size:.9rem;margin:0 auto 20px;color:#d1e1f1}
+.cx-account-surface .cx-account label{font-size:.86rem;color:#d5eaff;margin:14px 0 8px}
+.cx-account-surface .cx-account input{margin-top:7px;background:rgba(1,16,32,.9);border-color:#1a6585;box-shadow:inset 0 0 10px rgba(10,172,225,.04)}
+.cx-account-surface :is(.cx-account button,.cx-account-links a){clip-path:polygon(0 8px,8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px))}
+.cx-account-surface .cx-account form > fieldset > button[type=submit]::after{background:linear-gradient(100deg,#21b6ee,#2856d7 50%,#a53ce0)}
+.cx-account-surface .cx-account form > fieldset > button[type=submit]{margin-top:14px;filter:drop-shadow(0 0 7px rgba(39,201,255,.4));font-weight:750}
+.cx-account-surface--login .cx-account-links,.cx-account-surface--signup .cx-account-links{margin-top:22px;padding:18px 12px 0;border-top:1px solid rgba(78,212,240,.27);justify-content:center;gap:8px}
+.cx-account-surface--account .cx-account-brand{display:none}
+.cx-account-surface--account .cx-account-hero{position:relative;margin:-8px -8px 22px;padding:22px 25px;border:1px solid rgba(82,222,250,.54);background:linear-gradient(90deg,rgba(5,22,42,.93),rgba(7,32,54,.72));clip-path:polygon(0 12px,12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%)}
+.cx-account-surface--account .cx-account-hero::after{content:'⚙';position:absolute;right:32px;top:50%;transform:translateY(-50%);font-size:clamp(38px,5vw,70px);line-height:1;color:#71e9ff;text-shadow:0 0 9px #24bafa,0 0 25px #5c58ed;opacity:.8;pointer-events:none}
+.cx-account-surface--account .cx-account-hero .cx-account-intro{max-width:75%}
+.cx-account-surface--account .cx-account-sections{border-color:rgba(64,185,227,.58);clip-path:polygon(0 10px,10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%)}
+.cx-account-surface--account :is(.cx-account-identity,.cx-settings-grid form,.cx-profile-name,.cx-profile-activity,.cx-saved-posts,.cx-account-admin-actions){border-color:rgba(72,222,248,.72);box-shadow:inset 0 0 18px rgba(20,150,210,.06),0 0 10px rgba(40,195,240,.08)}
+.cx-account-surface--account .cx-settings{background:transparent;border:0;box-shadow:none;padding:0;clip-path:none}
+.cx-account-surface--account .cx-settings summary{padding:12px 4px;color:#dffaff}
+.cx-account-surface--account .cx-settings-grid form{padding:22px;background:rgba(3,19,38,.88);border-color:#39b7d8}
+@keyframes cx-account-border{from{opacity:.7;filter:brightness(.9)}to{opacity:1;filter:brightness(1.25)}}
+@media(max-width:700px){.cx-account-surface--account .cx-account-hero{padding:18px}.cx-account-surface--account .cx-account-hero::after{right:16px;font-size:34px}.cx-account-surface--account .cx-account-hero .cx-account-intro{max-width:80%}}
+@media(prefers-reduced-motion:reduce){.cx-account-surface :is(.cx-account,.cx-community,.cx-editor)::before{animation:none}}
