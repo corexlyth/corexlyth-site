@@ -33,7 +33,7 @@ const showNavSearch = currentPath !== rootPath && !currentPath.startsWith(`${roo
 <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
 {structuredData && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
 <link rel="stylesheet" href={`${base}assets/css/main.css?v=nav-search-8`} />
-<link rel="stylesheet" href={`${base}assets/css/archive-vault.css?v=4`} />
+<link rel="stylesheet" href={`${base}assets/css/archive-vault.css?v=5`} />
 <noscript><style is:inline>.cx-boot{display:none!important}@media(max-width:700px){.cx-menu-button{display:none!important}.cx-nav{display:flex!important;position:static!important;box-shadow:none!important}.cx-header__inner{flex-wrap:wrap}.cx-nav{width:100%}}</style></noscript>
 <noscript><style is:inline>@media(max-width:1000px){.cx-article-page .cx-menu-button{display:none!important}.cx-article-page .cx-nav{display:flex!important;position:static!important;box-shadow:none!important;width:100%}.cx-article-page .cx-header__inner{flex-wrap:wrap}}</style></noscript>
 <slot name="head" />
