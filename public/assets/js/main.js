@@ -197,3 +197,42 @@ if(progressBar && readingArticle){
  if('ResizeObserver' in window)new ResizeObserver(schedule).observe(readingArticle);
  update();
 }
+
+// A short eased glide for discrete mouse-wheel steps. Native touch, trackpad,
+// nested scrollers, zoom gestures and reduced-motion preferences stay native.
+(() => {
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let target=0, frame=0, lastTime=0;
+  const stop=()=>{if(frame) cancelAnimationFrame(frame);frame=0;lastTime=0;};
+  const maxScroll=()=>Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+  const insideScroller=(element)=>{
+    for(let node=element instanceof Element ? element : element?.parentElement;node && node!==document.body;node=node.parentElement){
+      if(node.matches('dialog,textarea,select,input,[contenteditable="true"],.cx-panel-carousel'))return true;
+      const style=getComputedStyle(node);
+      if((/(auto|scroll)/.test(style.overflowY) && node.scrollHeight>node.clientHeight+1) || (/(auto|scroll)/.test(style.overflowX) && node.scrollWidth>node.clientWidth+1))return true;
+    }
+    return false;
+  };
+  function tick(time){
+    if(motion.matches){stop();return;}
+    target=Math.max(0,Math.min(maxScroll(),target));
+    const elapsed=lastTime?Math.min(time-lastTime,50):16;lastTime=time;
+    const delta=target-window.scrollY;
+    if(Math.abs(delta)<.5){window.scrollTo({top:target,behavior:'instant'});stop();return;}
+    window.scrollTo({top:window.scrollY+delta*(1-Math.exp(-elapsed/85)),behavior:'instant'});
+    frame=requestAnimationFrame(tick);
+  }
+  window.addEventListener('wheel',event=>{
+    if(motion.matches||event.defaultPrevented||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||!event.cancelable||Math.abs(event.deltaX)>0||insideScroller(event.target)){stop();return;}
+    const amount=Math.abs(event.deltaY);
+    // Fine high-frequency pixel deltas are usually trackpad input: preserve them.
+    if(!amount || (event.deltaMode===0 && (amount<80 || !Number.isInteger(amount)))){stop();return;}
+    const pixels=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?window.innerHeight:1);
+    const next=Math.max(0,Math.min(maxScroll(),(frame?target:window.scrollY)+pixels));
+    if(!frame && Math.abs(next-window.scrollY)<.5)return;
+    event.preventDefault();target=next;
+    if(!frame)frame=requestAnimationFrame(tick);
+  },{passive:false});
+  for(const type of ['touchstart','pointerdown','keydown'])window.addEventListener(type,stop,{passive:true});
+  motion.addEventListener?.('change',stop);
+})();
