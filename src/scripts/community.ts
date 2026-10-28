@@ -1,6 +1,6 @@
 import { getAuthClient } from '../lib/supabase-client';
 
-type Comment = { id:string; post:string; parent:string|null; name:string; body:string; status:string; createdAt:string; own:boolean };
+type Comment = { id:string; post:string; parent:string|null; name:string; body:string; status:string; createdAt:string; own:boolean; authorLiked?:boolean };
 type State = { comments:Comment[]; moderator:boolean; blocked:boolean; signedIn:boolean; displayName:string|null; likes:number; liked:boolean; saved:boolean; bookmarks?:{slug:string;title:string}[] };
 for (const root of document.querySelectorAll<HTMLElement>('[data-community]')) void start(root);
 
@@ -70,6 +70,7 @@ async function start(root:HTMLElement) {
     if(mode==='moderation') { const link=node('a','Yazıyı aç');link.href=`${base}yazi/${encodeURIComponent(c.post)}/`;article.append(link); }
     if(c.parent) article.append(node('p',`↳ #${c.parent} numaralı yoruma yanıt`));
     const body=node('p',c.status==='deleted'?'Yorum silindi.':c.body);body.className='cx-comment__body'; article.append(body);
+    if(c.status==='published' && c.authorLiked) article.append(node('p','♥ Yazar beğendi'));
     if(labels[c.status]) article.append(node('p',labels[c.status]));
     const actions=node('div');actions.className='cx-comment__actions';
     if(mode==='article' && !c.parent && c.status==='published' && state?.signedIn) actions.append(actionButton('Yanıtla',()=>{
@@ -141,7 +142,14 @@ async function start(root:HTMLElement) {
     const {data,error}=await client.rpc('cx_author_comments');if(current!==request||!state?.signedIn)return;
     if(error){message.textContent='Yorumlar yüklenemedi. Bölümü kapatıp tekrar açmayı dene.';return;}
     message.textContent='';
-    for(const c of data.comments||[]){const item=node('article');item.className='cx-comment';const link=node('a',c.title) as HTMLAnchorElement;link.href=`${base}yazi/${encodeURIComponent(c.slug)}/#yorumlar`;item.append(link,node('p',`${c.name} · ${new Date(c.created_at).toLocaleString('tr-TR')}`),node('p',c.body));out.append(item);}
+    for(const c of data.comments||[]){
+      const item=node('article');item.className='cx-comment';const link=node('a',c.title) as HTMLAnchorElement;link.href=`${base}yazi/${encodeURIComponent(c.slug)}/#yorumlar`;
+      item.append(link,node('p',`${c.name} · ${new Date(c.created_at).toLocaleString('tr-TR')}`),node('p',c.body));
+      const likeButton=node('button',c.liked?'Beğeniyi kaldır':'Beğen');likeButton.type='button';likeButton.setAttribute('aria-pressed',String(Boolean(c.liked)));
+      likeButton.addEventListener('click',()=>{void(async()=>{if(busy)return;busy=true;likeButton.disabled=true;const {error}=await client.rpc('cx_author_comment_action',{p_action:'like',p_comment:c.id,p_value:!c.liked});busy=false;if(current!==request)return;likeButton.disabled=false;if(error){message.textContent='Beğeni kaydedilemedi.';return;}c.liked=!c.liked;likeButton.textContent=c.liked?'Beğeniyi kaldır':'Beğen';likeButton.setAttribute('aria-pressed',String(c.liked));message.textContent='Beğeni güncellendi.';})();});item.append(likeButton);
+      if(!c.parent){const form=node('form'),label=node('label','Yanıtın'),input=node('textarea'),button=node('button','Yanıtı gönder');input.required=true;input.maxLength=2000;input.rows=3;label.append(input);button.type='submit';form.append(label,button);form.addEventListener('submit',event=>{event.preventDefault();void(async()=>{if(busy||!form.reportValidity())return;busy=true;button.disabled=true;const {error}=await client.rpc('cx_author_comment_action',{p_action:'reply',p_comment:c.id,p_body:input.value.trim()});busy=false;if(current!==request)return;button.disabled=false;if(error){message.textContent=errorText(error);return;}form.reset();message.textContent='Yanıtın incelemeye alındı. Onaylandıktan sonra yayımlanacak.';})();});item.append(form);}
+      out.append(item);
+    }
     if(!out.childElementCount)out.append(node('p','Yazılarına gelen yayımlanmış yorum yok.'));
   })();});
   // These panels contain only the current member's private history.
