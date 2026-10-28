@@ -1,4 +1,4 @@
-import {publicationState,type EditorEntry,type PublishedVersion} from '../lib/publication-state';
+import {type EditorEntry,type PublishedVersion} from '../lib/publication-state';
 export function editorLibrary(root:HTMLElement,onSelect:(slug:string)=>void){
  const $=<T extends HTMLElement=HTMLElement>(s:string)=>root.querySelector<T>(s)!;
  const items=$('[data-library-items]'),category=$<HTMLSelectElement>('[data-library-category]'),query=$<HTMLInputElement>('[data-library-query]');
@@ -14,10 +14,7 @@ export function editorLibrary(root:HTMLElement,onSelect:(slug:string)=>void){
   for(const post of visible){
    const button=document.createElement('button');button.type='button';button.className='cx-editor-entry';button.dataset.libraryOpen=post.slug;button.disabled=disabled;if(post.slug===selected)button.setAttribute('aria-current','true');
    const heading=document.createElement('strong');heading.textContent=post.title;
-   const meta=document.createElement('span');meta.className='cx-editor-entry__meta';meta.textContent=post.category||'Kategorisiz';
-   const state=publicationState(post,versions.get(post.slug),checked.get(post.slug)===(post.published_revision??post.revision));const badge=document.createElement('span');badge.className='cx-editor-entry__state';badge.dataset.state=state.key;badge.textContent=post.published?state.label:'Yayında değil';
-   const detail=document.createElement('small');detail.textContent=post.description||'Düzenlemek için aç.';
-   button.append(meta,heading,badge,detail);button.addEventListener('click',()=>{if(!disabled)onSelect(post.slug);});items.append(button);
+   button.append(heading);button.addEventListener('click',()=>{if(!disabled)onSelect(post.slug);});items.append(button);
   }
   if(!visible.length){const empty=document.createElement('p');empty.textContent=category.value||needle?'Bu filtreyle eşleşen yazı yok.':'Henüz yazı yok.';items.append(empty);}
  }
