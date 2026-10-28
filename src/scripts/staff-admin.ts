@@ -34,6 +34,17 @@ if(root){
      if(result.error){tell('Rol güncellenemedi. Kullanıcının e-postası doğrulanmış olmalı.');return;}
      await load();if(changeEpoch+1===epoch)tell('Rol güncellendi ve işlem kaydedildi.');
     })();});card.append(button);
+    const restrictionLabel=node('label','Yorum kısıtlaması'), restriction=node('select');
+    restriction.setAttribute('aria-label',`${u.email||'Kullanıcı'} yorum kısıtlaması`);
+    for(const [value,name] of [['release','Kısıtlamayı kaldır'],['1440','1 gün'],['10080','7 gün'],['permanent','Süresiz']])restriction.add(new Option(name,value));
+    restrictionLabel.append(restriction);const restrictButton=node('button','Yorum kısıtlamasını uygula');restrictButton.type='button';
+    restrictButton.addEventListener('click',()=>{void(async()=>{
+     if(busy)return;const changeEpoch=epoch;busy=true;restrictButton.disabled=true;tell('İşlem yapılıyor…');
+     const release=restriction.value==='release';
+     const result=await client.rpc('cx_comment_restriction_set',{p_target:u.id,p_minutes:release||restriction.value==='permanent'?null:Number(restriction.value),p_release:release});
+     busy=false;if(changeEpoch!==epoch)return;restrictButton.disabled=false;
+     tell(result.error?'Yorum kısıtlaması değiştirilemedi.':'Yorum kısıtlaması güncellendi ve işlem kaydedildi.');
+    })();});card.append(restrictionLabel,restrictButton);
    }
    list.append(card);
   }
