@@ -69,14 +69,6 @@ if (canvas) {
       color: 0x647482, textureWidth: 512, textureHeight: 512, clipBias: .003,
     });
     ground.rotation.x=-Math.PI/2; ground.position.set(0,-.04,-42); scene.add(ground);
-    const groundLines: Shape[][]=[[],[],[]];
-    for(let i=-10;i<=10;i++) groundLines[Math.abs(i)%6===0?2:i%3===0?0:1].push({x:i*.75,y:.01,z:-42,w:.025,h:110,d:1,rot:0});
-    // Horizontal planes for road traces and softened reflections.
-    groundLines.forEach((list,i)=>{
-      const mesh=new THREE.InstancedMesh(plane,materials[i],list.length);
-      list.forEach((t,j)=>{matrix.compose(new THREE.Vector3(t.x,t.y,t.z),new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI/2,0,0)),new THREE.Vector3(t.w,t.h,1));mesh.setMatrixAt(j,matrix);});
-      scene.add(mesh);
-    });
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
     let raf=0, last=0, elapsed=0, distance=0, boost=0, lastScroll=window.scrollY, w=0, h=0;
     function resize(){ if(!canvas)return; const r=canvas.getBoundingClientRect(); w=r.width;h=r.height;if(!w||!h)return;renderer.setSize(w,h,false);const scale=Math.min(window.devicePixelRatio||1,1.25)*.6;ground.getRenderTarget().setSize(Math.max(1,Math.min(768,Math.round(w*scale))),Math.max(1,Math.min(768,Math.round(h*scale))));camera.aspect=w/h;camera.fov=w<600?55:48;camera.updateProjectionMatrix();render(); }

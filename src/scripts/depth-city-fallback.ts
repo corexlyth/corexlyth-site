@@ -28,7 +28,6 @@ if(canvas){
     };
     renderBuilding(true);renderBuilding(false);
    }
-   ctx.lineWidth=1;for(let i=-5;i<=5;i++){const a=project(i*.65,.35,2.3),b=project(i*.65,.35,32);ctx.strokeStyle=i%2?'rgba(74,226,249,.25)':'rgba(177,85,246,.23)';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}for(let i=0;i<19;i++){const z=3+(((i*1.6-shift)%30.4)+30.4)%30.4;const a=project(-6,.35,z),b=project(6,.35,z);ctx.strokeStyle='rgba(80,205,235,.12)';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
    canvas.parentElement?.classList.add('has-depth-city');
   }
   function tick(t:number){raf=0;if(document.hidden||reduce.matches)return;time+=last?Math.min(t-last,50):0;last=t;draw();raf=requestAnimationFrame(tick);}
