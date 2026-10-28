@@ -29,7 +29,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
 <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
 {structuredData && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
-<link rel="stylesheet" href={`${base}assets/css/main.css?v=smooth-scroll-1`} />
+<link rel="stylesheet" href={`${base}assets/css/main.css?v=profile-settings-1`} />
 <noscript><style is:inline>.cx-boot{display:none!important}@media(max-width:700px){.cx-menu-button{display:none!important}.cx-nav{display:flex!important;position:static!important;box-shadow:none!important}.cx-header__inner{flex-wrap:wrap}.cx-nav{width:100%}}</style></noscript>
 <slot name="head" />
 </head>
@@ -110,6 +110,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
   </dialog>
 
 <script>import '../scripts/navigation-auth';</script>
-<script is:inline src={`${base}assets/js/main.js?v=smooth-scroll-1`}></script>
+<script is:inline src={`${base}assets/js/main.js?v=profile-settings-1`}></script>
 </body>
 </html>

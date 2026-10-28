@@ -119,9 +119,43 @@ async function start(root:HTMLElement) {
     tell(state.blocked?'Hesabının topluluk gönderimleri kısıtlandı.':mode==='moderation'?'Yorumları inceleyebilir, yayımlayabilir veya silebilirsin.':'Topluluk güncel.');
   }
   if(!client) return;
+  // These panels contain only the current member's private history.
+  type PersonalItem={id:string;name?:string;usedUntil?:string;post?:string;postTitle?:string;active?:boolean;body?:string;status?:string;createdAt?:string};
+  const cursors:Record<string,string|null>={names:null,comments:null};
+  const loaded:Record<string,boolean>={names:false,comments:false};
+  let personalEpoch=0;
+  async function loadPersonal(kind:'names'|'comments',append=false){
+    if(!client || !state?.signedIn)return;
+    const epoch=personalEpoch;
+    const out=find(`[data-personal-${kind}-list]`),message=find(`[data-personal-${kind}-status]`),button=find<HTMLButtonElement>(`[data-personal-${kind}-more]`);
+    message.textContent='Yükleniyor…';button.disabled=true;
+    const {data,error}=await client.rpc('cx_personal_profile',{p_kind:kind,p_before:append?cursors[kind]:null});
+    if(epoch!==personalEpoch||!state?.signedIn)return;
+    button.disabled=false;
+    if(error){message.textContent='Bilgiler yüklenemedi. Bölümü kapatıp tekrar açarak yeniden deneyebilirsin.';return;}
+    if(!append)out.replaceChildren();
+    for(const entry of (data.items||[]) as PersonalItem[]){
+      const li=node('li');
+      if(kind==='names')li.textContent=`${entry.name} · ${new Date(entry.usedUntil!).toLocaleDateString('tr-TR')}`;
+      else{
+        const heading=entry.active?node('a',entry.postTitle):node('span',entry.postTitle);
+        if(heading instanceof HTMLAnchorElement)heading.href=`${base}yazi/${encodeURIComponent(entry.post!)}/`;
+        const text=node('p',entry.status==='deleted'?'Yorum silindi.':entry.body);
+        const labels:Record<string,string>={pending:'İncelemede',published:'Yayında',hidden:'İncelemede',deleted:'Silindi'};
+        li.append(heading,text,node('small',`${labels[entry.status||'']||''} · ${new Date(entry.createdAt!).toLocaleDateString('tr-TR')}`));
+      }
+      out.append(li);
+    }
+    loaded[kind]=true;cursors[kind]=data.next;button.hidden=!data.next;
+    message.textContent=out.childElementCount?'':kind==='names'?'Henüz önceki takma adın yok.':'Henüz yorum yapmadın.';
+  }
+  if(mode==='account')for(const kind of ['names','comments'] as const){
+    find<HTMLDetailsElement>(`[data-personal-${kind}]`)?.addEventListener('toggle',event=>{if((event.currentTarget as HTMLDetailsElement).open&&!loaded[kind])void loadPersonal(kind);});
+    find<HTMLButtonElement>(`[data-personal-${kind}-more]`)?.addEventListener('click',()=>void loadPersonal(kind,true));
+  }
   profile?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
     if(!profile.reportValidity()) return;
-    if(await write('profile',{p_body:String(new FormData(profile).get('displayName') || '').trim()})){await load();tell(state?.displayName?'Görünen adın kaydedildi.':'Takma adın kaldırıldı. Yorumlarında Anonim görüneceksin.');}
+    if(await write('profile',{p_body:String(new FormData(profile).get('displayName') || '').trim()})){loaded.names=false;await load();if(find<HTMLDetailsElement>('[data-personal-names]')?.open)void loadPersonal('names');tell(state?.displayName?'Görünen adın kaydedildi.':'Takma adın kaldırıldı. Yorumlarında Anonim görüneceksin.');}
   })();});
   commentForm?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
     if(!commentForm.reportValidity()) return;
@@ -135,8 +169,9 @@ async function start(root:HTMLElement) {
   more?.addEventListener('click',()=>{void load(true);});
   find('[data-community-refresh]').addEventListener('click',()=>{void load();});
   client.auth.onAuthStateChange(event=>{
-    if(event==='SIGNED_OUT') {
-      request++;state=undefined;list?.replaceChildren();find('[data-saved-list]')?.replaceChildren();
+    if(event==='SIGNED_OUT' || event==='SIGNED_IN') {
+      request++;personalEpoch++;state=undefined;list?.replaceChildren();find('[data-saved-list]')?.replaceChildren();
+      for(const kind of ['names','comments'] as const){loaded[kind]=false;cursors[kind]=null;find(`[data-personal-${kind}-list]`)?.replaceChildren();const panel=find<HTMLDetailsElement>(`[data-personal-${kind}]`);if(panel)panel.open=false;}
       profile?.reset();commentForm?.reset();resetReply();sync();
     }
     // Auth callback stays synchronous; RPCs start after the auth lock is released.

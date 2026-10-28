@@ -91,6 +91,9 @@ async function initialize(root: HTMLElement) {
       if (event === 'SIGNED_OUT') {
         signedIn = false;
         details.hidden = true;
+        root.querySelector<HTMLFormElement>('[data-change-email]')?.reset();
+        root.querySelector<HTMLFormElement>('[data-change-password]')?.reset();
+        root.querySelectorAll<HTMLElement>('[data-email-change-status],[data-password-change-status]').forEach(el=>{el.textContent='';});
         syncFields();
         message('Oturum kapatıldı.');
       }
@@ -184,6 +187,60 @@ async function initialize(root: HTMLElement) {
         syncFields();
       }
     });
+
+    // Sensitive account changes require a fresh password verification.
+    const verifyCurrentPassword = async (password:string) => {
+      const {data: current,error:userError}=await client.auth.getUser();
+      if(userError || !current.user?.email) throw new Error('session');
+      const {error}=await client.auth.signInWithPassword({email:current.user.email,password});
+      if(error) throw new Error('password');
+      return current.user;
+    };
+    const emailForm=root.querySelector<HTMLFormElement>('[data-change-email]');
+    const passwordForm=root.querySelector<HTMLFormElement>('[data-change-password]');
+    const emailStatus=root.querySelector<HTMLElement>('[data-email-change-status]');
+    const passwordStatus=root.querySelector<HTMLElement>('[data-password-change-status]');
+    const newPasswordInput=passwordForm?.querySelector<HTMLInputElement>('[name=newPassword]');
+    const confirmPasswordInput=passwordForm?.querySelector<HTMLInputElement>('[name=newPasswordConfirm]');
+    const newEmailInput=emailForm?.querySelector<HTMLInputElement>('[name=newEmail]');
+    const updateSettingsHints=()=>{
+      if(newEmailInput) newEmailInput.setCustomValidity(!newEmailInput.value || isGmail(newEmailInput.value)?'':'Geçerli bir @gmail.com adresi yaz.');
+      if(newPasswordInput){
+        for(const rule of passwordChecks(newPasswordInput.value)){
+          const item=root.querySelector<HTMLElement>(`[data-settings-password-rules] [data-rule="${rule.id}"]`);
+          if(item)item.dataset.valid=String(rule.valid);
+        }
+        newPasswordInput.setCustomValidity(!newPasswordInput.value || validPassword(newPasswordInput.value)?'':'Şifre şartlarının tamamını karşıla.');
+      }
+      if(confirmPasswordInput) confirmPasswordInput.setCustomValidity(!confirmPasswordInput.value || confirmPasswordInput.value===newPasswordInput?.value?'':'Şifreler eşleşmiyor.');
+    };
+    emailForm?.addEventListener('input',updateSettingsHints);
+    passwordForm?.addEventListener('input',updateSettingsHints);
+    emailForm?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
+      updateSettingsHints();if(!emailForm.reportValidity()||busy||!emailStatus)return;
+      const data=new FormData(emailForm);const email=normalizeEmail(String(data.get('newEmail')||''));
+      if(!isGmail(email))return;
+      busy=true;const button=emailForm.querySelector<HTMLButtonElement>('button[type=submit]')!;button.disabled=true;emailStatus.textContent='İşlem yapılıyor…';
+      try{
+        const user=await verifyCurrentPassword(String(data.get('currentPassword')||''));
+        if(normalizeEmail(user.email||'')===email)throw new Error('same_email');
+        const {error}=await client.auth.updateUser({email},{emailRedirectTo:destination('dogrula/')});if(error)throw error;
+        emailForm.reset();emailStatus.textContent='Değişiklik isteği alındı. E-posta kutularına gönderilen doğrulama bağlantılarını kontrol et; adres ancak doğrulama tamamlanınca değişir.';
+      }catch(error){emailStatus.textContent=(error as Error).message==='same_email'?'Bu zaten mevcut e-posta adresin.':(error as Error).message==='password'?'Mevcut şifren doğrulanamadı.':'İstek tamamlanamadı. Bağlantını ve oturumunu kontrol edip tekrar dene.';}
+      finally{busy=false;button.disabled=false;}
+    })();});
+    passwordForm?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
+      updateSettingsHints();if(!passwordForm.reportValidity()||busy||!passwordStatus)return;
+      const data=new FormData(passwordForm);const password=String(data.get('newPassword')||'');
+      if(!validPassword(password)||password!==String(data.get('newPasswordConfirm')||''))return;
+      busy=true;const button=passwordForm.querySelector<HTMLButtonElement>('button[type=submit]')!;button.disabled=true;passwordStatus.textContent='İşlem yapılıyor…';
+      try{
+        await verifyCurrentPassword(String(data.get('currentPassword')||''));
+        const {error}=await client.auth.updateUser({password});if(error)throw error;
+        passwordForm.reset();updateSettingsHints();passwordStatus.textContent='Şifren güncellendi.';
+      }catch(error){passwordStatus.textContent=(error as Error).message==='password'?'Mevcut şifren doğrulanamadı.':(error as {code?:string}).code==='same_password'?'Yeni şifren önceki şifrenden farklı olmalı.':'Şifre güncellenemedi. Oturumunu ve bağlantını kontrol edip tekrar dene.';}
+      finally{busy=false;button.disabled=false;}
+    })();});
 
     root.querySelector<HTMLButtonElement>('[data-signout]')?.addEventListener('click', async (event) => {
       const button = event.currentTarget as HTMLButtonElement;
