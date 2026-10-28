@@ -6,6 +6,9 @@ description = 'CoreXLyth: teknoloji, Android uygulamaları, rehberler ve dijital
 noindex = false, image, article = false, publishedTime, structuredData } = Astro.props;
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const rootPath = base.replace(/\/+$/, '') || '/';
+const showNavSearch = currentPath !== rootPath && !currentPath.startsWith(`${rootPath === '/' ? '' : rootPath}/hesap`);
 ---
 <!doctype html>
 <html lang="tr">
@@ -29,7 +32,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
 <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
 {structuredData && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
-<link rel="stylesheet" href={`${base}assets/css/main.css?v=account-reference-6`} />
+<link rel="stylesheet" href={`${base}assets/css/main.css?v=nav-search-7`} />
 <noscript><style is:inline>.cx-boot{display:none!important}@media(max-width:700px){.cx-menu-button{display:none!important}.cx-nav{display:flex!important;position:static!important;box-shadow:none!important}.cx-header__inner{flex-wrap:wrap}.cx-nav{width:100%}}</style></noscript>
 <noscript><style is:inline>@media(max-width:1000px){.cx-article-page .cx-menu-button{display:none!important}.cx-article-page .cx-nav{display:flex!important;position:static!important;box-shadow:none!important;width:100%}.cx-article-page .cx-header__inner{flex-wrap:wrap}}</style></noscript>
 <slot name="head" />
@@ -70,12 +73,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
       </button>
 
       <nav class="cx-nav" id="cx-nav" aria-label="Ana menü">
-        <a href={base}>Ana sayfa</a>
+        <a href={base}>Ana Sayfa</a>
           <a href={`${base}#kanallar`}>Kategoriler</a>
           <a href={`${base}ara/?q=inceleme`}>İncelemeler</a>
           <a href={`${base}kategori/rehberler/`}>Rehberler</a>
           <a href={`${base}#hakkinda`}>Hakkında</a>
-          <a class="cx-nav__search" href={`${base}ara/`} aria-label="Site içinde ara">⌕</a>
+          {showNavSearch && <div class="cx-nav-search" data-nav-search data-base={base}>
+            <button class="cx-nav-search__toggle" type="button" aria-label="Aramayı aç" aria-expanded="false" aria-controls="cx-nav-search-panel">⌕</button>
+            <div class="cx-nav-search__panel" id="cx-nav-search-panel" hidden>
+              <form role="search" action={`${base}ara/`} method="get"><label for="cx-nav-search-input">Yazılarda ara</label><div><input id="cx-nav-search-input" name="q" type="search" maxlength="100" autocomplete="off" placeholder="Bir konu veya kelime yaz…" /><button type="submit">Ara</button></div></form>
+              <p class="cx-nav-search__status" role="status" aria-live="polite">Aramak için en az iki harf yaz.</p><div class="cx-nav-search__results"></div>
+            </div>
+          </div>}
           <a class="cx-nav__explore" href={`${base}arsiv/`}>Keşfet <span aria-hidden="true">→</span></a>
         {authConfigured && <>
           <a data-nav-guest href={`${base}hesap/giris/`}>Giriş yap</a>
@@ -96,7 +105,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
       <strong>EXPLORE <b>•</b> CREATE <b>•</b> EVOLVE</strong>
       <p>Fikirler <b>•</b> deneyimler <b>•</b> projeler</p>
       <small>Bağlantı kararlı • CoreXLyth</small>
-      <nav class="cx-footer-links" aria-label="Ek bağlantılar"><a href={`${base}ara/`}>ARAMA</a><a href={`${base}arsiv/`}>ARŞİV</a><a href={`${base}rss.xml`}>RSS</a></nav>
     </div>
   </footer>
 
@@ -117,7 +125,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
     </div>
   </dialog>
 
-<script>import '../scripts/navigation-auth'; import '../scripts/depth-city';</script>
+<script>import '../scripts/navigation-auth'; import '../scripts/depth-city'; import '../scripts/navigation-search';</script>
 <script is:inline src={`${base}assets/js/main.js?v=cyber-infrastructure-1`}></script>
 </body>
 </html>

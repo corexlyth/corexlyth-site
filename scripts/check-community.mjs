@@ -2,8 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 const read=p=>readFileSync(p,'utf8');
 const home=read('dist/index.html');
-assert.match(home,/name="q"/,'Homepage must offer search');
-assert.match(home,/action="\/corexlyth-site\/ara\/"/,'Homepage search must target the existing search engine');
+assert.doesNotMatch(home,/cx-home-query/,'Homepage must not show the search box');
 
 for(const file of readdirSync('.cache/blog').filter(f=>f.endsWith('.md'))){
  const source=read(`.cache/blog/${file}`);
