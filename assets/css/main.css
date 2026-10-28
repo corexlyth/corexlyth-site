@@ -998,3 +998,13 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 @keyframes cx-orbit-spin{to{transform:rotate(360deg)}}@keyframes cx-axis-spin{to{transform:rotate(405deg)}}@keyframes cx-core-pulse{to{transform:scale(1.16);opacity:.7}}@keyframes cx-future-glow{to{transform:translate3d(-3%,3%,0) scale(1.05)}}@keyframes cx-future-title{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:700px){.cx-orbit{width:min(64vw,210px);margin-bottom:16px}.cx-hero h1{line-height:1.02}.cx-future-title span{overflow-wrap:normal}}
 @media(prefers-reduced-motion:reduce){.cx-hero::after,.cx-future-title span,.cx-hero .cx-lead,.cx-home-search,.cx-home-meta,.cx-orbit__ring,.cx-orbit__axis,.cx-orbit::after{animation:none!important}.cx-story-card,.cx-record-row,.cx-explore-btn,.cx-expand-btn{transition:none!important}}
+
+/* Scroll-responsive signal field */
+.cx-ambient__depth{position:absolute;inset:-12%;pointer-events:none;transform:translate3d(0,var(--signal-y,0px),0);opacity:.74}
+.cx-ambient__halo{position:absolute;right:-12%;top:15%;width:min(70vw,720px);aspect-ratio:1;border:1px solid rgba(96,231,246,.19);border-radius:50%;transform:rotate(var(--signal-turn,0deg));background:radial-gradient(circle,transparent 38%,rgba(125,93,208,.06) 39%,transparent 55%);box-shadow:0 0 0 38px rgba(99,150,224,.025),0 0 0 90px rgba(150,90,220,.018)}
+.cx-ambient__halo::before,.cx-ambient__halo::after{content:"";position:absolute;inset:12%;border:1px solid rgba(166,119,255,.16);border-radius:50%;border-left-color:transparent;border-bottom-color:transparent}.cx-ambient__halo::after{inset:25%;border-color:rgba(94,228,239,.13);border-right-color:transparent}
+.cx-ambient__circuit{position:absolute;display:block;width:38%;height:28%;border:1px solid rgba(88,234,255,.15);transform:skewY(-12deg);clip-path:polygon(0 0,75% 0,100% 25%,100% 100%,25% 100%,0 75%)}
+.cx-ambient__circuit--a{top:26%;left:-15%}.cx-ambient__circuit--b{right:-20%;bottom:3%;border-color:rgba(171,112,255,.18);transform:skewY(12deg)}
+.cx-ambient__stars{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(144,244,255,.45) 1px,transparent 2px),radial-gradient(circle,rgba(189,145,255,.35) 1px,transparent 2px);background-size:173px 191px,229px 257px;background-position:31px 42px,87px 115px;opacity:.4}
+@media(max-width:700px){.cx-ambient__depth{opacity:.55}.cx-ambient__halo{width:90vw;right:-50%;top:26%}.cx-ambient__circuit{width:55%}}
+@media(prefers-reduced-motion:reduce){.cx-ambient__depth{transform:none!important}.cx-ambient__halo{transform:none!important}}
