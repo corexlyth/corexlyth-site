@@ -1042,3 +1042,15 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-category-panel .cx-explore-btn{min-height:42px;padding:11px 16px;font-size:.7rem}
 .cx-category-panel .cx-story-card{flex:0 0 min(44%,390px);min-height:205px;aspect-ratio:auto}.cx-category-panel .cx-story-card__body{min-height:205px;padding:18px}.cx-category-panel .cx-story-card h4{font-size:1.12rem;margin-top:19px}.cx-category-panel .cx-story-card p{font-size:.82rem;margin-top:8px;-webkit-line-clamp:2}.cx-category-panel .cx-story-card__meta{font-size:.65rem}
 @media(max-width:700px){.cx-category-panel__head{align-items:flex-start}.cx-category-panel .cx-story-card{flex-basis:83%;min-height:190px}.cx-category-panel .cx-story-card__body{min-height:190px}.cx-category-panel .cx-story-card h4{font-size:1rem}.cx-category-panel .cx-explore-btn{padding:10px;font-size:.62rem}}
+
+/* Homepage: smaller surfaces give the moving scene room to breathe. */
+.cx-home-page{width:min(960px,calc(100% - 36px))}
+.cx-home-page .cx-hero{min-height:390px;padding:clamp(24px,4vw,48px);gap:24px;background:linear-gradient(135deg,rgba(5,15,24,.75),rgba(9,11,25,.64));backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.cx-home-page .cx-hero h1{font-size:clamp(2.5rem,6vw,5rem)}
+.cx-home-page .cx-terminal{padding:12px;background:rgba(5,13,25,.68)}
+.cx-home-page .cx-orbit{width:min(100%,215px);margin-bottom:8px}
+.cx-home-page .cx-hud-frame{background:linear-gradient(135deg,rgba(5,17,28,.8),rgba(8,10,23,.76))}
+.cx-home-page .cx-category-panel .cx-story-card{flex-basis:min(42%,320px);min-height:175px}
+.cx-home-page .cx-category-panel .cx-story-card__body{min-height:175px;padding:16px}
+.cx-home-page .cx-record-row{min-height:80px}.cx-home-page .cx-records-head>p{font-size:1rem}
+@media(max-width:700px){.cx-home-page{width:calc(100% - 28px)}.cx-home-page .cx-hero{padding:26px 20px}.cx-home-page .cx-hero h1{font-size:clamp(2.1rem,10vw,3.3rem)}.cx-home-page .cx-orbit{width:min(52vw,180px)}.cx-home-page .cx-category-panel .cx-story-card{flex-basis:82%;min-height:175px}.cx-home-page .cx-record-row{min-height:84px}}
