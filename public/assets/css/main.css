@@ -968,3 +968,12 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-account-surface :is(.cx-staff-user,[data-comment-list] article){min-width:0;overflow-wrap:anywhere}
 .cx-moderation-page > h1,.cx-moderation-page > p{margin:0}
 @media(max-width:600px){.cx-editor-modes{grid-template-columns:1fr}.cx-account-surface :is(.cx-account,.cx-community,.cx-editor){padding-left:18px;padding-right:18px}.cx-settings-grid{grid-template-columns:1fr}}
+
+/* Üye yönetimi */
+.cx-admin-section__heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid #294452}
+.cx-admin-section__heading h2{margin:5px 0 8px}.cx-admin-section__heading p{margin:0;color:#a7bbc6}.cx-admin-section__heading .cx-admin-section__kicker{font:700 .72rem var(--cx-mono);letter-spacing:.14em;color:#72dfed}
+.cx-staff-list{display:grid;gap:12px;margin-top:18px}.cx-staff-list .cx-staff-user{margin:0;padding:clamp(16px,2vw,22px);background:linear-gradient(120deg,#0a1a25,#100f20);border-color:#2c4d5a}
+.cx-staff-user__header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.cx-staff-user__identity{min-width:0}.cx-staff-user__identity strong{display:block;color:#edfaff;font-size:1.05rem}.cx-staff-user__identity p{margin:5px 0 0;color:#9eb5c0;font-size:.9rem}
+.cx-staff-user__badge{display:inline-flex;padding:5px 9px;border:1px solid #397b78;color:#9cebd4;font:700 .68rem var(--cx-mono);letter-spacing:.08em}.cx-staff-user__badge[data-restricted=true]{color:#ffd58c;border-color:#9b7440}.cx-staff-user__info{color:#f5cd96;font-size:.85rem;margin:12px 0 0}
+.cx-staff-user__controls{margin-top:16px;border-top:1px solid #263e4a}.cx-staff-user__controls summary{padding-top:14px;cursor:pointer;color:#b2edf4;font-weight:700;min-height:44px}.cx-staff-user__controls-body{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.cx-staff-user__controls-body label{flex:1 1 190px;margin:0}.cx-staff-user__controls-body select{width:100%;margin-top:6px}.cx-staff-user__controls-body button{margin-top:0}
+@media(max-width:600px){.cx-admin-section__heading button,.cx-staff-user__controls-body button{width:100%}.cx-staff-user__controls-body{align-items:stretch}.cx-staff-user__controls-body label{flex-basis:100%}}
