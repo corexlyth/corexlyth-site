@@ -11,14 +11,18 @@ const categories=categoriesFrom(await getPosts());
       <p data-editor-status role="status" aria-live="polite">Yetki kontrol ediliyor…</p>
       <p><a href={urlFor('hesap/')}>Hesabıma dön</a></p>
       <div data-editor-tools hidden>
-        <p>Yayımla düğmesi, yazının mevcut içeriğini yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; yazı ancak aktarım tamamlanıp sayfası doğrulanınca “Yayında” olur. Aktarım zamanlanmış bir iştir; gecikebilir. Hazır olmadan yazıyı açma bağlantısı gösterilmez.</p>
-        <section class="cx-editor-library" aria-label="Yazı seçimi">
-          <div class="cx-community-actions"><button type="button" data-editor-new>Yeni yazı</button></div>
+        <div class="cx-editor-modes" role="group" aria-label="Yazı yönetimi seçenekleri">
+          <button type="button" data-editor-mode="new" aria-pressed="false">Yeni yayın</button>
+          <button type="button" data-editor-mode="edit" aria-pressed="false">Yayınlanmış yazı düzenleme</button>
+        </div>
+        <p data-editor-intro hidden>Yayımla düğmesi, yazının mevcut içeriğini yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; yazı ancak aktarım tamamlanıp sayfası doğrulanınca “Yayında” olur. Aktarım zamanlanmış bir iştir; gecikebilir. Hazır olmadan yazıyı açma bağlantısı gösterilmez.</p>
+        <section class="cx-editor-library" data-editor-library hidden aria-label="Yazı seçimi">
           <div class="cx-editor-library__filters"><label>Kategoriye göre filtrele<select data-library-category><option value="">Tüm kategoriler</option></select></label><label>Yazı ara<input type="search" data-library-query placeholder="Başlık veya kategori…" maxlength="200" /></label></div>
           <div id="cx-library-items" data-library-items></div>
         </section>
-        <div class="cx-editor-save" data-editor-save data-state="idle" role="status" aria-live="polite">Henüz kaydedilmemiş yeni yazı.</div>
         <div data-editor-recovery hidden><p>Bu hesapla bu cihazda yarım kalan değişiklikler bulundu.</p><button type="button" data-recovery-restore>Yazmaya devam et</button> <button type="button" data-recovery-discard>Vazgeç</button></div>
+        <div data-editor-workspace hidden>
+        <div class="cx-editor-save" data-editor-save data-state="idle" role="status" aria-live="polite">Henüz kaydedilmemiş yeni yazı.</div>
         <form id="cx-editor-form" data-editor-form method="post">
           <fieldset disabled>
         <section class="cx-editor-media" aria-labelledby="cx-media-title">
@@ -73,6 +77,7 @@ const categories=categoriesFrom(await getPosts());
           <div class="cx-community-actions"><button type="button" data-inline-media-insert>Yazıya ekle</button><button type="button" data-inline-media-close>Vazgeç</button></div>
         </dialog>
         <section data-editor-preview-box hidden><h2>Canlı önizleme</h2><p>Yazı alanındaki değişiklikler burada biçimlenir; bu görünüm yazıyı yayımlamaz.</p><h3 data-editor-preview-title></h3><img data-editor-preview-cover hidden alt="" style="max-width:100%;height:auto" /><div class="cx-article__content" data-editor-preview-body></div></section>
+        </div>
       </div>
       <noscript>Yazı yönetimi JavaScript gerektirir.</noscript>
     </section>
