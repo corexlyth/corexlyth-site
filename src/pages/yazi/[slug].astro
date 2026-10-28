@@ -52,22 +52,7 @@ const structuredData = {
         <a href={categoryUrl(post.data.category)}>{post.data.category}</a><span>›</span>
         <span aria-current="page">{post.data.title}</span>
       </nav>
-      <div class="cx-article__intro">
-      <header class="cx-article__head">
-        <a class="cx-article__category" href={categoryUrl(post.data.category)}>{post.data.category}</a>
-        <h1>{titleStart}{titleEnding && <> <span>{titleEnding}</span></>}</h1>
-        <p class="cx-article__summary">{post.data.description}</p>
-        <div class="cx-article__meta">
-          <time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time>
-          <a href={categoryUrl(post.data.category)}>{post.data.category}</a>
-        </div>
-      </header>
-
-      <figure class="cx-article-cover">
-        <img src={coverFor(post)} alt={post.data.coverAlt} loading="eager" />
-      </figure>
-      </div>
-
+      {(contents.length >= 2 || post.data.tags.length > 0) && <div class="cx-article__sidebar" data-pagefind-ignore>
       {contents.length >= 2 && <details class="cx-toc" open data-pagefind-ignore>
         <summary>İçindekiler</summary>
         <nav aria-label="Yazının içindekileri">
@@ -85,6 +70,23 @@ const structuredData = {
           {post.data.tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}
         </div>
       </aside>}
+      </div>}
+
+      <div class="cx-article__intro">
+      <header class="cx-article__head">
+        <a class="cx-article__category" href={categoryUrl(post.data.category)}>{post.data.category}</a>
+        <h1>{titleStart}{titleEnding && <> <span>{titleEnding}</span></>}</h1>
+        <p class="cx-article__summary">{post.data.description}</p>
+        <div class="cx-article__meta">
+          <time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time>
+          <a href={categoryUrl(post.data.category)}>{post.data.category}</a>
+        </div>
+      </header>
+
+      <figure class="cx-article-cover">
+        <img src={coverFor(post)} alt={post.data.coverAlt} loading="eager" />
+      </figure>
+      </div>
 
       <div class="cx-article__content">
         <Content />

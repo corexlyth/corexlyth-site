@@ -29,12 +29,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
 <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
 {structuredData && <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
-<link rel="stylesheet" href={`${base}assets/css/main.css?v=article-hud-3`} />
+<link rel="stylesheet" href={`${base}assets/css/main.css?v=article-flow-4`} />
 <noscript><style is:inline>.cx-boot{display:none!important}@media(max-width:700px){.cx-menu-button{display:none!important}.cx-nav{display:flex!important;position:static!important;box-shadow:none!important}.cx-header__inner{flex-wrap:wrap}.cx-nav{width:100%}}</style></noscript>
-{article && <noscript><style is:inline>@media(max-width:1000px){.cx-article-page .cx-menu-button{display:none!important}.cx-article-page .cx-nav{display:flex!important;position:static!important;box-shadow:none!important;width:100%}.cx-article-page .cx-header__inner{flex-wrap:wrap}}</style></noscript>}
+<noscript><style is:inline>@media(max-width:1000px){.cx-article-page .cx-menu-button{display:none!important}.cx-article-page .cx-nav{display:flex!important;position:static!important;box-shadow:none!important;width:100%}.cx-article-page .cx-header__inner{flex-wrap:wrap}}</style></noscript>
 <slot name="head" />
 </head>
-<body class:list={{ 'cx-article-page': article }}>
+<body class="cx-article-page">
 <a class="cx-skip-link" href="#home">Ana içeriğe geç</a>
   <div class="cx-boot" aria-hidden="true">
     <div class="cx-boot__core">
@@ -73,19 +73,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
       <nav class="cx-nav" id="cx-nav" aria-label="Ana menü">
         <a href={base}>Ana sayfa</a>
-        {article ? <>
           <a href={`${base}#kanallar`}>Kategoriler</a>
           <a href={`${base}ara/?q=inceleme`}>İncelemeler</a>
           <a href={`${base}kategori/rehberler/`}>Rehberler</a>
           <a href={`${base}#hakkinda`}>Hakkında</a>
           <a class="cx-nav__search" href={`${base}ara/`} aria-label="Site içinde ara">⌕</a>
           <a class="cx-nav__explore" href={`${base}arsiv/`}>Keşfet <span aria-hidden="true">→</span></a>
-        </> : <>
-        <a href={`${base}arsiv/`}>Yazılar</a>
-        <a href={`${base}ara/`}>⌕ Ara</a>
-        <a href={`${base}#kanallar`}>Kanallar</a>
-        <a href={`${base}#hakkinda`}>Hakkında</a>
-        </>}
         {authConfigured && <>
           <a data-nav-guest href={`${base}hesap/giris/`}>Giriş yap</a>
           <a data-nav-guest href={`${base}hesap/kayit/`}>Kayıt ol</a>
