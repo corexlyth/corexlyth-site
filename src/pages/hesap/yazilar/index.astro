@@ -13,7 +13,7 @@ const categories=categoriesFrom(await getPosts());
       <div data-editor-tools hidden>
         <p>Yayımla düğmesi, yazının mevcut içeriğini yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; yazı ancak aktarım tamamlanıp sayfası doğrulanınca “Yayında” olur. Aktarım zamanlanmış bir iştir; gecikebilir. Hazır olmadan yazıyı açma bağlantısı gösterilmez.</p>
         <section class="cx-editor-library" aria-label="Yazı seçimi">
-          <div class="cx-community-actions"><button type="button" data-editor-new>Yeni yazı</button><button type="button" data-editor-refresh>Listeyi ve yayın durumunu yenile</button></div>
+          <div class="cx-community-actions"><button type="button" data-editor-new>Yeni yazı</button></div>
           <div class="cx-editor-library__filters"><label>Kategoriye göre filtrele<select data-library-category><option value="">Tüm kategoriler</option></select></label><label>Yazı ara<input type="search" data-library-query placeholder="Başlık veya kategori…" maxlength="200" /></label></div>
           <div id="cx-library-items" data-library-items></div>
         </section>
@@ -57,7 +57,7 @@ const categories=categoriesFrom(await getPosts());
               <p class="cx-field-hint">Metni seçip bir araca dokun veya imleci eklemek istediğin yere bırak. Araçlar biçimi hazır ekler; sonucu aşağıdaki canlı önizlemeden takip edebilirsin.</p>
               <textarea id="cx-write-body" name="body" rows="18" maxlength="100000" required aria-label="Yazı alanı"></textarea>
             </div>
-            <p>Yazı hazır olduğunda Yayımla düğmesine bas. Yazarken metnin bu cihazda geçici olarak korunur; çıkış yaptığında geçici kayıt silinir.</p>
+            <p>Yeni yazıyı yayımlamak veya açık yazıdaki değişiklikleri uygulamak için aşağıdaki düğmeyi kullan. Yazarken metnin bu cihazda geçici olarak korunur; çıkış yaptığında geçici kayıt silinir.</p>
             <div class="cx-community-actions"><button type="submit" data-editor-publish disabled>Yayımla</button><button type="button" data-editor-preview>Önizle</button></div>
           </fieldset>
         </form>
