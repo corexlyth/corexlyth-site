@@ -15,8 +15,9 @@ import { urlFor } from '../../../lib/posts';
     <p>Yazar ve moderatör işlevleri geliştiriliyor; bazı yetkiler henüz kullanıma hazır değil.</p>
     <div data-staff-users></div>
     <button type="button" data-staff-refresh>Listeyi yenile</button>
+    <details data-author-assign><summary>Yazı sahipliği</summary><p>Yalnızca sahibi belirlenmemiş yazılar listelenir. Atamayı kaydetmeden önce doğru hesabı seç.</p><p data-author-assign-status role="status"></p><div data-author-assign-list></div></details>
    </div>
   </section>
  </main>
 </SiteLayout>
-<script>import '../../../scripts/staff-admin';</script>
+<script>import '../../../scripts/staff-admin';import '../../../scripts/author-assignment';</script>
