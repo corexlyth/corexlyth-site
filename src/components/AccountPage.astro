@@ -13,7 +13,7 @@ const newPassword = ['signup','reset'].includes(mode);
 ---
 <SiteLayout title={`${titles[mode]} | CoreXLyth`} noindex={true}>
   <meta slot="head" name="referrer" content="no-referrer" />
-  <main id="home" class="cx-reading-shell">
+  <main id="home" class="cx-reading-shell cx-account-surface">
     <section class="cx-account cx-hud-frame" data-auth-page={mode} data-base={urlFor('')}>
       <p class="cx-kicker">COREXLYTH // HESAP</p>
       <h1>{titles[mode]}</h1>

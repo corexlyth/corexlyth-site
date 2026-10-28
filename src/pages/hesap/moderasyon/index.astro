@@ -4,9 +4,9 @@ import Community from '../../../components/Community.astro';
 import { urlFor } from '../../../lib/posts';
 ---
 <SiteLayout title="Moderasyon | CoreXLyth" noindex={true}>
-  <main id="home" class="cx-reading-shell">
+  <main id="home" class="cx-reading-shell cx-account-surface">
     <h1>Topluluk yönetimi</h1>
-    <p><a href={urlFor('hesap/')}>Hesabıma dön</a></p>
+    <p><a class="cx-account-back" href={urlFor('hesap/')}>Hesabıma dön</a></p>
     <Community mode="moderation" />
   </main>
 </SiteLayout>
