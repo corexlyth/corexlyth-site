@@ -75,13 +75,13 @@ const showNavSearch = currentPath !== rootPath && !currentPath.startsWith(`${roo
       <nav class="cx-nav" id="cx-nav" aria-label="Ana menü">
         <a href={base}>Ana Sayfa</a>
           <a href={`${base}#kanallar`}>Kategoriler</a>
-          <a href={`${base}ara/?q=inceleme`}>İncelemeler</a>
+          <a href={`${base}arsiv/`}>İncelemeler</a>
           <a href={`${base}kategori/rehberler/`}>Rehberler</a>
           <a href={`${base}#hakkinda`}>Hakkında</a>
           {showNavSearch && <div class="cx-nav-search" data-nav-search data-base={base}>
             <button class="cx-nav-search__toggle" type="button" aria-label="Aramayı aç" aria-expanded="false" aria-controls="cx-nav-search-panel">⌕</button>
             <div class="cx-nav-search__panel" id="cx-nav-search-panel" hidden>
-              <form role="search" action={`${base}ara/`} method="get"><label for="cx-nav-search-input">Yazılarda ara</label><div><input id="cx-nav-search-input" name="q" type="search" maxlength="100" autocomplete="off" placeholder="Bir konu veya kelime yaz…" /><button type="submit">Ara</button></div></form>
+              <form role="search"><label for="cx-nav-search-input">Yazılarda ara</label><div><input id="cx-nav-search-input" name="q" type="search" maxlength="100" autocomplete="off" placeholder="Bir konu veya kelime yaz…" /><button type="submit">Ara</button></div></form>
               <p class="cx-nav-search__status" role="status" aria-live="polite">Aramak için en az iki harf yaz.</p><div class="cx-nav-search__results"></div>
             </div>
           </div>}
