@@ -23,16 +23,26 @@ if (root) {
       const engine=await enginePromise, result=await engine.search(query);
       if(id!==request)return;
       const matches=result?.results || [];
-      const records=await Promise.all(matches.slice(0,5).map((item:any)=>item.data()));
+      const records=await Promise.all(matches.map((item:any)=>item.data()));
       if(id!==request)return;
-      for(const record of records){
+      // Pagefind may return partial matches; check the complete indexed article
+      // so every entered term really occurs in the title or body.
+      const words = (value: string) => (value.toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/\p{M}/gu,'').match(/[\p{L}\p{N}]+/gu) || []);
+      const terms = words(query);
+      const contains = (text: string) => {
+        const tokens = words(text);
+        return terms.length > 0 && terms.every(term => tokens.some(token => /^\d+$/.test(term) ? token === term : token.startsWith(term)));
+      };
+      const relevant = records.filter((record:any) => contains(`${record.meta?.title || ''} ${record.content || ''}`));
+      relevant.sort((a:any,b:any) => Number(contains(b.meta?.title || '')) - Number(contains(a.meta?.title || '')));
+      for(const record of relevant.slice(0,5)){
         const url=new URL(record.url,location.origin); if(url.origin!==location.origin)continue;
         if(!url.pathname.startsWith(base))url.pathname=base+url.pathname.replace(/^\/+/, '');
         const a=document.createElement('a'); a.href=url.pathname+url.search+url.hash; a.className='cx-nav-search__result';
         const title=document.createElement('strong');title.textContent=record.meta?.title||'CoreXLyth yayını';
         const excerpt=document.createElement('span');excerpt.textContent=record.plain_excerpt||'Yazıyı görüntüle';a.append(title,excerpt);list.append(a);
       }
-      status.textContent=matches.length ? `${matches.length} sonuç bulundu${matches.length>5?' · ilk 5 gösteriliyor':''}.` : 'Sonuç bulunamadı. Başka bir kelime dene.';
+      status.textContent=relevant.length ? `${relevant.length} sonuç bulundu${relevant.length>5?' · ilk 5 gösteriliyor':''}.` : 'Sonuç bulunamadı. Başka bir kelime dene.';
     } catch(error){if(id!==request)return;console.warn('Arama yüklenemedi',error);status.textContent='Arama yüklenemedi. Tekrar deneyebilirsin.';}
   }
   input.addEventListener('input',()=>{ clearTimeout(timer); const id=++request; if(!input.value.trim()){list.replaceChildren();status.textContent='Aramak için en az iki harf yaz.';return;} timer=setTimeout(()=>{if(id===request)void search();},220); });
