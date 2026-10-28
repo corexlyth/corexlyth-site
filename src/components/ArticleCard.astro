@@ -1,18 +1,7 @@
 ---
 import type { Post } from '../lib/posts';
-import { coverFor, dateTR, postUrl } from '../lib/posts';
+import VaultCard from './VaultCard.astro';
 interface Props { post: Post; accent?: string; }
-const { post, accent = '#58eaff' } = Astro.props;
+const { post } = Astro.props;
 ---
-<a class="cx-story-card" style={`--cx-card-accent:${accent}`} href={postUrl(post)} aria-label={post.data.title}>
-  <img src={coverFor(post)} alt="" loading="lazy" />
-  <div class="cx-story-card__shade" aria-hidden="true"></div>
-  <div class="cx-story-card__body">
-    <div class="cx-story-card__meta">
-      <time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time>
-      <b>{post.data.category.toLocaleUpperCase('tr-TR')}</b>
-    </div>
-    <h4>{post.data.title}</h4>
-    <p>{post.data.description}</p>
-  </div>
-</a>
+<VaultCard post={post} kind="carousel" />

@@ -1,0 +1,17 @@
+---
+import type { Post } from '../lib/posts';
+import { coverFor, dateTR, postUrl } from '../lib/posts';
+interface Props { post: Post; kind?: 'archive' | 'featured' | 'carousel' | 'related'; index?: number; }
+const { post, kind = 'archive', index = 0 } = Astro.props;
+---
+<a class:list={['cx-vault-card', `cx-vault-card--${kind}`]} href={postUrl(post)} data-vault-card={kind === 'archive' ? '' : undefined} data-category={kind === 'archive' ? post.data.category : undefined} data-date={kind === 'archive' ? post.data.pubDate.toISOString() : undefined} data-title={kind === 'archive' ? post.data.title : undefined} style={`--vault-delay:${Math.min(index,8)*55}ms`}>
+  <div class="cx-vault-card__inner">
+    <div class="cx-vault-card__image"><img src={coverFor(post)} alt="" loading={index < 3 ? 'eager' : 'lazy'} /></div>
+    <div class="cx-vault-card__body">
+      <div class="cx-vault-card__meta"><time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time><span>•</span><span>{post.data.category}</span></div>
+      <h3>{post.data.title}</h3>
+      <p>{post.data.description}</p>
+      <span class="cx-vault-card__link">Devamını oku <b aria-hidden="true">→</b></span>
+    </div>
+  </div>
+</a>
