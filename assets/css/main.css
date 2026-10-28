@@ -941,3 +941,8 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-staff-user p { overflow-wrap: anywhere; }
 .cx-staff-user label { display: block; margin: 1rem 0; }
 .cx-staff-user select { display: block; max-width: 100%; margin-top: .5rem; }
+
+/* Yazı yönetimi seçenekleri */
+.cx-editor-modes{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
+.cx-editor-modes button[aria-pressed=true]{border-color:#82edfa;box-shadow:inset 3px 0 #58eaff}
+.cx-editor [data-editor-workspace][hidden],.cx-editor [data-editor-library][hidden],.cx-editor [data-editor-intro][hidden]{display:none}
