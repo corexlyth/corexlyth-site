@@ -33,7 +33,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
       </div>
 
       <aside class="cx-terminal cx-frame cx-frame--compact">
-        <div class="cx-orbit" aria-hidden="true"><div class="cx-orbit__ring cx-orbit__ring--outer"></div><div class="cx-orbit__ring cx-orbit__ring--inner"></div><div class="cx-orbit__axis"></div><div class="cx-orbit__core"><span>CX</span><i></i></div><div class="cx-orbit__label">CORE // 2591</div></div>
+        <div class="cx-orbit" aria-hidden="true"><canvas class="cx-particle-core" data-particle-core></canvas><div class="cx-orbit__ring cx-orbit__ring--outer"></div><div class="cx-orbit__ring cx-orbit__ring--inner"></div><div class="cx-orbit__axis"></div><div class="cx-orbit__core"><span>CX</span><i></i></div><div class="cx-orbit__label">CORE // 2591</div></div>
         <div class="cx-terminal__top">
           <span>SYSTEM // STATUS</span>
           <i></i>
@@ -96,3 +96,5 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 
 </main>
 </SiteLayout>
+
+<script>import '../scripts/particle-core';</script>
