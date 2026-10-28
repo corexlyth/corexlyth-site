@@ -1201,3 +1201,22 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
  .cx-reading-shell .cx-article__content{padding:6px 10px}.cx-reading-shell .cx-article__foot{margin:10px 10px 8px}
  .cx-article__related-list{grid-template-columns:1fr}.cx-article__related-card img{min-height:85px}
 }
+
+/* Let the article flow beside the contents panel and fill the width below it. */
+.cx-reading-shell .cx-article{display:flow-root}
+.cx-article__sidebar{float:right;width:min(300px,28%);margin:0 0 16px 18px}
+.cx-article__sidebar .cx-toc{width:100%;box-sizing:border-box}
+.cx-article__sidebar .cx-article__topics{margin-top:12px}
+.cx-article__intro{display:flow-root}
+.cx-reading-shell .cx-article__content{max-width:none}
+.cx-reading-shell .cx-article__content > :is(p,h2,h3,h4,h5,h6,ul,ol,blockquote,pre,figure,aside,details){display:flow-root}
+.cx-reading-shell .cx-article__foot,.cx-article__related{clear:both}
+@media(max-width:850px){
+ .cx-reading-shell .cx-article{display:flex;flex-direction:column;align-items:stretch}
+ .cx-reading-shell .cx-article > .cx-breadcrumb{order:0}
+ .cx-article__intro{order:1}
+ .cx-article__sidebar{float:none;order:2;width:100%;margin:0}
+ .cx-reading-shell .cx-article__content{order:3}
+ .cx-reading-shell .cx-article__foot{order:4}
+ .cx-article__related{order:5;align-self:stretch}
+}
