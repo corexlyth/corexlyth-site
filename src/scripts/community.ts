@@ -25,7 +25,7 @@ async function start(root:HTMLElement) {
     if(msg.includes('rate_limited') || error?.status===429) return 'Gönderim sınırına ulaştın. Biraz bekleyip tekrar dene.';
     if(msg.includes('member_blocked')) return 'Bu hesabın topluluk gönderimleri kısıtlandı.';
     if(msg.includes('comment_restricted')) return 'Bu hesabın yorum yapması kısıtlandı.';
-    if(msg.includes('moderator_required')) return 'Bu bölüm için moderatör yetkisi gerekiyor.';
+    if(msg.includes('moderator_required')) return 'Bu bölüm için admin yetkisi gerekiyor.';
     if(msg.includes('login_required')) return 'İşlem için doğrulanmış hesabınla giriş yap.';
     if(msg.includes('invalid_parent')) return 'Bu yoruma artık yanıt verilemiyor. Listeyi yenile.';
     return 'İşlem tamamlanamadı. Bağlantını kontrol edip yeniden dene.';
@@ -70,7 +70,7 @@ async function start(root:HTMLElement) {
     if(mode==='moderation') { const link=node('a','Yazıyı aç');link.href=`${base}yazi/${encodeURIComponent(c.post)}/`;article.append(link); }
     if(c.parent) article.append(node('p',`↳ #${c.parent} numaralı yoruma yanıt`));
     const body=node('p',c.status==='deleted'?'Yorum silindi.':c.body);body.className='cx-comment__body'; article.append(body);
-    if(c.status==='published' && c.authorLiked) article.append(node('p','♥ Yazar beğendi'));
+    if(c.status==='published' && c.authorLiked) article.append(node('p','♥ Admin beğendi'));
     if(labels[c.status]) article.append(node('p',labels[c.status]));
     const actions=node('div');actions.className='cx-comment__actions';
     if(mode==='article' && !c.parent && c.status==='published' && state?.signedIn) actions.append(actionButton('Yanıtla',()=>{
@@ -85,7 +85,7 @@ async function start(root:HTMLElement) {
       });actions.append(remove);
     }
     if(mode==='moderation' && state?.moderator && c.status!=='deleted') {
-      for(const [label,action] of [...(c.status!=='published' ? [['Yayınla','publish']] : []),...(!c.own ? [['Üyeyi engelle','block'],['Engeli kaldır','unblock']] : [])]) {
+      for(const [label,action] of (c.status!=='published' ? [['Yayınla','publish']] : [])) {
         actions.append(actionButton(label,()=>{void(async()=>{if(await write(action,{p_comment:c.id})){await load();tell('Moderasyon işlemi kaydedildi.');}})();}));
       }
       if(!c.own){
@@ -99,15 +99,7 @@ async function start(root:HTMLElement) {
           catch{tell('Kısıtlama güncellenemedi. Bu hesap için yetkini kontrol et.',true);}
           finally{busy=false;sync();}
         })();}));
-        const banLabel=node('label','Hesap banı'),banChoice=node('select');banChoice.setAttribute('aria-label',`${c.name} için hesap banı`);
-        for(const [value,name] of [['ban_1d','1 gün'],['ban_7d','7 gün'],['ban_long','100 yıl'],['unban','Banı kaldır']])banChoice.add(new Option(name,value));
-        banLabel.append(banChoice);actions.append(banLabel);
-        actions.append(actionButton('Hesap banını uygula',()=>{void(async()=>{
-          if(busy||!client)return;busy=true;sync();tell('Hesap işlemi yapılıyor…');
-          try{const {error}=await client.functions.invoke('account-ban',{body:{comment:c.id,operation:banChoice.value}});if(error)throw error;tell('Hesap banı işlemi tamamlandı.');}
-          catch{tell('İşlemin sonucu doğrulanamadı. Yetkini ve hesap durumunu kontrol et.',true);}
-          finally{busy=false;sync();}
-        })();}));
+
       }
     }
     article.append(actions);return article;

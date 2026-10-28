@@ -8,7 +8,7 @@ if(root){
  async function load(){
   if(!client||busy)return;const current=++epoch;list.replaceChildren();refresh.hidden=true;status.textContent='Yetki kontrol ediliyor…';
   const {data,error}=await client.rpc('cx_staff_posts',{p_action:'list'});if(current!==epoch)return;
-  if(error){status.textContent=error.message?.includes('moderator_required')?'Yazı yönetimi için moderatör veya admin yetkisi gerekiyor.':error.message?.includes('login_required')?'Yazı yönetimi için giriş yap.':'Yazılar yüklenemedi. Bağlantını kontrol edip sayfayı yenile.';return;}
+  if(error){status.textContent=error.message?.includes('moderator_required')?'Yazı yönetimi için admin yetkisi gerekiyor.':error.message?.includes('login_required')?'Yazı yönetimi için giriş yap.':'Yazılar yüklenemedi. Bağlantını kontrol edip sayfayı yenile.';return;}
   refresh.hidden=false;status.textContent='En son 100 kayıt gösteriliyor. Silinen yazı yayın akışından kaldırılır; site güncellemesi biraz sürebilir.';
   for(const post of (data.posts||[]) as Post[]){
    const card=document.createElement('article');card.className='cx-staff-user';const title=document.createElement('strong');title.textContent=post.title;const state=document.createElement('p');state.textContent=post.published?'Yayında':'Taslak';const button=document.createElement('button');button.type='button';button.textContent='Yazıyı sil';let armed=false;

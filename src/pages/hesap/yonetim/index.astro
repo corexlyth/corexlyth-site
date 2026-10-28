@@ -10,14 +10,12 @@ import { urlFor } from '../../../lib/posts';
    <p><a class="cx-account-back" href={urlFor('hesap/')}>Hesabıma dön</a></p>
    <p data-staff-status role="status" aria-live="polite">Yetki kontrol ediliyor…</p>
    <div data-staff-content hidden>
-    <h2>Kullanıcılar ve roller</h2>
-    <p>Rol değişiklikleri kaydedilir. Kendi admin yetkini buradan kaldıramazsın.</p>
-    <p>Yazar ve moderatör işlevleri geliştiriliyor; bazı yetkiler henüz kullanıma hazır değil.</p>
+    <h2>Üyeler</h2>
+    <p>Üyeleri görebilir ve gerektiğinde yorum yapmalarını kısıtlayabilirsin.</p>
     <div data-staff-users></div>
     <button type="button" data-staff-refresh>Listeyi yenile</button>
-    <details data-author-assign><summary>Yazı sahipliği</summary><p>Yalnızca sahibi belirlenmemiş yazılar listelenir. Atamayı kaydetmeden önce doğru hesabı seç.</p><p data-author-assign-status role="status"></p><div data-author-assign-list></div></details>
    </div>
   </section>
  </main>
 </SiteLayout>
-<script>import '../../../scripts/staff-admin';import '../../../scripts/author-assignment';</script>
+<script>import '../../../scripts/staff-admin';</script>
