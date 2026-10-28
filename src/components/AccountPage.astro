@@ -13,10 +13,12 @@ const newPassword = ['signup','reset'].includes(mode);
 ---
 <SiteLayout title={`${titles[mode]} | CoreXLyth`} noindex={true}>
   <meta slot="head" name="referrer" content="no-referrer" />
-  <main id="home" class="cx-reading-shell cx-account-surface">
+  <main id="home" class:list={['cx-reading-shell', 'cx-account-surface', `cx-account-surface--${mode}`]}>
     <section class="cx-account cx-hud-frame" data-auth-page={mode} data-base={urlFor('')}>
-      <p class="cx-kicker">COREXLYTH // HESAP</p>
+      <p class="cx-account-brand">Core<span>XLyth</span></p>
+      <p class="cx-kicker">COREXLYTH // {mode === 'account' ? 'HESAP AYARLARI' : 'HESAP'}</p>
       <h1>{titles[mode]}</h1>
+      <p class="cx-account-intro">{mode === 'account' ? 'Hesap bilgilerini ve güvenlik ayarlarını buradan yönet.' : mode === 'login' ? 'Hesabına giriş yaparak CoreXLyth topluluğuna katıl.' : mode === 'signup' ? 'Hesabını oluştur ve CoreXLyth topluluğuna katıl.' : 'Hesabına güvenli şekilde erişmek için aşağıdaki adımları izle.'}</p>
       {!authPublicLaunch && <p>Üyelik sistemi kapalı test aşamasında.</p>}
       <p id="cx-auth-status" role="status" aria-live="polite">{authConfigured ? 'Bağlantı kontrol ediliyor…' : 'Hesap sistemi henüz kullanıma açılmadı.'}</p>
       {['login','signup','forgot','reset'].includes(mode) && <form data-auth-form method="post">
@@ -49,8 +51,9 @@ const newPassword = ['signup','reset'].includes(mode);
         </fieldset>
       </form>}
       <div data-account-details hidden>
-        <div class="cx-account-identity"><span class="cx-account-eyebrow">HESAP BİLGİLERİ</span><p>E-posta: <strong data-account-email></strong></p><p data-account-verification></p></div>
-        {mode === 'account' && <details class="cx-settings" data-account-settings>
+        {mode === 'account' && <nav class="cx-account-sections" aria-label="Hesap bölümleri"><a href="#hesap-bilgileri">Hesap bilgileri</a><a href="#hesap-ayarlari">Güvenlik</a><a href="#hesap-topluluk">Profil ve topluluk</a></nav>}
+        <div class="cx-account-identity" id="hesap-bilgileri"><span class="cx-account-eyebrow">HESAP BİLGİLERİ</span><p>E-posta: <strong data-account-email></strong></p><p data-account-verification></p></div>
+        {mode === 'account' && <details class="cx-settings" id="hesap-ayarlari" data-account-settings open>
           <summary>Hesap ayarları</summary>
           <p>E-posta ve şifreni buradan güncelleyebilirsin.</p>
           <div class="cx-settings-grid"><form data-change-email><h3>E-posta adresi</h3><p>Mevcut e-posta adresin: <strong data-settings-email></strong></p><label>Yeni Gmail adresi <input name="newEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" required /></label><p data-email-change-status role="status" aria-live="polite"></p><button type="submit">E-posta değişikliği iste</button></form>
