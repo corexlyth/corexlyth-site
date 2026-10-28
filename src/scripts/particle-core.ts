@@ -12,6 +12,19 @@ if (canvas) {
       if (index % 4 !== 0) point[index % 3] = (index % 2 ? 1 : -1) * (.9 + Math.random() * .1);
       return {x:point[0], y:point[1], z:point[2], size:.45 + Math.random() * .8, light:Math.random()};
     });
+    // Keep the initials facing the reader while the surrounding cloud rotates.
+    const glyphCanvas = document.createElement('canvas');
+    glyphCanvas.width = 100; glyphCanvas.height = 50;
+    const glyph = glyphCanvas.getContext('2d');
+    const initials:{x:number;y:number;size:number}[] = [];
+    if (glyph) {
+      glyph.fillStyle = '#fff'; glyph.font = '900 45px sans-serif';
+      glyph.textAlign = 'center'; glyph.textBaseline = 'middle'; glyph.fillText('CX', 50, 25);
+      const pixels = glyph.getImageData(0,0,100,50).data;
+      for (let y=0;y<50;y+=2) for (let x=0;x<100;x+=2) {
+        if (pixels[(y*100+x)*4+3]>100) initials.push({x:(x-50)/100,y:(y-25)/50,size:.8+Math.random()*.5});
+      }
+    }
     let width = 0, height = 0, visible = true, raf = 0, last = 0, phase = 0;
     function resize() {
       if (!canvas || !context) return;
@@ -36,12 +49,16 @@ if (canvas) {
         context.fillStyle = point.light > .62 ? `rgba(160,133,255,${alpha})` : `rgba(181,246,255,${alpha})`;
         context.fillRect(px,py,point.size,point.size);
       }
+      for (const dot of initials) {
+        const px=width/2+dot.x*scale*1.55, py=height*.47+dot.y*scale*.78;
+        context.fillStyle='rgba(255,55,83,.95)';context.fillRect(px,py,dot.size,dot.size);
+      }
       frame.classList.add('is-particles-ready');
     }
     function tick(time:number) {
       raf = 0;
       if (!visible || document.hidden || reduced.matches) return;
-      if (!last || time - last >= 33) {phase += last ? Math.min(time-last,80) * .00018 : 0; last = time; draw();}
+      if (!last || time - last >= 33) {phase += last ? Math.min(time-last,80) * .00026 : 0; last = time; draw();}
       raf = requestAnimationFrame(tick);
     }
     function update() {
