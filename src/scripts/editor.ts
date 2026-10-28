@@ -33,7 +33,7 @@ async function initialize(root:HTMLElement){
   root.querySelectorAll<HTMLButtonElement>('[data-editor-recovery] button').forEach(button=>button.disabled=busy||saving||signedOut);
   $<HTMLButtonElement>('[data-editor-slug-reset]').disabled=Boolean(revision)||saving;
   $<HTMLButtonElement>('[data-editor-publish]').disabled=busy||saving||Boolean(pendingRecovery)||role!=='owner';
-  $<HTMLButtonElement>('[data-editor-unpublish]').disabled=busy||saving||Boolean(pendingRecovery)||!published||role!=='owner';};
+  };
  const reason=(e:{message?:string;code?:string;status?:number})=>e.message?.includes('revision_conflict')?'Yazı başka bir oturumda değişti. Metnini kopyalayarak koru; yazıyı yeniden açıp son sürümle karşılaştır.':e.message?.includes('publisher_required')?'Yayımlama için site sahibi yetkisi gerekiyor.':e.message?.includes('editor_required')||e.message?.includes('login_required')||e.code==='42501'||e.status===403?'Bu bölüm yalnızca yetkili içerik yöneticilerine açıktır.':e.message?.includes('media_not_found')?'Yazıda kullanılan bir görsel bulunamadı. Önce görseli yükleyip yeniden seç.':e.message?.includes('too_many_images')?'Bir yazıda en fazla 100 yüklü görsel kullanılabilir.':e.message?.includes('rate_limited')?'Çok sık kaydettin. Biraz bekleyip tekrar dene.':'İşlem tamamlanamadı. Alanları ve bağlantını kontrol et.';
  function payload():ContentPayload {return {title:field('title').value.trim(),description:field('description').value.trim(),body:field('body').value,category:field('category').value.trim(),tags:field('tags').value.split(',').map(s=>s.trim()).filter(Boolean),pubDate:publicationDate||new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Istanbul'}).format(new Date()),cover:field('cover').value,coverAlt:field('coverAlt').value.trim(),featured:field('featured').checked};}
  function state(){
@@ -119,7 +119,6 @@ async function initialize(root:HTMLElement){
    published=action==='publish';publishedRevision=published?revision:0;publicationStage=published?'queued':'draft';$('[data-editor-live]').hidden=true;await refreshList();list.reveal(slug);void deployedState();tell(published?'Yayın isteğin alındı. Aktarım tamamlanınca yazın sitede görünecek.':'Yazı yayından kaldırılmak üzere işaretlendi. Site güncellenince sayfası kaldırılacak.');
   }catch(e){if(epoch===sessionEpoch){cache();tell(reason(e as Error),true);}}finally{if(epoch===sessionEpoch){busy=false;state();}}
  }
- $('[data-editor-unpublish]').addEventListener('click',()=>{void publish('unpublish');});
  $('[data-editor-new]').addEventListener('click',()=>{void open('');});
  $('[data-editor-refresh]').addEventListener('click',()=>{void(async()=>{if(busy||saving||signedOut)return;busy=true;sync();try{await refreshList();await deployedState();tell('Yazı listesi ve yayın durumu güncellendi.');}catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}})();});
  publicationTimer=setInterval(()=>{if(!document.hidden&&!signedOut)void deployedState();},30000);
