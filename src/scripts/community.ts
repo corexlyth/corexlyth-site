@@ -34,7 +34,7 @@ async function start(root:HTMLElement) {
   function sync() {
     if(mode==='account') root.hidden=!state?.signedIn;
     root.querySelectorAll<HTMLButtonElement>('button').forEach(button => { button.disabled=busy; });
-    if(profile) { profile.hidden=!state?.signedIn; profile.querySelector('fieldset')!.disabled=!enabled(); }
+    if(profile) { profile.hidden=!state?.signedIn || Boolean(state?.moderator); profile.querySelector('fieldset')!.disabled=!enabled() || Boolean(state?.moderator); }
     if(commentForm) { commentForm.hidden=!state?.signedIn; commentForm.querySelector('fieldset')!.disabled=!enabled(); }
     if(like) like.disabled=!enabled();
     if(bookmark) bookmark.disabled=!enabled();
