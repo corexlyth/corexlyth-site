@@ -906,3 +906,18 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 @keyframes cx-nav-trace{to{opacity:.55;transform:scaleX(.78);transform-origin:left}}
 @media(max-width:700px){.cx-nav{gap:6px}.cx-nav a{justify-content:flex-start;min-height:44px;padding:0 14px;border:0}.cx-nav a:hover,.cx-nav a:focus-visible,.cx-nav a[aria-current]{transform:translateX(3px)}}
 @media(prefers-reduced-motion:reduce){.cx-header__inner::before{animation:none}.cx-nav a,.cx-nav a::after{transition:none}.cx-nav a:hover,.cx-nav a:focus-visible,.cx-nav a[aria-current],.cx-nav a:active{transform:none}}
+
+/* Account actions follow the same cut-corner navigation language. */
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button:not(.cx-editor-entry),.cx-account-links a,.cx-account [data-account-details] a,.cx-editor > p a,.cx-account-back){
+ position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;min-height:44px;max-width:100%;box-sizing:border-box;padding:10px 16px;color:#e0faff;font:inherit;line-height:1.4;text-decoration:none;text-align:center;border:0;background:transparent;cursor:pointer;
+ clip-path:polygon(0 8px,8px 0,75% 0,80% 4px,100% 4px,100% calc(100% - 8px),calc(100% - 8px) 100%,25% 100%,20% calc(100% - 4px),0 calc(100% - 4px));transition:transform .2s ease,color .2s ease;
+}
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button:not(.cx-editor-entry),.cx-account-links a,.cx-account [data-account-details] a,.cx-editor > p a,.cx-account-back)::before,.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button:not(.cx-editor-entry),.cx-account-links a,.cx-account [data-account-details] a,.cx-editor > p a,.cx-account-back)::after{content:"";position:absolute;clip-path:inherit;pointer-events:none}
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button:not(.cx-editor-entry),.cx-account-links a,.cx-account [data-account-details] a,.cx-editor > p a,.cx-account-back)::before{inset:0;z-index:-2;background:linear-gradient(110deg,rgba(88,234,255,.75),rgba(154,108,255,.55))}
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button:not(.cx-editor-entry),.cx-account-links a,.cx-account [data-account-details] a,.cx-editor > p a,.cx-account-back)::after{inset:1px;z-index:-1;background:#0b202b;transition:background .2s ease}
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button:not(.cx-editor-entry),.cx-account-links a,.cx-account [data-account-details] a,.cx-editor > p a,.cx-account-back):is(:hover,:focus-visible):not(:disabled){transform:translateY(-2px);color:#f2ffff}
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button:not(.cx-editor-entry),.cx-account-links a,.cx-account [data-account-details] a,.cx-editor > p a,.cx-account-back):is(:hover,:focus-visible):not(:disabled)::after,.cx-account-surface .cx-editor-library__tabs [aria-selected=true]::after,.cx-account-surface .cx-community button[aria-pressed=true]::after{background:linear-gradient(110deg,#164654,#281a46)}
+.cx-account-surface :is(button,a):focus-visible{outline:3px solid #76e8bd;outline-offset:3px;filter:drop-shadow(0 0 5px #76e8bd)}
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-editor button):disabled{opacity:.5;cursor:not-allowed}
+.cx-account-surface .cx-account-links{gap:10px}.cx-account-surface .cx-account [data-account-details] button{display:flex}
+@media(prefers-reduced-motion:reduce){.cx-account-surface :is(button,a),.cx-account-surface :is(button,a)::after{transition:none}.cx-account-surface :is(button,a):is(:hover,:focus-visible){transform:none}}
