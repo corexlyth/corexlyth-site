@@ -29,7 +29,7 @@ async function initialize(root:HTMLElement){
 
  const field=(name:string)=>form.elements.namedItem(name) as HTMLInputElement;
  const tell=(s:string,error=false)=>{$('[data-editor-status]').textContent=s;$('[data-editor-status]').dataset.error=String(error);};
- const sync=()=>{root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=busy||signedOut);form.querySelector('fieldset')!.disabled=busy||signedOut||Boolean(pendingRecovery);list.disabled=busy||signedOut||saving||Boolean(pendingRecovery);$<HTMLButtonElement>('[data-editor-new]').disabled=busy||signedOut||saving||Boolean(pendingRecovery);$<HTMLButtonElement>('[data-editor-refresh]').disabled=busy||signedOut||saving||Boolean(pendingRecovery);
+ const sync=()=>{root.querySelectorAll<HTMLButtonElement>('.cx-editor-media button').forEach(b=>b.disabled=busy||signedOut);form.querySelector('fieldset')!.disabled=busy||signedOut||Boolean(pendingRecovery);list.disabled=busy||signedOut||saving||Boolean(pendingRecovery);$<HTMLButtonElement>('[data-editor-new]').disabled=busy||signedOut||saving||Boolean(pendingRecovery);
   root.querySelectorAll<HTMLButtonElement>('[data-editor-recovery] button').forEach(button=>button.disabled=busy||saving||signedOut);
   $<HTMLButtonElement>('[data-editor-slug-reset]').disabled=Boolean(revision)||saving;
   $<HTMLButtonElement>('[data-editor-publish]').disabled=busy||saving||Boolean(pendingRecovery)||role!=='owner';
@@ -37,6 +37,7 @@ async function initialize(root:HTMLElement){
  const reason=(e:{message?:string;code?:string;status?:number})=>e.message?.includes('revision_conflict')?'Yazı başka bir oturumda değişti. Metnini kopyalayarak koru; yazıyı yeniden açıp son sürümle karşılaştır.':e.message?.includes('publisher_required')?'Yayımlama için site sahibi yetkisi gerekiyor.':e.message?.includes('editor_required')||e.message?.includes('login_required')||e.code==='42501'||e.status===403?'Bu bölüm yalnızca yetkili içerik yöneticilerine açıktır.':e.message?.includes('media_not_found')?'Yazıda kullanılan bir görsel bulunamadı. Önce görseli yükleyip yeniden seç.':e.message?.includes('too_many_images')?'Bir yazıda en fazla 100 yüklü görsel kullanılabilir.':e.message?.includes('rate_limited')?'Çok sık kaydettin. Biraz bekleyip tekrar dene.':'İşlem tamamlanamadı. Alanları ve bağlantını kontrol et.';
  function payload():ContentPayload {return {title:field('title').value.trim(),description:field('description').value.trim(),body:field('body').value,category:field('category').value.trim(),tags:field('tags').value.split(',').map(s=>s.trim()).filter(Boolean),pubDate:publicationDate||new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Istanbul'}).format(new Date()),cover:field('cover').value,coverAlt:field('coverAlt').value.trim(),featured:field('featured').checked};}
  function state(){
+  $<HTMLButtonElement>('[data-editor-publish]').textContent=revision?'Düzenle':'Yayımla';
   $('[data-editor-state]').textContent=revision?`Yazı sürümü: ${revision}. ${published?(publicationStage==='live'?'Yayında.':'Siteye aktarımın tamamlanması bekleniyor.'):'Yayından kaldırıldı.'}${dirty?' Kaydedilmemiş değişiklikler var.':''}`:'Yeni yazı henüz yayımlanmadı.';
   field('slug').readOnly=Boolean(revision)||saving;$('[data-editor-date]').textContent=published&&publicationDate?`İlk yayın tarihi: ${new Intl.DateTimeFormat('tr-TR',{timeZone:'Europe/Istanbul'}).format(new Date(publicationDate+'T12:00:00+03:00'))}. Düzenlemelerde bu tarih korunur.`:'Yayın tarihi ilk yayımlama anında otomatik belirlenir. ';sync();
  }
@@ -54,7 +55,7 @@ async function initialize(root:HTMLElement){
    const url=`${root.dataset.base}yazi/${encodeURIComponent(target)}/`;const page=await fetch(url,{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(10000)});const html=page.ok?await page.text():'';if(!current())return;
    if(!page.ok||!pageMatchesPublication(html,target,expected)){publicationStage='queued';list.unverified(target);info.textContent='Site güncellemesi henüz bu adreste hazır değil. Bağlantı hazır olduğunda otomatik açılacak.';state();return;}
    publicationStage='live';list.verified(target,expected);link.href=url;view.hidden=false;info.textContent=`Yayında · sitedeki sürüm: ${expected}.${revision!==expected?' Yayımlanmamış değişiklikler var.':''}`;state();
-  }catch{if(current()){if(publicationStage!=='live'){view.hidden=true;link.removeAttribute('href');}info.textContent='Yayın durumu kontrol edilemedi. Listeyi ve yayın durumunu yenileyerek tekrar deneyebilirsin.';state();}}
+  }catch{if(current()){if(publicationStage!=='live'){view.hidden=true;link.removeAttribute('href');}info.textContent='Yayın durumu kontrol edilemedi. Sayfayı yenileyerek tekrar deneyebilirsin.';state();}}
  }
  async function refreshList(){const epoch=sessionEpoch;const {data,error}=await client!.rpc('cx_editor_read');if(error)throw error;if(epoch!==sessionEpoch)throw new Error('login_required');role=data.role;list.setPosts(data.posts);
   for(const p of data.posts)reserved.add(p.slug);const current=data.posts.find((p:{slug:string})=>p.slug===slug);if(current){published=Boolean(current.published);publishedRevision=current.published_revision??(published?current.revision:0);}list.value=slug;}
@@ -120,7 +121,6 @@ async function initialize(root:HTMLElement){
   }catch(e){if(epoch===sessionEpoch){cache();tell(reason(e as Error),true);}}finally{if(epoch===sessionEpoch){busy=false;state();}}
  }
  $('[data-editor-new]').addEventListener('click',()=>{void open('');});
- $('[data-editor-refresh]').addEventListener('click',()=>{void(async()=>{if(busy||saving||signedOut)return;busy=true;sync();try{await refreshList();await deployedState();tell('Yazı listesi ve yayın durumu güncellendi.');}catch(e){tell(reason(e as Error),true);}finally{busy=false;state();}})();});
  publicationTimer=setInterval(()=>{if(!document.hidden&&!signedOut)void deployedState();},30000);
  function schedulePreview(){previewVersion++;clearTimeout(previewTimer);previewTimer=setTimeout(()=>{void preview();},320);}
  async function preview(){
