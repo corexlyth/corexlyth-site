@@ -24,6 +24,7 @@ async function start(root:HTMLElement) {
     const msg = error?.message || '';
     if(msg.includes('rate_limited') || error?.status===429) return 'Gönderim sınırına ulaştın. Biraz bekleyip tekrar dene.';
     if(msg.includes('member_blocked')) return 'Bu hesabın topluluk gönderimleri kısıtlandı.';
+    if(msg.includes('comment_restricted')) return 'Bu hesabın yorum yapması kısıtlandı.';
     if(msg.includes('moderator_required')) return 'Bu bölüm için moderatör yetkisi gerekiyor.';
     if(msg.includes('login_required')) return 'İşlem için doğrulanmış hesabınla giriş yap.';
     if(msg.includes('invalid_parent')) return 'Bu yoruma artık yanıt verilemiyor. Listeyi yenile.';
