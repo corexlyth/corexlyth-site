@@ -87,6 +87,18 @@ async function start(root:HTMLElement) {
       for(const [label,action] of [...(c.status!=='published' ? [['Yayınla','publish']] : []),...(!c.own ? [['Üyeyi engelle','block'],['Engeli kaldır','unblock']] : [])]) {
         actions.append(actionButton(label,()=>{void(async()=>{if(await write(action,{p_comment:c.id})){await load();tell('Moderasyon işlemi kaydedildi.');}})();}));
       }
+      if(!c.own){
+        const label=node('label','Yorum kısıtlaması');
+        const select=node('select');select.setAttribute('aria-label',`${c.name} için yorum kısıtlaması`);
+        for(const [value,name] of [['1440','1 gün'],['10080','7 gün'],['permanent','Süresiz'],['release','Kısıtlamayı kaldır']])select.add(new Option(name,value));
+        label.append(select);actions.append(label);
+        actions.append(actionButton('Uygula',()=>{void(async()=>{
+          if(busy||!client)return;busy=true;sync();tell('İşlem yapılıyor…');
+          try{const release=select.value==='release';const {error}=await client.rpc('cx_comment_restriction_from_comment',{p_comment:c.id,p_minutes:release||select.value==='permanent'?null:Number(select.value),p_release:release});if(error)throw error;tell('Yorum kısıtlaması güncellendi.');}
+          catch{tell('Kısıtlama güncellenemedi. Bu hesap için yetkini kontrol et.',true);}
+          finally{busy=false;sync();}
+        })();}));
+      }
     }
     article.append(actions);return article;
   }
