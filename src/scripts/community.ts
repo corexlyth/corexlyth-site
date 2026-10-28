@@ -31,6 +31,7 @@ async function start(root:HTMLElement) {
   };
   const enabled = () => Boolean(state?.signedIn && !state.blocked && !busy);
   function sync() {
+    if(mode==='account') root.hidden=!state?.signedIn;
     root.querySelectorAll<HTMLButtonElement>('button').forEach(button => { button.disabled=busy; });
     if(profile) { profile.hidden=!state?.signedIn; profile.querySelector('fieldset')!.disabled=!enabled(); }
     if(commentForm) { commentForm.hidden=!state?.signedIn; commentForm.querySelector('fieldset')!.disabled=!enabled(); }

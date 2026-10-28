@@ -886,3 +886,7 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
  .cx-nav{top:calc(100% + 7px);left:0;right:0;max-height:calc(100dvh - 90px);overflow:auto}
  .cx-nav a{min-height:44px;display:flex;align-items:center;font-size:.85rem}
 }
+
+/* Respect hidden navigation and align the article sign-in action with reactions. */
+.cx-nav [hidden],.cx-community[hidden]{display:none!important}
+.cx-community-actions .cx-community-login{padding:10px 16px}
