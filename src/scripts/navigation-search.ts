@@ -8,8 +8,9 @@ if (root) {
   const list = root.querySelector<HTMLElement>('.cx-nav-search__results')!;
   const base = root.dataset.base || '/';
   let enginePromise: Promise<any> | undefined, timer: ReturnType<typeof setTimeout>, request = 0;
-  const close = () => { panel.hidden = true; toggle.setAttribute('aria-expanded','false'); request++; };
-  const open = () => { panel.hidden = false; toggle.setAttribute('aria-expanded','true'); input.focus(); };
+  const header = root.closest<HTMLElement>('.cx-header__inner');
+  const close = () => { panel.hidden = true; header?.classList.remove('is-search-open'); toggle.setAttribute('aria-expanded','false'); request++; };
+  const open = () => { header?.classList.add('is-search-open'); panel.hidden = false; toggle.setAttribute('aria-expanded','true'); input.focus(); };
   toggle.addEventListener('click', () => panel.hidden ? open() : close());
   document.addEventListener('click', e => { if (!root.contains(e.target as Node)) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { close(); toggle.focus(); } });
@@ -22,7 +23,7 @@ if (root) {
       const engine=await enginePromise, result=await engine.search(query);
       if(id!==request)return;
       const matches=result?.results || [];
-      const records=await Promise.all(matches.slice(0,8).map((item:any)=>item.data()));
+      const records=await Promise.all(matches.slice(0,5).map((item:any)=>item.data()));
       if(id!==request)return;
       for(const record of records){
         const url=new URL(record.url,location.origin); if(url.origin!==location.origin)continue;
@@ -31,7 +32,7 @@ if (root) {
         const title=document.createElement('strong');title.textContent=record.meta?.title||'CoreXLyth yayını';
         const excerpt=document.createElement('span');excerpt.textContent=record.plain_excerpt||'Yazıyı görüntüle';a.append(title,excerpt);list.append(a);
       }
-      status.textContent=matches.length ? `${matches.length} sonuç bulundu${matches.length>8?' · ilk 8 gösteriliyor':''}.` : 'Sonuç bulunamadı. Başka bir kelime dene.';
+      status.textContent=matches.length ? `${matches.length} sonuç bulundu${matches.length>5?' · ilk 5 gösteriliyor':''}.` : 'Sonuç bulunamadı. Başka bir kelime dene.';
     } catch(error){if(id!==request)return;console.warn('Arama yüklenemedi',error);status.textContent='Arama yüklenemedi. Tekrar deneyebilirsin.';}
   }
   input.addEventListener('input',()=>{ clearTimeout(timer); const id=++request; if(!input.value.trim()){list.replaceChildren();status.textContent='Aramak için en az iki harf yaz.';return;} timer=setTimeout(()=>{if(id===request)void search();},220); });
