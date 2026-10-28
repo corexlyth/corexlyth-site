@@ -1,28 +1,46 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import PostList from '../../components/PostList.astro';
-import { categoriesFrom, categoryUrl, getPosts, tagsFrom, tagUrl, urlFor } from '../../lib/posts';
+import { categoriesFrom, coverFor, dateTR, getPosts, postUrl, urlFor } from '../../lib/posts';
 const posts = await getPosts();
 const categories = categoriesFrom(posts);
-const tags = tagsFrom(posts);
 ---
-<SiteLayout title="Tüm Kayıtlar | CoreXLyth" description="CoreXLyth tüm yazılar, kanallar, içerik kategorileri ve etiketler arşivi.">
-  <main id="home" class="cx-list-page">
-    <nav class="cx-breadcrumb" aria-label="İçerik yolu"><a href={urlFor('')}>COREXLYTH</a><span>/</span><span>TÜM KAYITLAR</span></nav>
-    <section class="cx-all-records cx-hud-frame">
-      <header class="cx-records-head">
-        <p class="cx-kicker">ARCHIVE // ALL RECORDS</p>
-        <div class="cx-records-title"><h1>TÜM KAYITLAR</h1><span>{posts.length} YAYIN</span></div>
-        <p>CoreXLyth yayın akışı. Yeni yazılar otomatik olarak en üste gelir.</p>
-        <div class="cx-archive-filters" aria-label="Kategori bağlantıları">
-          {categories.map(category => <a href={categoryUrl(category)}>{category}</a>)}
-        </div>
+<SiteLayout title="Tüm Kayıtlar | CoreXLyth" description="CoreXLyth yazılarını siber arşivde keşfet.">
+  <link slot="head" rel="stylesheet" href={urlFor('assets/css/archive-vault.css?v=1')} />
+  <main id="home" class="cx-vault" data-vault>
+    <div class="cx-vault__backdrop" aria-hidden="true"></div>
+    <div class="cx-vault__inner">
+      <header class="cx-vault__header">
+        <p class="cx-vault__eyebrow">COREXLYTH <span>✦</span> SİBER ARŞİV</p>
+        <h1>TÜM KAYITLAR</h1>
+        <p>Teknoloji, bilim ve daha fazlası. Bilginin dijital arşivini keşfet.</p>
       </header>
-      <PostList posts={posts} />
-      <div class="cx-archive-tags">
-        <p class="cx-kicker">INDEX // TAGS</p>
-        <div class="cx-tag-links">{tags.map(tag => <a href={tagUrl(tag)}>#{tag}</a>)}</div>
+      <div class="cx-vault__controls">
+        <div class="cx-vault__filters" role="group" aria-label="Yazıları kategoriye göre filtrele">
+          <button type="button" class="is-active" aria-pressed="true" data-vault-filter="all">Tümü</button>
+          {categories.map(category => <button type="button" aria-pressed="false" data-vault-filter={category}>{category}</button>)}
+        </div>
+        <label class="cx-vault__sort">Sırala <select data-vault-sort aria-label="Yazıları sırala"><option value="newest">En yeni</option><option value="oldest">En eski</option><option value="title">A–Z</option></select></label>
       </div>
-    </section>
+      <p class="cx-vault__count" aria-live="polite" data-vault-count>{posts.length} yayın</p>
+      <section class="cx-vault__stage" aria-label="Arşivdeki yazılar">
+        <div class="cx-vault__orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="cx-vault__platform" aria-hidden="true"></div>
+        <div class="cx-vault__cards" data-vault-cards>
+          {posts.map((post,index) => <a class="cx-vault-card" href={postUrl(post)} data-vault-card data-category={post.data.category} data-date={post.data.pubDate.toISOString()} data-title={post.data.title} style={`--vault-delay:${Math.min(index,8)*55}ms`}>
+            <div class="cx-vault-card__inner">
+              <div class="cx-vault-card__image"><img src={coverFor(post)} alt="" loading={index < 3 ? 'eager' : 'lazy'} /></div>
+              <div class="cx-vault-card__body">
+                <div class="cx-vault-card__meta"><time datetime={post.data.pubDate.toISOString().slice(0,10)}>{dateTR(post.data.pubDate)}</time><span>•</span><span>{post.data.category}</span></div>
+                <h2>{post.data.title}</h2>
+                <p>{post.data.description}</p>
+                <span class="cx-vault-card__link">Devamını oku <b aria-hidden="true">→</b></span>
+              </div>
+            </div>
+          </a>)}
+        </div>
+        <p class="cx-vault__empty" hidden>Bu kategoride henüz yazı bulunmuyor.</p>
+      </section>
+    </div>
   </main>
 </SiteLayout>
+<script>import '../../scripts/archive-vault';</script>
