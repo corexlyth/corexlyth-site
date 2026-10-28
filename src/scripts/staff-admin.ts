@@ -46,6 +46,19 @@ if(root){
      busy=false;if(changeEpoch!==epoch)return;restrictButton.disabled=false;
      if(result.error){tell('Yorum kısıtlaması değiştirilemedi.');return;}await load();if(changeEpoch+1===epoch)tell('Yorum kısıtlaması güncellendi ve işlem kaydedildi.');
     })();});card.append(restrictionLabel,restrictButton);
+    if(u.role!=='admin'){
+     const banLabel=node('label','Hesap banı'),banChoice=node('select');
+     banChoice.setAttribute('aria-label',`${u.email||'Kullanıcı'} hesap banı`);
+     for(const [value,name] of [['ban_1d','1 gün'],['ban_7d','7 gün'],['ban_long','100 yıl'],['unban','Banı kaldır']])banChoice.add(new Option(name,value));
+     banLabel.append(banChoice);const banButton=node('button','Hesap banı işlemini uygula');banButton.type='button';
+     banButton.addEventListener('click',()=>{void(async()=>{
+      if(busy)return;const run=epoch;busy=true;banButton.disabled=true;tell('Hesap işlemi yapılıyor…');
+      const {error}=await client.functions.invoke('account-ban',{body:{target:u.id,operation:banChoice.value}});
+      busy=false;if(run!==epoch)return;banButton.disabled=false;
+      if(error){tell('İşlemin sonucu doğrulanamadı. Yenileyip hesap durumunu kontrol et.');return;}
+      await load();if(run+1===epoch)tell('Hesap banı işlemi tamamlandı.');
+     })();});card.append(banLabel,banButton);
+    }
    }
    list.append(card);
   }
