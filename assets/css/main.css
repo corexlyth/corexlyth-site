@@ -1030,3 +1030,15 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 @keyframes cx-city-glow{to{opacity:.45;transform:translate3d(0,-3%,0)}}@keyframes cx-city-float{to{transform:translate3d(0,-25px,0)}}@keyframes cx-grid-flow{to{background-position:0 62px}}@keyframes cx-stream{0%{opacity:.05}45%{opacity:.65}100%{opacity:.05}}
 @media(max-width:700px){.cx-cyberworld{opacity:.5}.cx-cyberworld__city{width:190%;left:-45%;opacity:.4}.cx-cyberworld__grid{background-size:85px 85px}}
 @media(prefers-reduced-motion:reduce){.cx-cyberworld{transform:none!important}.cx-cyberworld__sky,.cx-cyberworld__city,.cx-cyberworld__grid,.cx-cyberworld__stream{animation:none!important}}
+
+/* A quiet 3D city behind the page and a compact category index. */
+.cx-depth-city{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.9}
+.cx-ambient.has-depth-city .cx-cyberworld{opacity:.13}
+.cx-discovery{padding-top:clamp(36px,5vw,60px)}.cx-discovery-title{margin-bottom:22px}.cx-discovery-title h2{font-size:clamp(2rem,4vw,3.1rem)}
+.cx-category-panel{margin-bottom:18px!important;padding:clamp(18px,2vw,26px)!important}
+.cx-category-panel__head{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px!important}
+.cx-category-panel__title-row h3{font-size:clamp(1.15rem,2.3vw,1.55rem)}.cx-category-panel__title-row span,.cx-category-panel__title-row em{font-size:.7rem}
+.cx-category-panel__head p{font-size:.88rem;line-height:1.45;margin:8px 0}.cx-category-panel__head b{font-size:.62rem;padding:5px 7px}
+.cx-category-panel .cx-explore-btn{min-height:42px;padding:11px 16px;font-size:.7rem}
+.cx-category-panel .cx-story-card{flex:0 0 min(44%,390px);min-height:205px;aspect-ratio:auto}.cx-category-panel .cx-story-card__body{min-height:205px;padding:18px}.cx-category-panel .cx-story-card h4{font-size:1.12rem;margin-top:19px}.cx-category-panel .cx-story-card p{font-size:.82rem;margin-top:8px;-webkit-line-clamp:2}.cx-category-panel .cx-story-card__meta{font-size:.65rem}
+@media(max-width:700px){.cx-category-panel__head{align-items:flex-start}.cx-category-panel .cx-story-card{flex-basis:83%;min-height:190px}.cx-category-panel .cx-story-card__body{min-height:190px}.cx-category-panel .cx-story-card h4{font-size:1rem}.cx-category-panel .cx-explore-btn{padding:10px;font-size:.62rem}}

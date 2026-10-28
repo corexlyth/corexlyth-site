@@ -1,1 +1,0 @@
-import{t as e}from"./supabase-client.dtfbhbVh.js";var t=document.querySelectorAll(`[data-nav-guest]`),n=document.querySelector(`[data-nav-member]`),r=e=>{t.forEach(t=>t.hidden=e),n&&(n.hidden=!e)},i=e();i&&i.auth.onAuthStateChange((e,t)=>r(!!t?.user));
