@@ -4,7 +4,7 @@ import { authConfigured } from '../config/auth';
 interface Props { mode?: 'article' | 'account' | 'moderation'; post?: string; }
 const { mode = 'article', post = '' } = Astro.props;
 ---
-<section id={mode === 'article' ? 'yorumlar' : undefined} class="cx-community cx-hud-frame" hidden={mode === 'account'} data-community={mode} data-post={post} data-base={urlFor('')} data-pagefind-ignore>
+<section id={mode === 'article' ? 'yorumlar' : mode === 'account' ? 'hesap-topluluk' : undefined} class="cx-community cx-hud-frame" hidden={mode === 'account'} data-community={mode} data-post={post} data-base={urlFor('')} data-pagefind-ignore>
   <p class="cx-kicker">COREXLYTH // TOPLULUK</p>
   <h2>{mode === 'article' ? 'Yorumlar ve etkileşim' : mode === 'account' ? 'Profilim' : 'Yorum moderasyonu'}</h2>
   <p data-community-status role="status" aria-live="polite">{authConfigured ? 'Topluluk yükleniyor…' : 'Topluluk henüz kullanıma açılmadı.'}</p>
