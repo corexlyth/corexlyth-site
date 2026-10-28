@@ -1,0 +1,22 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { urlFor } from '../../../lib/posts';
+---
+<SiteLayout title="Yönetim paneli | CoreXLyth" noindex={true}>
+ <main id="home" class="cx-reading-shell cx-account-surface">
+  <section class="cx-account cx-hud-frame" data-staff-admin>
+   <p class="cx-kicker">COREXLYTH // YÖNETİM</p>
+   <h1>Yönetim paneli</h1>
+   <p><a class="cx-account-back" href={urlFor('hesap/')}>Hesabıma dön</a></p>
+   <p data-staff-status role="status" aria-live="polite">Yetki kontrol ediliyor…</p>
+   <div data-staff-content hidden>
+    <h2>Kullanıcılar ve roller</h2>
+    <p>Rol değişiklikleri kaydedilir. Kendi admin yetkini buradan kaldıramazsın.</p>
+    <p>Yazar ve moderatör işlevleri geliştiriliyor; bazı yetkiler henüz kullanıma hazır değil.</p>
+    <div data-staff-users></div>
+    <button type="button" data-staff-refresh>Listeyi yenile</button>
+   </div>
+  </section>
+ </main>
+</SiteLayout>
+<script>import '../../../scripts/staff-admin';</script>
