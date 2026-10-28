@@ -35,7 +35,7 @@ if(existsSync(join(dist,'index.html'))){
  assert(!html.includes('src="./assets/'),'No broken asset URLs');
 }
 
-const SEO_FILES=['ara/index.html','rss.xml','robots.txt','sitemap-index.xml','sitemap-0.xml','assets/js/search.js','pagefind/pagefind.js'];
+const SEO_FILES=['rss.xml','robots.txt','sitemap-index.xml','sitemap-0.xml','pagefind/pagefind.js'];
 for(const file of SEO_FILES)assert(existsSync(join(dist,file)),`Search/SEO output ${file}`);
 if(existsSync(join(dist,'rss.xml'))) {
  const xml=readFileSync(join(dist,'rss.xml'),'utf8');
@@ -51,12 +51,7 @@ if(existsSync(join(dist,'sitemap-0.xml'))){
  assert(markdown.length===0 || xml.includes('/corexlyth-site/yazi/'),'Sitemap contains current article pages');
  assert(!xml.includes('/ara/'),'Sitemap excludes noindex search page');
 }
-if(existsSync(join(dist,'ara/index.html'))){
- const html=readFileSync(join(dist,'ara/index.html'),'utf8');
- assert(html.includes('cx-search-input'),'Search page includes input');
- assert(html.includes('assets/js/search.js'),'Search page loads client search');
- assert(html.includes('noindex'),'Search page excluded from index');
-}
+assert(!existsSync(join(dist,'ara/index.html')),'Standalone search page removed');
 for(const file of markdown){
  const path=`yazi/${file.slice(0,-3)}/index.html`;
  if(!existsSync(join(dist,path)))continue;
@@ -66,7 +61,7 @@ for(const file of markdown){
 }
 if(existsSync(join(dist,'index.html'))){
  const html=readFileSync(join(dist,'index.html'),'utf8');
- assert(html.includes('/corexlyth-site/ara/'),'Home navigation to search');
+ assert(!html.includes('/corexlyth-site/ara/'),'Home does not link to removed search page');
  assert(html.includes('/corexlyth-site/rss.xml'),'RSS discovery tag');
 }
 
