@@ -1,6 +1,6 @@
 import { getAuthClient } from '../lib/supabase-client';
 
-type User = {id:string;email:string|null;display_name:string|null;role:'admin'|'moderator'|'author'|null;blocked:boolean;banned_until:string|null;comment_restricted:boolean;comment_restriction_until:string|null};
+type User = {id:string;email:string|null;display_name:string|null;comment_restricted:boolean;comment_restriction_until:string|null};
 const root=document.querySelector<HTMLElement>('[data-staff-admin]');
 if(root){
  const client=getAuthClient(), status=root.querySelector<HTMLElement>('[data-staff-status]')!, content=root.querySelector<HTMLElement>('[data-staff-content]')!, list=root.querySelector<HTMLElement>('[data-staff-users]')!, refresh=root.querySelector<HTMLButtonElement>('[data-staff-refresh]')!;
@@ -20,21 +20,8 @@ if(root){
   for(const u of (data.users||[]) as User[]){
    const card=node('article');card.className='cx-staff-user';
    const title=node('strong',u.display_name||'Anonim'),email=node('p',u.email||'E-posta yok');
-   const label=node('label',u.id===currentUser?'Rolün':'Rol');
-   const select=node('select');select.setAttribute('aria-label',`${u.email||'Kullanıcı'} rolü`);
-   for(const [value,name] of [['','Üye'],['author','Yazar'],['moderator','Moderatör'],['admin','Admin']])select.add(new Option(name,value));
-   select.value=u.role||'';select.disabled=u.id===currentUser;label.append(select);
-   const banned=Boolean(u.banned_until && new Date(u.banned_until).getTime()>Date.now());
-   card.append(title,email,node('p',banned?`Hesap banlı · ${new Date(u.banned_until!).toLocaleString('tr-TR')}`:'Hesap banı yok'),node('p',u.blocked?'Topluluk gönderimleri engelli':'Topluluk engeli yok'),node('p',u.comment_restricted?(u.comment_restriction_until?`Yorum kısıtlı · ${new Date(u.comment_restriction_until).toLocaleString('tr-TR')}`:'Yorum süresiz kısıtlı'):'Yorum kısıtlaması yok'),label);
+   card.append(title,email,node('p',u.comment_restricted?(u.comment_restriction_until?`Yorum kısıtlı · ${new Date(u.comment_restriction_until).toLocaleString('tr-TR')}`:'Yorum süresiz kısıtlı'):'Yorum kısıtlaması yok'));
    if(u.id!==currentUser){
-    const button=node('button','Rolü kaydet');button.type='button';
-    button.addEventListener('click',()=>{void(async()=>{
-     if(busy)return;const changeEpoch=epoch;busy=true;button.disabled=true;tell('Rol güncelleniyor…');
-     const result=await client.rpc('cx_staff_admin',{p_action:'set_role',p_user:u.id,p_role:select.value||null});
-     busy=false;if(changeEpoch!==epoch)return;button.disabled=false;
-     if(result.error){tell('Rol güncellenemedi. Kullanıcının e-postası doğrulanmış olmalı.');return;}
-     await load();if(changeEpoch+1===epoch)tell('Rol güncellendi ve işlem kaydedildi.');
-    })();});card.append(button);
     const restrictionLabel=node('label','Yorum kısıtlaması'), restriction=node('select');
     restriction.setAttribute('aria-label',`${u.email||'Kullanıcı'} yorum kısıtlaması`);
     for(const [value,name] of [['release','Kısıtlamayı kaldır'],['1440','1 gün'],['10080','7 gün'],['permanent','Süresiz']])restriction.add(new Option(name,value));
@@ -46,19 +33,7 @@ if(root){
      busy=false;if(changeEpoch!==epoch)return;restrictButton.disabled=false;
      if(result.error){tell('Yorum kısıtlaması değiştirilemedi.');return;}await load();if(changeEpoch+1===epoch)tell('Yorum kısıtlaması güncellendi ve işlem kaydedildi.');
     })();});card.append(restrictionLabel,restrictButton);
-    if(u.role!=='admin'){
-     const banLabel=node('label','Hesap banı'),banChoice=node('select');
-     banChoice.setAttribute('aria-label',`${u.email||'Kullanıcı'} hesap banı`);
-     for(const [value,name] of [['ban_1d','1 gün'],['ban_7d','7 gün'],['ban_long','100 yıl'],['unban','Banı kaldır']])banChoice.add(new Option(name,value));
-     banLabel.append(banChoice);const banButton=node('button','Hesap banı işlemini uygula');banButton.type='button';
-     banButton.addEventListener('click',()=>{void(async()=>{
-      if(busy)return;const run=epoch;busy=true;banButton.disabled=true;tell('Hesap işlemi yapılıyor…');
-      const {error}=await client.functions.invoke('account-ban',{body:{target:u.id,operation:banChoice.value}});
-      busy=false;if(run!==epoch)return;banButton.disabled=false;
-      if(error){tell('İşlemin sonucu doğrulanamadı. Yenileyip hesap durumunu kontrol et.');return;}
-      await load();if(run+1===epoch)tell('Hesap banı işlemi tamamlandı.');
-     })();});card.append(banLabel,banButton);
-    }
+
    }
    list.append(card);
   }
