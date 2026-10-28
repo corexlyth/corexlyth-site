@@ -1034,6 +1034,7 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 /* A quiet 3D city behind the page and a compact category index. */
 .cx-depth-city{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.9}
 .cx-ambient.has-depth-city .cx-cyberworld{opacity:.13}
+.cx-ambient.has-depth-city .cx-cyberworld__grid,.cx-ambient.has-depth-city .cx-cyberworld__stream{display:none}
 .cx-discovery{padding-top:clamp(36px,5vw,60px)}.cx-discovery-title{margin-bottom:22px}.cx-discovery-title h2{font-size:clamp(2rem,4vw,3.1rem)}
 .cx-category-panel{margin-bottom:18px!important;padding:clamp(18px,2vw,26px)!important}
 .cx-category-panel__head{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px!important}
