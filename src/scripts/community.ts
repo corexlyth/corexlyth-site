@@ -99,6 +99,15 @@ async function start(root:HTMLElement) {
           catch{tell('Kısıtlama güncellenemedi. Bu hesap için yetkini kontrol et.',true);}
           finally{busy=false;sync();}
         })();}));
+        const banLabel=node('label','Hesap banı'),banChoice=node('select');banChoice.setAttribute('aria-label',`${c.name} için hesap banı`);
+        for(const [value,name] of [['ban_1d','1 gün'],['ban_7d','7 gün'],['ban_long','100 yıl'],['unban','Banı kaldır']])banChoice.add(new Option(name,value));
+        banLabel.append(banChoice);actions.append(banLabel);
+        actions.append(actionButton('Hesap banını uygula',()=>{void(async()=>{
+          if(busy||!client)return;busy=true;sync();tell('Hesap işlemi yapılıyor…');
+          try{const {error}=await client.functions.invoke('account-ban',{body:{comment:c.id,operation:banChoice.value}});if(error)throw error;tell('Hesap banı işlemi tamamlandı.');}
+          catch{tell('İşlemin sonucu doğrulanamadı. Yetkini ve hesap durumunu kontrol et.',true);}
+          finally{busy=false;sync();}
+        })();}));
       }
     }
     article.append(actions);return article;
