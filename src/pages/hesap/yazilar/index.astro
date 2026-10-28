@@ -11,12 +11,11 @@ const categories=categoriesFrom(await getPosts());
       <p data-editor-status role="status" aria-live="polite">Yetki kontrol ediliyor…</p>
       <p><a href={urlFor('hesap/')}>Hesabıma dön</a></p>
       <div data-editor-tools hidden>
-        <p>Taslaklar özeldir. Yayımlama, kaydedilmiş sürümü herkese açık yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; yazı ancak aktarım tamamlanıp sayfası doğrulanınca “Yayında” olur. Aktarım zamanlanmış bir iştir; gecikebilir. Hazır olmadan yazıyı açma bağlantısı gösterilmez.</p>
-        <section class="cx-editor-library" aria-label="Yazı ve taslak seçimi">
+        <p>Yayımla düğmesi, yazının mevcut içeriğini yayın akışına ekler. Site düzenli aralıklarla bu akışı kontrol eder; yazı ancak aktarım tamamlanıp sayfası doğrulanınca “Yayında” olur. Aktarım zamanlanmış bir iştir; gecikebilir. Hazır olmadan yazıyı açma bağlantısı gösterilmez.</p>
+        <section class="cx-editor-library" aria-label="Yazı seçimi">
           <div class="cx-community-actions"><button type="button" data-editor-new>Yeni yazı</button><button type="button" data-editor-refresh>Listeyi ve yayın durumunu yenile</button></div>
-          <div class="cx-editor-library__tabs" role="tablist" aria-label="Yayın türü"><button type="button" id="cx-library-published" role="tab" aria-controls="cx-library-items" aria-selected="true" data-library-mode="published">Yazılar</button><button type="button" id="cx-library-drafts" role="tab" aria-controls="cx-library-items" aria-selected="false" tabindex="-1" data-library-mode="drafts">Taslaklar</button></div>
           <div class="cx-editor-library__filters"><label>Kategoriye göre filtrele<select data-library-category><option value="">Tüm kategoriler</option></select></label><label>Yazı ara<input type="search" data-library-query placeholder="Başlık veya kategori…" maxlength="200" /></label></div>
-          <div id="cx-library-items" data-library-items role="tabpanel" aria-labelledby="cx-library-published"></div>
+          <div id="cx-library-items" data-library-items></div>
         </section>
         <div class="cx-editor-save" data-editor-save data-state="idle" role="status" aria-live="polite">Henüz kaydedilmemiş yeni yazı.</div>
         <div data-editor-recovery hidden><p>Bu hesapla bu cihazda yarım kalan değişiklikler bulundu.</p><button type="button" data-recovery-restore>Yazmaya devam et</button> <button type="button" data-recovery-discard>Vazgeç</button></div>
@@ -25,7 +24,7 @@ const categories=categoriesFrom(await getPosts());
         <section class="cx-editor-media" aria-labelledby="cx-media-title">
           <h2 id="cx-media-title">Kapak görseli</h2>
           <label>Kapak açıklaması <input name="coverAlt" data-media-alt minlength="5" maxlength="300" required placeholder="Görselde ne olduğunu kısaca anlat" /></label>
-          <p>JPG, PNG, WebP, AVIF · en fazla 15 MB. Uzun kenar en fazla 1920 piksele küçültülür ve WebP olarak kaydedilir. Taslak görselleri özel alanda tutulur.</p>
+          <p>JPG, PNG, WebP, AVIF · en fazla 15 MB. Uzun kenar en fazla 1920 piksele küçültülür ve WebP olarak kaydedilir. Görseller yayımlanana kadar özel alanda tutulur.</p>
           <input data-media-file type="file" accept="image/jpeg,image/png,image/webp,image/avif" hidden />
           <div class="cx-community-actions"><button type="button" data-media-upload-cover>Kapak yükle</button></div>
           <input type="hidden" name="cover" value="" />
@@ -37,7 +36,7 @@ const categories=categoriesFrom(await getPosts());
             <button type="button" data-editor-slug-reset>Adresi başlıktan oluştur</button>
             <label>Başlık <input name="title" minlength="8" maxlength="200" required /></label>
             <label>Kısa açıklama <textarea name="description" minlength="35" maxlength="220" rows="3" required></textarea></label>
-            <p data-editor-date>Yayın tarihi ilk yayımlama anında otomatik belirlenir. Hazır olmayan yazıyı taslak olarak saklayabilirsin.</p>
+            <p data-editor-date>Yayın tarihi ilk yayımlama anında otomatik belirlenir. </p>
             <label>Kategori <select data-editor-category required aria-describedby="cx-category-hint"><option value="">Kategori seç</option>{categories.map(category=><option value={category}>{category}</option>)}<option value="__new__">Yeni kategori ekle…</option></select></label>
             <label data-editor-category-wrap hidden>Yeni kategori adı <input data-editor-category-new minlength="2" maxlength="80" placeholder="Örneğin: Android" /></label>
             <input name="category" type="hidden" value="" />
@@ -58,12 +57,12 @@ const categories=categoriesFrom(await getPosts());
               <p class="cx-field-hint">Metni seçip bir araca dokun veya imleci eklemek istediğin yere bırak. Araçlar biçimi hazır ekler; sonucu aşağıdaki canlı önizlemeden takip edebilirsin.</p>
               <textarea id="cx-write-body" name="body" rows="18" maxlength="100000" required aria-label="Yazı alanı"></textarea>
             </div>
-            <p>Gerekli alanlar tamamlandığında taslak otomatik kaydedilir. Eksik alanlarla yazdığın metin bu cihazda geçici olarak korunur; çıkış yaptığında cihazdaki bu geçici kayıt silinir.</p>
-            <div class="cx-community-actions"><button type="submit" data-editor-save-button>Taslağı kaydet</button><button type="button" data-editor-preview>Önizle</button></div>
+            <p>Yazı hazır olduğunda Yayımla düğmesine bas. Yazarken metnin bu cihazda geçici olarak korunur; çıkış yaptığında geçici kayıt silinir.</p>
+            <div class="cx-community-actions"><button type="submit" data-editor-publish disabled>Yayımla</button><button type="button" data-editor-preview>Önizle</button></div>
           </fieldset>
         </form>
         <p data-editor-state></p><p data-editor-deployed></p>
-        <div class="cx-community-actions"><button type="button" data-editor-publish disabled>Kaydedilmiş sürümü yayımla</button><button type="button" data-editor-unpublish disabled>Yayından kaldır</button></div>
+        <div class="cx-community-actions"><button type="button" data-editor-unpublish disabled>Yayından kaldır</button></div>
         <p data-editor-live hidden><a data-editor-live-link>Yazıyı sitede aç</a></p>
         <dialog class="cx-inline-media-dialog" data-inline-media-dialog aria-labelledby="cx-inline-media-title">
           <h2 id="cx-inline-media-title" data-inline-media-title>Yazıya görsel ekle</h2>
@@ -74,7 +73,7 @@ const categories=categoriesFrom(await getPosts());
           <div data-inline-media-queue></div><p data-inline-media-status role="status" aria-live="polite"></p>
           <div class="cx-community-actions"><button type="button" data-inline-media-insert>Yazıya ekle</button><button type="button" data-inline-media-close>Vazgeç</button></div>
         </dialog>
-        <section data-editor-preview-box hidden><h2>Canlı önizleme</h2><p>Yazı alanındaki değişiklikler burada biçimlenir; bu görünüm taslağı yayımlamaz.</p><h3 data-editor-preview-title></h3><img data-editor-preview-cover hidden alt="" style="max-width:100%;height:auto" /><div class="cx-article__content" data-editor-preview-body></div></section>
+        <section data-editor-preview-box hidden><h2>Canlı önizleme</h2><p>Yazı alanındaki değişiklikler burada biçimlenir; bu görünüm yazıyı yayımlamaz.</p><h3 data-editor-preview-title></h3><img data-editor-preview-cover hidden alt="" style="max-width:100%;height:auto" /><div class="cx-article__content" data-editor-preview-body></div></section>
       </div>
       <noscript>Yazı yönetimi JavaScript gerektirir.</noscript>
     </section>
