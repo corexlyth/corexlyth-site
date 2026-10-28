@@ -1,7 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import PostList from '../../components/PostList.astro';
 import Community from '../../components/Community.astro';
 import { categoryUrl, coverFor, dateTR, getPosts, postUrl, tagUrl, urlFor } from '../../lib/posts';
 import type { Post } from '../../lib/posts';
@@ -51,7 +50,7 @@ const structuredData = {
 
     <article class="cx-article cx-hud-frame" data-pagefind-body>
       <header class="cx-article__head">
-        <p class="cx-kicker">COREXLYTH // EDITORIAL RECORD</p>
+        <a class="cx-article__category" href={categoryUrl(post.data.category)}>{post.data.category}</a>
         <h1>{post.data.title}</h1>
         <p class="cx-article__summary">{post.data.description}</p>
         <div class="cx-article__meta">
@@ -86,14 +85,19 @@ const structuredData = {
         </div>
         <a class="cx-link" href={urlFor('arsiv/')}>← TÜM KAYITLARA DÖN</a>
       </footer>
+
+      {related.length > 0 && <section class="cx-article__related" aria-label="Benzer içerikler" data-pagefind-ignore>
+        <h2>İlgini çekebilir</h2>
+        <div class="cx-article__related-list">
+          {related.map(item => <a class="cx-article__related-card" href={postUrl(item)}>
+            <img src={coverFor(item)} alt="" loading="lazy" />
+            <span><small>{item.data.category}</small><strong>{item.data.title}</strong></span>
+          </a>)}
+        </div>
+      </section>}
     </article>
 
     <Community post={post.id} />
 
-    {related.length > 0 && <section class="cx-related cx-hud-frame" aria-label="Benzer içerikler">
-      <p class="cx-kicker">FURTHER READING</p>
-      <h2>İlgini çekebilir</h2>
-      <PostList posts={related} />
-    </section>}
   </main>
 </SiteLayout>
