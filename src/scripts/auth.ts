@@ -111,6 +111,8 @@ async function initialize(root: HTMLElement) {
     } else if (mode === 'account' || mode === 'confirm') {
       if (data.user && signedIn) {
         root.querySelector('[data-account-email]')!.textContent = data.user.email || '';
+        const settingsEmail = root.querySelector('[data-settings-email]');
+        if (settingsEmail) settingsEmail.textContent = data.user.email || '';
         root.querySelector('[data-account-verification]')!.textContent = data.user.email_confirmed_at ? 'E-posta adresin doğrulandı.' : 'E-posta adresin henüz doğrulanmadı.';
         details.hidden = false;
         message(mode === 'confirm' ? 'E-posta bağlantın doğrulandı. Hesabına giriş yaptın.' : 'Hesabına giriş yaptın.');
@@ -188,12 +190,9 @@ async function initialize(root: HTMLElement) {
       }
     });
 
-    // Sensitive account changes require a fresh password verification.
-    const verifyCurrentPassword = async (password:string) => {
+    const currentUser = async () => {
       const {data: current,error:userError}=await client.auth.getUser();
       if(userError || !current.user?.email) throw new Error('session');
-      const {error}=await client.auth.signInWithPassword({email:current.user.email,password});
-      if(error) throw new Error('password');
       return current.user;
     };
     const emailForm=root.querySelector<HTMLFormElement>('[data-change-email]');
@@ -222,11 +221,11 @@ async function initialize(root: HTMLElement) {
       if(!isGmail(email))return;
       busy=true;const button=emailForm.querySelector<HTMLButtonElement>('button[type=submit]')!;button.disabled=true;emailStatus.textContent='İşlem yapılıyor…';
       try{
-        const user=await verifyCurrentPassword(String(data.get('currentPassword')||''));
+        const user=await currentUser();
         if(normalizeEmail(user.email||'')===email)throw new Error('same_email');
         const {error}=await client.auth.updateUser({email},{emailRedirectTo:destination('dogrula/')});if(error)throw error;
         emailForm.reset();emailStatus.textContent='Değişiklik isteği alındı. E-posta kutularına gönderilen doğrulama bağlantılarını kontrol et; adres ancak doğrulama tamamlanınca değişir.';
-      }catch(error){emailStatus.textContent=(error as Error).message==='same_email'?'Bu zaten mevcut e-posta adresin.':(error as Error).message==='password'?'Mevcut şifren doğrulanamadı.':'İstek tamamlanamadı. Bağlantını ve oturumunu kontrol edip tekrar dene.';}
+      }catch(error){emailStatus.textContent=(error as Error).message==='same_email'?'Bu zaten mevcut e-posta adresin.':'İstek tamamlanamadı. Bağlantını ve oturumunu kontrol edip tekrar dene.';}
       finally{busy=false;button.disabled=false;}
     })();});
     passwordForm?.addEventListener('submit',event=>{event.preventDefault();void(async()=>{
@@ -235,10 +234,10 @@ async function initialize(root: HTMLElement) {
       if(!validPassword(password)||password!==String(data.get('newPasswordConfirm')||''))return;
       busy=true;const button=passwordForm.querySelector<HTMLButtonElement>('button[type=submit]')!;button.disabled=true;passwordStatus.textContent='İşlem yapılıyor…';
       try{
-        await verifyCurrentPassword(String(data.get('currentPassword')||''));
+        await currentUser();
         const {error}=await client.auth.updateUser({password});if(error)throw error;
         passwordForm.reset();updateSettingsHints();passwordStatus.textContent='Şifren güncellendi.';
-      }catch(error){passwordStatus.textContent=(error as Error).message==='password'?'Mevcut şifren doğrulanamadı.':(error as {code?:string}).code==='same_password'?'Yeni şifren önceki şifrenden farklı olmalı.':'Şifre güncellenemedi. Oturumunu ve bağlantını kontrol edip tekrar dene.';}
+      }catch(error){passwordStatus.textContent=(error as {code?:string}).code==='same_password'?'Yeni şifren önceki şifrenden farklı olmalı.':'Şifre güncellenemedi. Oturumunu ve bağlantını kontrol edip tekrar dene.';}
       finally{busy=false;button.disabled=false;}
     })();});
 
