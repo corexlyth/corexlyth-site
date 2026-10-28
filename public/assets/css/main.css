@@ -977,3 +977,24 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-staff-user__badge{display:inline-flex;padding:5px 9px;border:1px solid #397b78;color:#9cebd4;font:700 .68rem var(--cx-mono);letter-spacing:.08em}.cx-staff-user__badge[data-restricted=true]{color:#ffd58c;border-color:#9b7440}.cx-staff-user__info{color:#f5cd96;font-size:.85rem;margin:12px 0 0}
 .cx-staff-user__controls{margin-top:16px;border-top:1px solid #263e4a}.cx-staff-user__controls summary{padding-top:14px;cursor:pointer;color:#b2edf4;font-weight:700;min-height:44px}.cx-staff-user__controls-body{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.cx-staff-user__controls-body label{flex:1 1 190px;margin:0}.cx-staff-user__controls-body select{width:100%;margin-top:6px}.cx-staff-user__controls-body button{margin-top:0}
 @media(max-width:600px){.cx-admin-section__heading button,.cx-staff-user__controls-body button{width:100%}.cx-staff-user__controls-body{align-items:stretch}.cx-staff-user__controls-body label{flex-basis:100%}}
+
+/* CoreXLyth 2591: layered typography and an animated signal core. */
+.cx-hero{isolation:isolate;overflow:hidden}
+.cx-hero::after{content:"";position:absolute;inset:-15%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 80% 28%,rgba(65,170,206,.13),transparent 37%),radial-gradient(ellipse at 90% 85%,rgba(143,69,224,.16),transparent 38%);animation:cx-future-glow 12s ease-in-out infinite alternate}
+.cx-future-title span{display:block;animation:cx-future-title .9s cubic-bezier(.22,1,.36,1) both}.cx-future-title span+span{animation-delay:.16s;color:#b7f8ff;text-shadow:0 0 32px rgba(88,234,255,.15)}
+.cx-hero .cx-lead,.cx-home-search,.cx-home-meta{animation:cx-future-title .9s .26s cubic-bezier(.22,1,.36,1) both}
+.cx-orbit{position:relative;width:min(100%,260px);aspect-ratio:1;margin:2px auto 22px;display:grid;place-items:center;overflow:hidden}
+.cx-orbit::before,.cx-orbit::after{content:"";position:absolute;inset:13%;border-radius:50%;background:radial-gradient(circle,rgba(102,239,255,.15),rgba(77,60,154,.08) 45%,transparent 70%)}
+.cx-orbit::after{inset:31%;background:radial-gradient(circle,rgba(111,237,255,.26),transparent 68%);animation:cx-core-pulse 4s ease-in-out infinite alternate}
+.cx-orbit__ring{position:absolute;border-radius:50%;inset:9%;border:1px solid rgba(109,236,245,.27);border-top-color:#70edf8;border-right-color:#b97cff;animation:cx-orbit-spin 20s linear infinite}
+.cx-orbit__ring::after{content:"";position:absolute;top:14%;left:10%;width:6px;height:6px;border-radius:50%;background:#9cfaff;box-shadow:0 0 13px #60edff}
+.cx-orbit__ring--inner{inset:23%;border-style:dashed;border-color:rgba(160,130,255,.42);animation-duration:15s;animation-direction:reverse}
+.cx-orbit__axis{position:absolute;inset:17%;border:1px solid rgba(103,220,240,.25);transform:rotate(45deg);animation:cx-axis-spin 35s linear infinite}
+.cx-orbit__core{position:relative;z-index:1;width:23%;aspect-ratio:1;display:grid;place-items:center;border:1px solid #7cf3ff;background:linear-gradient(135deg,#0d2e3b,#1a1133);transform:rotate(45deg);box-shadow:0 0 30px rgba(88,234,255,.25)}
+.cx-orbit__core span{transform:rotate(-45deg);color:#ddffff;font:800 clamp(16px,2vw,23px)/1 var(--cx-mono);letter-spacing:.08em}.cx-orbit__core i{position:absolute;inset:5px;border:1px solid rgba(154,108,255,.5)}
+.cx-orbit__label{position:absolute;bottom:3%;font:700 9px var(--cx-mono);letter-spacing:.16em;color:#a0c8d5}
+.cx-story-card,.cx-record-row,.cx-explore-btn,.cx-expand-btn{transition:transform .3s cubic-bezier(.22,1,.36,1),filter .3s ease,border-color .3s ease}
+@media(hover:hover){.cx-story-card:hover,.cx-record-row:hover{transform:translateY(-4px);filter:brightness(1.12)}.cx-explore-btn:hover,.cx-expand-btn:hover{transform:translateY(-3px)}}
+@keyframes cx-orbit-spin{to{transform:rotate(360deg)}}@keyframes cx-axis-spin{to{transform:rotate(405deg)}}@keyframes cx-core-pulse{to{transform:scale(1.16);opacity:.7}}@keyframes cx-future-glow{to{transform:translate3d(-3%,3%,0) scale(1.05)}}@keyframes cx-future-title{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.cx-orbit{width:min(64vw,210px);margin-bottom:16px}.cx-hero h1{line-height:1.02}.cx-future-title span{overflow-wrap:normal}}
+@media(prefers-reduced-motion:reduce){.cx-hero::after,.cx-future-title span,.cx-hero .cx-lead,.cx-home-search,.cx-home-meta,.cx-orbit__ring,.cx-orbit__axis,.cx-orbit::after{animation:none!important}.cx-story-card,.cx-record-row,.cx-explore-btn,.cx-expand-btn{transition:none!important}}
