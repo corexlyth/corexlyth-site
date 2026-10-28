@@ -890,3 +890,19 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 /* Respect hidden navigation and align the article sign-in action with reactions. */
 .cx-nav [hidden],.cx-community[hidden]{display:none!important}
 .cx-community-actions .cx-community-login{padding:10px 16px}
+
+/* Neon Hat: each navigation action has the article's angled HUD outline. */
+.cx-header__inner{position:relative;border-top:2px solid rgba(88,234,255,.48)}
+.cx-header__inner::before{content:"";position:absolute;top:-2px;left:0;width:40%;height:2px;pointer-events:none;background:linear-gradient(90deg,#6be8f4,#ad83ff,transparent);animation:cx-nav-trace 3s ease-in-out infinite alternate}
+.cx-nav{gap:5px}
+.cx-nav a{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 9px;isolation:isolate;white-space:nowrap;clip-path:polygon(0 7px,7px 0,75% 0,80% 3px,100% 3px,100% calc(100% - 7px),calc(100% - 7px) 100%,25% 100%,20% calc(100% - 3px),0 calc(100% - 3px));transition:color .2s ease,transform .2s ease}
+.cx-nav a::before,.cx-nav a::after{content:"";position:absolute;pointer-events:none;clip-path:inherit}
+.cx-nav a::before{inset:0;z-index:-2;background:linear-gradient(110deg,rgba(88,234,255,.35),rgba(154,108,255,.25))}
+.cx-nav a::after{inset:1px;z-index:-1;background:#07131e;transition:background .2s ease}
+.cx-nav a:hover,.cx-nav a:focus-visible,.cx-nav a[aria-current]{color:#e8fcff;transform:translateY(-2px)}
+.cx-nav a:hover::after,.cx-nav a:focus-visible::after,.cx-nav a[aria-current]::after{background:linear-gradient(110deg,#11303d,#19132f)}
+.cx-nav a:active{transform:translateY(1px) scale(.97)}
+.cx-nav a[data-nav-guest]:nth-last-of-type(2)::before{background:linear-gradient(90deg,#6be8f4,#ad83ff)}
+@keyframes cx-nav-trace{to{opacity:.55;transform:scaleX(.78);transform-origin:left}}
+@media(max-width:700px){.cx-nav{gap:6px}.cx-nav a{justify-content:flex-start;min-height:44px;padding:0 14px;border:0}.cx-nav a:hover,.cx-nav a:focus-visible,.cx-nav a[aria-current]{transform:translateX(3px)}}
+@media(prefers-reduced-motion:reduce){.cx-header__inner::before{animation:none}.cx-nav a,.cx-nav a::after{transition:none}.cx-nav a:hover,.cx-nav a:focus-visible,.cx-nav a[aria-current],.cx-nav a:active{transform:none}}
