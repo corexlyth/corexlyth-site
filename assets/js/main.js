@@ -257,3 +257,18 @@ if (signalDepth) {
  reduced.addEventListener?.('change', scheduleSignal);
  scheduleSignal();
 }
+
+// Whole-page cyber backdrop responds to the reader's progress.
+const cyberworld = document.querySelector('[data-cyberworld]');
+if (cyberworld) {
+ const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+ let queued = false;
+ const paint = () => {
+  queued = false;
+  if (motionPreference.matches) { cyberworld.style.removeProperty('--cyber-scroll'); return; }
+  const range = Math.max(1,document.documentElement.scrollHeight-innerHeight);
+  cyberworld.style.setProperty('--cyber-scroll', `${Math.round(Math.min(1,Math.max(0,scrollY/range))*-180)}px`);
+ };
+ const schedule = () => { if (!queued) {queued=true;requestAnimationFrame(paint);} };
+ addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule,{passive:true});motionPreference.addEventListener?.('change',schedule);schedule();
+}

@@ -1017,3 +1017,14 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-orbit.is-particles-ready::before,.cx-orbit.is-particles-ready::after{opacity:.3}
 @media(max-width:700px){.cx-orbit{width:min(70vw,260px)}}
 @media(prefers-reduced-motion:reduce){.cx-particle-core{transition:none}}
+
+/* Full viewport cyber infrastructure, behind all site content. */
+.cx-cyberworld{position:absolute;inset:-14% 0;overflow:hidden;pointer-events:none;transform:translate3d(0,var(--cyber-scroll,0px),0);opacity:.62}
+.cx-cyberworld__sky{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(19,128,170,.28),transparent 45%),radial-gradient(ellipse at 85% 65%,rgba(130,40,185,.23),transparent 40%);animation:cx-city-glow 9s ease-in-out infinite alternate}
+.cx-cyberworld__city{position:absolute;width:100%;height:80%;bottom:4%;opacity:.47;filter:drop-shadow(0 0 7px rgba(69,223,255,.2));animation:cx-city-float 16s ease-in-out infinite alternate}
+.cx-cyberworld__grid{position:absolute;inset:45% -30% -20%;transform:perspective(400px) rotateX(60deg);transform-origin:50% 0;background-image:linear-gradient(rgba(84,230,255,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(153,91,255,.25) 1px,transparent 1px);background-size:62px 62px;mask-image:linear-gradient(transparent,#000 35%,transparent);animation:cx-grid-flow 3s linear infinite}
+.cx-cyberworld__stream{position:absolute;width:140%;height:2px;left:-20%;top:68%;background:linear-gradient(90deg,transparent,#55ebff,#b360ff,transparent);box-shadow:0 0 14px #56d9ff;transform:rotate(-13deg);opacity:.45;animation:cx-stream 6s linear infinite}
+.cx-cyberworld__stream--two{top:83%;transform:rotate(11deg);animation-delay:-3s;background:linear-gradient(90deg,transparent,#b360ff,#51ecff,transparent)}
+@keyframes cx-city-glow{to{opacity:.45;transform:translate3d(0,-3%,0)}}@keyframes cx-city-float{to{transform:translate3d(0,-25px,0)}}@keyframes cx-grid-flow{to{background-position:0 62px}}@keyframes cx-stream{0%{opacity:.05}45%{opacity:.65}100%{opacity:.05}}
+@media(max-width:700px){.cx-cyberworld{opacity:.5}.cx-cyberworld__city{width:190%;left:-45%;opacity:.4}.cx-cyberworld__grid{background-size:85px 85px}}
+@media(prefers-reduced-motion:reduce){.cx-cyberworld{transform:none!important}.cx-cyberworld__sky,.cx-cyberworld__city,.cx-cyberworld__grid,.cx-cyberworld__stream{animation:none!important}}
