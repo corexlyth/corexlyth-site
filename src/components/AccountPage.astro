@@ -49,17 +49,16 @@ const newPassword = ['signup','reset'].includes(mode);
         </fieldset>
       </form>}
       <div data-account-details hidden>
-        <p>E-posta: <strong data-account-email></strong></p>
-        <p data-account-verification></p>
+        <div class="cx-account-identity"><span class="cx-account-eyebrow">HESAP BİLGİLERİ</span><p>E-posta: <strong data-account-email></strong></p><p data-account-verification></p></div>
         {mode === 'account' && <details class="cx-settings" data-account-settings>
           <summary>Hesap ayarları</summary>
           <p>E-posta ve şifreni buradan güncelleyebilirsin.</p>
-          <form data-change-email><p>Mevcut e-posta adresin: <strong data-settings-email></strong></p><label>Yeni Gmail adresi <input name="newEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" required /></label><p data-email-change-status role="status" aria-live="polite"></p><button type="submit">E-posta değişikliği iste</button></form>
-          <form data-change-password><label>Yeni şifre <input name="newPassword" type="password" autocomplete="new-password" minlength={MIN_PASSWORD_LENGTH} maxlength="128" required /></label>
+          <div class="cx-settings-grid"><form data-change-email><h3>E-posta adresi</h3><p>Mevcut e-posta adresin: <strong data-settings-email></strong></p><label>Yeni Gmail adresi <input name="newEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" required /></label><p data-email-change-status role="status" aria-live="polite"></p><button type="submit">E-posta değişikliği iste</button></form>
+          <form data-change-password><h3>Şifre</h3><label>Yeni şifre <input name="newPassword" type="password" autocomplete="new-password" minlength={MIN_PASSWORD_LENGTH} maxlength="128" required /></label>
             <ul data-settings-password-rules aria-label="Yeni şifre şartları">{passwordChecks('').map(check=><li data-rule={check.id}>{check.label}</li>)}</ul>
             <label>Yeni şifreyi tekrar yaz <input name="newPasswordConfirm" type="password" autocomplete="new-password" minlength={MIN_PASSWORD_LENGTH} maxlength="128" required /></label>
             <p data-password-change-status role="status" aria-live="polite"></p><button type="submit">Şifreyi güncelle</button>
-          </form>
+          </form></div>
         </details>}
         <button type="button" data-signout>Çıkış yap</button>
       </div>

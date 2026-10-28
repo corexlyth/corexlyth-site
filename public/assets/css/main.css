@@ -946,3 +946,25 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
 .cx-editor-modes{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
 .cx-editor-modes button[aria-pressed=true]{border-color:#82edfa;box-shadow:inset 3px 0 #58eaff}
 .cx-editor [data-editor-workspace][hidden],.cx-editor [data-editor-library][hidden],.cx-editor [data-editor-intro][hidden]{display:none}
+
+/* Hesap ve yönetim alanları */
+.cx-account-surface{display:grid;gap:clamp(18px,3vw,30px)}
+.cx-account-surface > :is(.cx-account,.cx-community,.cx-editor){min-width:0;margin:0}
+.cx-account-surface :is(.cx-account,.cx-community,.cx-editor){overflow-wrap:anywhere}
+.cx-account-identity,.cx-account-admin-actions,.cx-profile-activity,.cx-saved-posts,.cx-editor-group,.cx-admin-section,.cx-profile-name,.cx-editor-media{padding:clamp(16px,2.5vw,24px);margin:18px 0;border:1px solid #254351;background:linear-gradient(125deg,rgba(9,26,36,.85),rgba(11,12,25,.8));clip-path:polygon(0 12px,12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%)}
+.cx-account-eyebrow{font:700 .72rem var(--cx-mono);letter-spacing:.14em;color:#79e2ee}
+.cx-account-identity p{margin:8px 0}.cx-account-surface h2,.cx-account-surface h3{overflow-wrap:anywhere}
+.cx-account-admin-actions:not(:has(.cx-account-admin-links a:not([hidden]))){display:none}
+.cx-account-admin-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+.cx-account-surface .cx-account-admin-links a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:10px 14px;text-align:center;text-decoration:none;border:1px solid #346075;background:#0b202b;color:#e0faff}
+.cx-account-surface .cx-account-admin-links a[hidden]{display:none}
+.cx-account-surface .cx-account-admin-links a:focus-visible,.cx-account-surface .cx-account-admin-links a:hover{border-color:#80e4ef;background:#123441}
+.cx-settings{margin:18px 0}.cx-settings summary,.cx-profile-activity summary{cursor:pointer;font-weight:700;color:#e2f6ff;padding:14px 16px;border:1px solid #315262;background:#0a1924}
+.cx-settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;margin-top:16px}
+.cx-settings-grid form{min-width:0;padding:18px;border:1px solid #274354;background:#08131e}.cx-settings-grid form h3{margin-top:0}
+.cx-profile-activity details+details{margin-top:10px}.cx-profile-activity details[open]{padding-bottom:12px}.cx-saved-posts ul{padding-left:22px}
+.cx-editor-group h2,.cx-editor-media h2,.cx-profile-activity h3,.cx-saved-posts h3,.cx-account-admin-actions h3{margin-top:0}
+.cx-editor-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cx-editor-modes button{width:100%}
+.cx-account-surface :is(.cx-staff-user,[data-comment-list] article){min-width:0;overflow-wrap:anywhere}
+.cx-moderation-page > h1,.cx-moderation-page > p{margin:0}
+@media(max-width:600px){.cx-editor-modes{grid-template-columns:1fr}.cx-account-surface :is(.cx-account,.cx-community,.cx-editor){padding-left:18px;padding-right:18px}.cx-settings-grid{grid-template-columns:1fr}}

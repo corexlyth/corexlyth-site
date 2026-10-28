@@ -17,7 +17,7 @@ const { mode = 'article', post = '' } = Astro.props;
     </div>
     <p>Yorumlar incelendikten sonra yayımlanır. E-posta adresin yorumlarda gösterilmez.</p>
   </>}
-  {mode === 'account' && <form data-profile-form method="post" hidden>
+  {mode === 'account' && <form class="cx-profile-name" data-profile-form method="post" hidden>
     <fieldset disabled>
       <label>Görünen adın <input name="displayName" autocomplete="nickname" minlength="2" maxlength="40" /></label>
       <p>Takma adın isteğe bağlıdır ve yorumlarında herkese görünür. Boş bırakırsan Anonim olarak görünürsün.</p>
@@ -25,14 +25,15 @@ const { mode = 'article', post = '' } = Astro.props;
     </fieldset>
   </form>}
   {mode === 'account' && <>
-    <p><a data-editor-link href={urlFor('hesap/yazilar/')} hidden>Yazı yönetimi</a></p>
+    <div class="cx-account-admin-actions"><h3>Yönetim araçları</h3><div class="cx-account-admin-links"><a data-editor-link href={urlFor('hesap/yazilar/')} hidden>Yazı yönetimi</a>
+    <a data-admin-link href={urlFor('hesap/yonetim/')} hidden>Yönetim paneli</a><a data-moderation-link href={urlFor('hesap/moderasyon/')} hidden>Moderasyon paneli</a></div>
     <details data-author-comments hidden><summary>Yazılara gelen yorumlar</summary><p>Yayımlanmış en son 50 yorum gösterilir. Yanıtlar incelendikten sonra yayımlanır.</p><p data-author-comments-status role="status"></p><div data-author-comments-list></div></details>
-    <p><a data-admin-link href={urlFor('hesap/yonetim/')} hidden>Yönetim paneli</a></p>
-    <details data-personal-names><summary>Önceki takma adlarım</summary><p>Bu özellik açıldıktan sonra değiştirdiğin adlar burada görünür.</p><p data-personal-names-status role="status"></p><ul data-personal-names-list></ul><button type="button" data-personal-names-more hidden>Daha fazla göster</button></details>
+    </div>
+    <div class="cx-profile-activity"><h3>Hareketlerim</h3><details data-personal-names><summary>Önceki takma adlarım</summary><p>Bu özellik açıldıktan sonra değiştirdiğin adlar burada görünür.</p><p data-personal-names-status role="status"></p><ul data-personal-names-list></ul><button type="button" data-personal-names-more hidden>Daha fazla göster</button></details>
     <details data-personal-comments><summary>Yorumlarım</summary><p data-personal-comments-status role="status"></p><ul data-personal-comments-list></ul><button type="button" data-personal-comments-more hidden>Daha fazla göster</button></details>
-    <h3>Kaydettiğim yazılar</h3>
+    </div><div class="cx-saved-posts"><h3>Kaydettiğim yazılar</h3>
     <p>En son kaydettiğin 100 yazı burada görünür.</p>
-    <ul data-saved-list></ul>
+    <ul data-saved-list></ul></div>
   </>}
   {mode === 'article' && <form data-comment-form method="post" hidden>
     <fieldset disabled>
@@ -47,7 +48,7 @@ const { mode = 'article', post = '' } = Astro.props;
     <div data-comment-list aria-label={mode === 'moderation' ? 'Moderasyon kuyruğu' : 'Yorumlar'}></div>
     <button type="button" data-more hidden>Daha fazla yükle</button>
   </>}
-  <p><button type="button" data-community-refresh>Yenile</button> {mode === 'account' && <a data-moderation-link href={urlFor('hesap/moderasyon/')} hidden>Moderasyon paneli</a>}</p>
+  <p><button type="button" data-community-refresh>Yenile</button></p>
   <noscript>Topluluk işlemleri için JavaScript gerekir. Yazıyı giriş yapmadan okuyabilirsin.</noscript>
 </section>
 <script>import '../scripts/community';</script>

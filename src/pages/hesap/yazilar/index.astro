@@ -35,6 +35,7 @@ const categories=categoriesFrom(await getPosts());
           <img data-media-cover-preview hidden alt="" />
           <p data-media-status role="status" aria-live="polite">Bu yazının kapak görselini cihazından yükle.</p>
         </section>
+            <section class="cx-editor-group"><h2>Yayın bilgileri</h2>
             <label>Yazı adresi <input name="slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="160" required placeholder="ornek-yazi-adresi" /></label>
             <p>Adres başlıktan otomatik oluşturulur. İstersen ilk kayıttan önce değiştirebilirsin; kayıt başladıktan sonra sabit kalır.</p>
             <button type="button" data-editor-slug-reset>Adresi başlıktan oluştur</button>
@@ -48,6 +49,7 @@ const categories=categoriesFrom(await getPosts());
             <label>Etiketler <input name="tags" maxlength="1200" required placeholder="Android, Rehber, Güvenlik" /></label>
             <p>Virgülle ayır. Her etiket 2–50 karakter; en fazla 20 etiket.</p>
             <label><input name="featured" type="checkbox" /> Öne çıkan yazı</label>
+            </section><section class="cx-editor-group"><h2>Yazı içeriği</h2>
             <div class="cx-writing-area">
               <label for="cx-write-body">Yazı alanı</label>
               <div class="cx-write-toolbar" role="group" aria-label="Yazı biçimlendirme araçları">
@@ -63,6 +65,7 @@ const categories=categoriesFrom(await getPosts());
             </div>
             <p>Yeni yazıyı yayımlamak veya açık yazıdaki değişiklikleri uygulamak için aşağıdaki düğmeyi kullan. Yazarken metnin bu cihazda geçici olarak korunur; çıkış yaptığında geçici kayıt silinir.</p>
             <div class="cx-community-actions"><button type="submit" data-editor-publish disabled>Yayımla</button><button type="button" data-editor-preview>Önizle</button></div>
+            </section>
           </fieldset>
         </form>
         <p data-editor-state></p><p data-editor-deployed></p>
