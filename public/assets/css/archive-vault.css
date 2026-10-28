@@ -33,7 +33,7 @@
 /* A large version of the homepage particle core, strictly behind the page UI. */
 .cx-vault__backdrop{z-index:-1;inset:0;background:none;display:flex;justify-content:center;align-items:flex-start;overflow:hidden}
 .cx-vault__backdrop::after{display:none}
-.cx-vault .cx-vault__background-core{width:min(95vw,1050px);height:auto;aspect-ratio:1;flex:none;margin:-165px 0 0;transform:translateX(min(15vw,180px));opacity:.7;pointer-events:none}
+.cx-vault .cx-vault__background-core{width:min(95vw,1050px);height:auto;aspect-ratio:1;flex:none;margin:-165px 0 0;transform:none;opacity:1;pointer-events:none}
 .cx-vault__inner{position:relative;z-index:1}
 .cx-vault__stage{padding-top:32px}
 .cx-vault__cards{gap:38px 32px}
@@ -46,7 +46,7 @@
 .cx-article__related-list .cx-vault-card__body{padding:12px}
 .cx-article__related-list .cx-vault-card h3{font-size:.9rem}
 @media(max-width:800px){
- .cx-vault .cx-vault__background-core{width:min(110vw,750px);margin:-55px 0 0;transform:translateX(12vw);opacity:.6}
+ .cx-vault .cx-vault__background-core{width:min(110vw,750px);margin:-55px 0 0;transform:none;opacity:1}
  .cx-vault__stage{padding-top:24px}
  .cx-vault__cards{gap:28px 24px}
  .cx-home-featured-grid{gap:24px}
