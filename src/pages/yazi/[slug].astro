@@ -42,13 +42,13 @@ const structuredData = {
   {post.data.publicationRevision && <meta slot="head" name="cx-publication" content={`${post.id}:${post.data.publicationRevision}`} />}
   <div class="cx-reading-progress" aria-hidden="true"><span></span></div>
   <main id="home" class="cx-reading-shell">
-    <nav class="cx-breadcrumb" aria-label="İçerik yolu">
-      <a href={urlFor('')}>COREXLYTH</a><span>/</span>
-      <a href={urlFor('arsiv/')}>KAYITLAR</a><span>/</span>
-      <a href={categoryUrl(post.data.category)}>{post.data.category.toLocaleUpperCase('tr-TR')}</a>
-    </nav>
-
     <article class="cx-article cx-hud-frame" data-pagefind-body>
+      <nav class="cx-breadcrumb" aria-label="İçerik yolu" data-pagefind-ignore>
+        <a href={urlFor('')}>Ana Sayfa</a><span>›</span>
+        <a href={urlFor('#kanallar')}>Kategoriler</a><span>›</span>
+        <a href={categoryUrl(post.data.category)}>{post.data.category}</a><span>›</span>
+        <span aria-current="page">{post.data.title}</span>
+      </nav>
       <header class="cx-article__head">
         <a class="cx-article__category" href={categoryUrl(post.data.category)}>{post.data.category}</a>
         <h1>{post.data.title}</h1>
