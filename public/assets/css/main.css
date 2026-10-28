@@ -1220,3 +1220,39 @@ main{width:min(1180px,calc(100% - 28px));margin:18px auto 0}
  .cx-reading-shell .cx-article__foot{order:4}
  .cx-article__related{order:5;align-self:stretch}
 }
+
+/* Account center: cyber-glass panels shared by sign-in, settings and tools. */
+.cx-account-surface{width:min(1100px,calc(100% - 40px));padding-top:26px}
+.cx-account-surface :is(.cx-account,.cx-community,.cx-editor){max-width:none;width:100%;box-sizing:border-box;padding:clamp(22px,3.5vw,38px);border:1px solid rgba(84,222,244,.65);background:linear-gradient(130deg,rgba(3,17,35,.88),rgba(8,15,36,.85));box-shadow:0 0 24px rgba(28,196,240,.12),0 22px 65px rgba(0,0,0,.3)}
+.cx-account-surface .cx-account h1{margin:8px 0 10px;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.025em}
+.cx-account-brand{margin:0 0 24px;color:#f5fbff;font-size:1.65rem;font-weight:850;letter-spacing:-.04em}.cx-account-brand span{color:#8dcfff}
+.cx-account-intro{max-width:620px;color:#c2d7e7;line-height:1.6}
+.cx-account-surface .cx-account input,.cx-account-surface .cx-community input,.cx-account-surface .cx-community textarea{min-height:48px;border:1px solid rgba(78,180,218,.52);border-radius:6px;background:rgba(3,19,35,.86);color:#effaff;padding:12px 14px}
+.cx-account-surface :is(input,textarea):focus-visible{outline:2px solid #67e8f5;outline-offset:2px;border-color:#67e8f5}
+.cx-account-surface :is(.cx-account button,.cx-community button,.cx-account-links a){border-color:transparent;color:#eafcff}
+.cx-account-surface .cx-account form > fieldset > button[type=submit]::after{background:linear-gradient(100deg,#007ca8,#4d39ab 68%,#8b46ca)}
+.cx-account-surface--login,.cx-account-surface--signup,.cx-account-surface--forgot,.cx-account-surface--reset{width:min(600px,calc(100% - 32px));min-height:70vh;align-content:start;padding-top:clamp(32px,7vh,76px)}
+.cx-account-surface--login .cx-account,.cx-account-surface--signup .cx-account,.cx-account-surface--forgot .cx-account,.cx-account-surface--reset .cx-account{padding:clamp(28px,5vw,48px)}
+.cx-account-surface--login .cx-account-brand,.cx-account-surface--signup .cx-account-brand{text-align:center;font-size:2rem}
+.cx-account-surface--login h1,.cx-account-surface--signup h1{text-align:center}
+.cx-account-surface--login .cx-account-intro,.cx-account-surface--signup .cx-account-intro{text-align:center;margin:0 auto 22px}
+.cx-account-surface--login form > fieldset > button,.cx-account-surface--signup form > fieldset > button,.cx-account-surface--forgot form > fieldset > button,.cx-account-surface--reset form > fieldset > button{width:100%;justify-content:center;min-height:50px}
+.cx-account-surface .cx-account-sections{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 12px}
+.cx-account-surface .cx-account-sections a{min-height:42px;display:inline-flex;align-items:center;text-decoration:none;font-size:.86rem}
+.cx-account-surface :is(.cx-account-identity,.cx-settings,.cx-profile-name,.cx-account-admin-actions,.cx-profile-activity,.cx-saved-posts,.cx-editor-group,.cx-admin-section,.cx-editor-media){border:1px solid rgba(65,205,235,.48);background:linear-gradient(135deg,rgba(4,23,40,.85),rgba(9,16,38,.82));box-shadow:inset 0 0 25px rgba(39,187,234,.035)}
+.cx-account-surface .cx-settings{padding:20px;margin:18px 0}
+.cx-account-surface .cx-settings summary{border:0;background:transparent;padding:0;font-size:1.18rem;color:#f0faff}
+.cx-account-surface .cx-settings-grid{grid-template-columns:1fr;gap:14px}
+.cx-account-surface .cx-settings-grid form{margin:0;padding:20px;border:1px solid rgba(54,163,199,.45);background:rgba(3,18,33,.82);clip-path:polygon(0 9px,9px 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%)}
+.cx-account-surface .cx-settings-grid form h3{margin:0 0 10px;color:#effaff}.cx-account-surface .cx-settings-grid form label{margin:12px 0}
+.cx-account-surface [data-account-details] > button[data-signout]{margin-top:20px}
+.cx-account-surface .cx-community h2,.cx-account-surface .cx-editor h1{color:#f3fbff}
+.cx-account-surface :is(.cx-account,.cx-community,.cx-editor) :is(h2,h3,summary){scroll-margin-top:100px}
+@media(max-width:700px){.cx-account-surface{width:calc(100% - 28px)}.cx-account-surface :is(.cx-account,.cx-community,.cx-editor){padding:22px 18px}.cx-account-surface .cx-account-sections{display:grid;grid-template-columns:1fr 1fr}.cx-account-surface .cx-account-sections a{justify-content:center;text-align:center}.cx-account-surface .cx-settings{padding:15px}.cx-account-surface .cx-settings-grid form{padding:15px}}
+@media(min-width:851px){
+ .cx-account-surface--account [data-account-details]:not([hidden]){display:grid;grid-template-columns:185px minmax(0,1fr);column-gap:18px;align-items:start}
+ .cx-account-surface--account .cx-account-sections{grid-column:1;grid-row:1 / span 3;display:flex;flex-direction:column;gap:7px;margin:18px 0;padding:12px;border:1px solid rgba(65,205,235,.38);background:rgba(4,20,37,.75)}
+ .cx-account-surface--account .cx-account-identity{grid-column:2;grid-row:1}
+ .cx-account-surface--account .cx-settings{grid-column:2;grid-row:2}
+ .cx-account-surface--account [data-signout]{grid-column:2;grid-row:3;justify-self:start}
+}
