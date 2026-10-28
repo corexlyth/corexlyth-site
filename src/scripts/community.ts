@@ -127,13 +127,23 @@ async function start(root:HTMLElement) {
       if(!saved.childElementCount) saved.append(node('li',state.signedIn?'Henüz bir yazı kaydetmedin.':'Kaydettiğin yazıları görmek için giriş yap.'));
     }
     const editorLink=find('[data-editor-link]');
-    if(editorLink){editorLink.hidden=true;if(state.signedIn){const capability=await client.rpc('cx_editor_read');if(current!==request)return;editorLink.hidden=Boolean(capability.error);}}
+    if(editorLink){editorLink.hidden=true;const authorPanel=find<HTMLDetailsElement>('[data-author-comments]');if(authorPanel)authorPanel.hidden=true;if(state.signedIn){const capability=await client.rpc('cx_editor_read');if(current!==request)return;editorLink.hidden=Boolean(capability.error);if(authorPanel)authorPanel.hidden=Boolean(capability.error);}}
     const adminLink=find('[data-admin-link]');
     if(adminLink){adminLink.hidden=true;if(state.signedIn){const capability=await client.rpc('cx_staff_admin',{p_action:'list'});if(current!==request)return;adminLink.hidden=Boolean(capability.error);}}
     sync();
     tell(state.blocked?'Hesabının topluluk gönderimleri kısıtlandı.':mode==='moderation'?'Yorumları inceleyebilir, yayımlayabilir veya silebilirsin.':'Topluluk güncel.');
   }
   if(!client) return;
+  const authorPanel=find<HTMLDetailsElement>('[data-author-comments]');
+  authorPanel?.addEventListener('toggle',()=>{if(!authorPanel.open||!state?.signedIn)return;void(async()=>{
+    const current=request, message=find('[data-author-comments-status]'),out=find('[data-author-comments-list]');
+    message.textContent='Yükleniyor…';out.replaceChildren();
+    const {data,error}=await client.rpc('cx_author_comments');if(current!==request||!state?.signedIn)return;
+    if(error){message.textContent='Yorumlar yüklenemedi. Bölümü kapatıp tekrar açmayı dene.';return;}
+    message.textContent='';
+    for(const c of data.comments||[]){const item=node('article');item.className='cx-comment';const link=node('a',c.title) as HTMLAnchorElement;link.href=`${base}yazi/${encodeURIComponent(c.slug)}/#yorumlar`;item.append(link,node('p',`${c.name} · ${new Date(c.created_at).toLocaleString('tr-TR')}`),node('p',c.body));out.append(item);}
+    if(!out.childElementCount)out.append(node('p','Yazılarına gelen yayımlanmış yorum yok.'));
+  })();});
   // These panels contain only the current member's private history.
   type PersonalItem={id:string;name?:string;usedUntil?:string;post?:string;postTitle?:string;active?:boolean;body?:string;status?:string;createdAt?:string};
   const cursors:Record<string,string|null>={names:null,comments:null};
@@ -186,6 +196,7 @@ async function start(root:HTMLElement) {
   client.auth.onAuthStateChange(event=>{
     if(event==='SIGNED_OUT' || event==='SIGNED_IN') {
       request++;personalEpoch++;state=undefined;list?.replaceChildren();find('[data-saved-list]')?.replaceChildren();
+      find('[data-author-comments-list]')?.replaceChildren();if(authorPanel)authorPanel.open=false;
       for(const kind of ['names','comments'] as const){loaded[kind]=false;cursors[kind]=null;find(`[data-personal-${kind}-list]`)?.replaceChildren();const panel=find<HTMLDetailsElement>(`[data-personal-${kind}]`);if(panel)panel.open=false;}
       profile?.reset();commentForm?.reset();resetReply();sync();
     }
