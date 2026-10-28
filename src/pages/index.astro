@@ -20,13 +20,6 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
         <p class="cx-lead">Teknolojinin gölgelerinde keşfeder, dijital dünyanın derinliklerinde yol açarız.</p>
 
         <div class="cx-home-hero-actions"><a href="#kayitlar">Son yazılar <span aria-hidden="true">→</span></a><a href="#kanallar">Kategorileri keşfet <span aria-hidden="true">→</span></a></div>
-        <form class="cx-search-form cx-home-search" role="search" action={urlFor('ara/')} method="get">
-          <label for="cx-home-query">Yazılarda ara</label>
-          <div class="cx-search-form__row">
-            <input id="cx-home-query" name="q" type="search" placeholder="Android, uygulama, rehber…" minlength="2" maxlength="100" required />
-            <button type="submit">ARA ↗</button>
-          </div>
-        </form>
         <div class="cx-home-meta">
           <span><i class="cx-live-dot"></i>SIGNAL ACTIVE</span>
           <span>CHANNELS // {String(categories.length).padStart(2,"0")}</span>
