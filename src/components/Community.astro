@@ -4,15 +4,16 @@ import { authConfigured } from '../config/auth';
 interface Props { mode?: 'article' | 'account' | 'moderation'; post?: string; }
 const { mode = 'article', post = '' } = Astro.props;
 ---
-<section class="cx-community cx-hud-frame" data-community={mode} data-post={post} data-base={urlFor('')} data-pagefind-ignore>
+<section class="cx-community cx-hud-frame" hidden={mode === 'account'} data-community={mode} data-post={post} data-base={urlFor('')} data-pagefind-ignore>
   <p class="cx-kicker">COREXLYTH // TOPLULUK</p>
   <h2>{mode === 'article' ? 'Yorumlar ve etkileşim' : mode === 'account' ? 'Profilim ve kaydettiklerim' : 'Yorum moderasyonu'}</h2>
   <p data-community-status role="status" aria-live="polite">{authConfigured ? 'Topluluk yükleniyor…' : 'Topluluk henüz kullanıma açılmadı.'}</p>
-  <p data-community-login hidden><a class="cx-community-login" href={urlFor('hesap/giris/')}>Giriş yap</a></p>
+  {mode !== 'article' && <p data-community-login hidden><a class="cx-community-login" href={urlFor('hesap/giris/')}>Giriş yap</a></p>}
   {mode === 'article' && <>
     <div class="cx-community-actions">
       <button type="button" data-like disabled aria-pressed="false">Beğen <span data-like-count>0</span></button>
       <button type="button" data-bookmark disabled aria-pressed="false">Yazıyı kaydet</button>
+      <a data-community-login class="cx-community-login" href={urlFor('hesap/giris/')} hidden>Giriş yap</a>
     </div>
     <p>Yorumlar incelendikten sonra yayımlanır. E-posta adresin yorumlarda gösterilmez.</p>
   </>}
