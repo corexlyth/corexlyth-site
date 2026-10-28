@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Reflector } from 'three/addons/objects/Reflector.js';
 
 // The city is decorative: a still, lightweight version is used when motion is reduced.
 const canvas = document.querySelector<HTMLCanvasElement>('[data-depth-city]');
@@ -58,8 +59,15 @@ if (canvas) {
     makeInstances(box, buildingMaterials as unknown as THREE.Material, towers);
     makeInstances(box, roof, tops);
     trims.forEach((list,i)=>makeInstances(plane,materials[i],list));
+    // A second identical stretch follows the first, so the loop happens behind the camera.
+    const cityRepeat = city.clone();
+    scene.add(cityRepeat);
+    const cityLength = 17 * 5.2;
 
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(80,120),new THREE.MeshBasicMaterial({color:0x06111f}));
+    // The reflector renders the same buildings and windows into a capped-size texture.
+    const ground = new Reflector(new THREE.PlaneGeometry(80,200), {
+      color: 0x647482, textureWidth: 512, textureHeight: 512, clipBias: .003,
+    });
     ground.rotation.x=-Math.PI/2; ground.position.set(0,-.04,-42); scene.add(ground);
     const groundLines: Shape[][]=[[],[],[]];
     for(let i=-10;i<=10;i++) groundLines[Math.abs(i)%6===0?2:i%3===0?0:1].push({x:i*.75,y:.01,z:-42,w:.025,h:110,d:1,rot:0});
@@ -70,12 +78,12 @@ if (canvas) {
       scene.add(mesh);
     });
     const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-    let raf=0, last=0, elapsed=0, scroll=0, w=0, h=0;
-    function resize(){ if(!canvas)return; const r=canvas.getBoundingClientRect(); w=r.width;h=r.height;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<600?55:48;camera.updateProjectionMatrix();render(); }
-    function render(){camera.position.x=Math.sin(elapsed*.00012)*.18;camera.position.z=11-Math.min(scroll*.0015,3);camera.lookAt(0,5,-38);renderer.render(scene,camera);}
-    function tick(t:number){raf=0;if(document.hidden||reduce.matches)return;elapsed+=last?Math.min(t-last,50):0;last=t;render();raf=requestAnimationFrame(tick);}
+    let raf=0, last=0, elapsed=0, distance=0, boost=0, lastScroll=window.scrollY, w=0, h=0;
+    function resize(){ if(!canvas)return; const r=canvas.getBoundingClientRect(); w=r.width;h=r.height;if(!w||!h)return;renderer.setSize(w,h,false);const scale=Math.min(window.devicePixelRatio||1,1.25)*.6;ground.getRenderTarget().setSize(Math.max(1,Math.min(768,Math.round(w*scale))),Math.max(1,Math.min(768,Math.round(h*scale))));camera.aspect=w/h;camera.fov=w<600?55:48;camera.updateProjectionMatrix();render(); }
+    function render(){const travel=distance%cityLength;city.position.z=travel;cityRepeat.position.z=travel-cityLength;camera.position.x=Math.sin(elapsed*.00012)*.18;camera.lookAt(0,5,-38);renderer.render(scene,camera);}
+    function tick(t:number){raf=0;if(document.hidden||reduce.matches)return;const dt=last?Math.min(t-last,50)/1000:0;last=t;elapsed+=dt*1000;distance+=(.8+boost)*dt;boost*=Math.exp(-dt*2.4);render();raf=requestAnimationFrame(tick);}
     function update(){if(raf)cancelAnimationFrame(raf);raf=0;last=0;render();if(!document.hidden&&!reduce.matches)raf=requestAnimationFrame(tick);}
-    addEventListener('resize',resize,{passive:true});addEventListener('scroll',()=>{scroll=window.scrollY;if(reduce.matches)render();},{passive:true});document.addEventListener('visibilitychange',update);reduce.addEventListener('change',update);
+    addEventListener('resize',resize,{passive:true});addEventListener('scroll',()=>{const current=window.scrollY;const delta=Math.abs(current-lastScroll);lastScroll=current;if(!reduce.matches)boost=Math.min(3,boost+Math.min(delta,180)*.012);},{passive:true});document.addEventListener('visibilitychange',update);reduce.addEventListener('change',update);
     canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);canvas.parentElement?.classList.remove('has-depth-city');});
     canvas.addEventListener('webglcontextrestored',()=>{canvas.parentElement?.classList.add('has-depth-city');resize();update();});
     resize();canvas.parentElement?.classList.add('has-depth-city');update();
