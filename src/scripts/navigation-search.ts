@@ -16,11 +16,12 @@ if (root) {
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { close(); toggle.focus(); } });
   async function search() {
     const query=input.value.trim().slice(0,100), id=++request; list.replaceChildren();
+    const indexedQuery = query.replace(/\bwifi\b/gi, 'wi-fi');
     if(query.length<2){status.textContent='Aramak için en az iki harf yaz.';return;}
     status.textContent='Yazılar aranıyor…';
     try {
       enginePromise ??= import(/* @vite-ignore */ `${base}pagefind/pagefind.js`).then(async api=>{await api.options({baseUrl:base});return api;}).catch(error=>{enginePromise=undefined;throw error;});
-      const engine=await enginePromise, result=await engine.search(query);
+      const engine=await enginePromise, result=await engine.search(indexedQuery);
       if(id!==request)return;
       const matches=result?.results || [];
       const records=await Promise.all(matches.map((item:any)=>item.data()));
@@ -28,7 +29,7 @@ if (root) {
       // Pagefind may return partial matches; check the complete indexed article
       // so every entered term really occurs in the title or body.
       const words = (value: string) => (value.toLocaleLowerCase('tr-TR').replace(/ı/g,'i').normalize('NFD').replace(/\p{M}/gu,'').match(/[\p{L}\p{N}]+/gu) || []);
-      const terms = words(query);
+      const terms = words(indexedQuery);
       const contains = (text: string) => {
         const tokens = words(text);
         return terms.length > 0 && terms.every(term => tokens.some(token => /^\d+$/.test(term) ? token === term : token.startsWith(term)));
