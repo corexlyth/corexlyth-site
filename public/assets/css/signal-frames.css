@@ -1,0 +1,36 @@
+/* C — Siber Sinyal: one visual language across the site's framed surfaces. */
+:root{--cx-signal:#36dff6;--cx-signal-edge:rgba(75,219,248,.72);--cx-signal-violet:#af73f8;--cx-signal-shape:polygon(0 12px,12px 0,calc(100% - 16px) 0,100% 16px,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%)}
+/* The header remains unclipped so navigation and search panels can open. */
+.cx-article-page .cx-header__inner::before{clip-path:var(--cx-signal-shape);background:linear-gradient(115deg,#32dff6,rgba(48,144,200,.48) 50%,#a36af2)}
+.cx-article-page .cx-header__inner::after{clip-path:var(--cx-signal-shape);background:linear-gradient(115deg,rgba(6,30,51,.78) 0 30px,rgba(3,17,34,.78) 30px,rgba(9,18,42,.74) 100%)}
+/* Major structural panels: cyan outline, clipped edges and fine signal bands. */
+.cx-article-page :is(.cx-hero,.cx-terminal,.cx-category-panel,.cx-all-records,.cx-info,.cx-info-page__panel,.cx-article__intro,.cx-toc,.cx-article__topics,.cx-article__related,.cx-community,.cx-editor,.cx-account,.cx-account-identity,.cx-account-hero,.cx-profile-name,.cx-profile-activity,.cx-saved-posts,.cx-account-admin-actions,.cx-editor-group,.cx-editor-media,.cx-admin-section,.cx-settings-grid form,.cx-account-sections){
+ --frame-accent:var(--cx-accent,var(--cx-signal));border-radius:0;clip-path:var(--cx-signal-shape);border:1px solid color-mix(in srgb,var(--frame-accent) 70%,transparent);
+ background:linear-gradient(125deg,color-mix(in srgb,var(--frame-accent) 11%,transparent),transparent 65px),repeating-linear-gradient(135deg,rgba(87,220,255,.045) 0 1px,transparent 1px 5px) left/9px 100% no-repeat,linear-gradient(115deg,rgba(4,25,42,.82),rgba(3,14,30,.85));
+ box-shadow:inset 3px 0 0 color-mix(in srgb,var(--frame-accent) 48%,transparent),0 0 15px rgba(31,184,235,.1)
+}
+/* The original site uses background pseudo-elements for several frames. */
+.cx-article-page :is(.cx-article__intro,.cx-toc,.cx-article__topics,.cx-article__related,.cx-account,.cx-community,.cx-editor)::before{background:linear-gradient(125deg,#47dff5,#235478 44%,#9d6ef1);clip-path:var(--cx-signal-shape);animation:none}
+.cx-article-page :is(.cx-article__intro,.cx-toc,.cx-article__topics,.cx-article__related,.cx-account,.cx-community,.cx-editor)::after{background:linear-gradient(110deg,rgba(5,27,45,.95) 0 14px,rgba(3,15,31,.91) 14px,rgba(7,15,34,.9));clip-path:var(--cx-signal-shape)}
+/* Picture frames and framed content in articles. */
+.cx-reading-shell .cx-article-cover,.cx-reading-shell .cx-article__content :is(blockquote,pre,.cx-figure,.cx-gallery,.cx-gallery__item,.cx-table-scroll),.cx-reading-shell .cx-article__content :is(ul,ol):not(li *){
+ border:1px solid var(--cx-signal-edge);border-left:3px solid var(--cx-signal);border-radius:0;clip-path:var(--cx-signal-shape);
+ background-color:rgba(3,17,34,.84);box-shadow:inset 3px 0 rgba(65,214,245,.17),0 0 14px rgba(30,190,235,.08)
+}
+/* Cards share the same C frame rather than the older bright double border. */
+.cx-vault-card{padding:0;border:1px solid rgba(67,212,244,.77);border-left:3px solid #36dff6;border-radius:0;clip-path:var(--cx-signal-shape);background:linear-gradient(120deg,rgba(5,28,48,.96),rgba(5,14,32,.96));box-shadow:inset 3px 0 rgba(55,215,245,.16),0 0 13px rgba(37,177,237,.15)}
+.cx-vault-card::before{inset:0;border:0;box-shadow:none;background:linear-gradient(135deg,rgba(61,212,244,.22),transparent 36px) top left/76px 36px no-repeat,repeating-linear-gradient(125deg,rgba(88,222,255,.5) 0 5px,transparent 5px 9px) top 9px right 12px/33px 4px no-repeat;z-index:2}
+.cx-vault-card__inner{background:linear-gradient(110deg,rgba(7,35,53,.9),rgba(3,16,31,.96) 20%,rgba(4,13,29,.96));box-shadow:none}
+.cx-vault-card__image{border-bottom:1px solid rgba(83,208,242,.55)}
+.cx-vault-card[data-vault-position="1"]{padding:0;border-left:3px solid #50e7f9;box-shadow:inset 3px 0 rgba(55,215,245,.16),0 0 17px rgba(36,186,246,.25)}
+/* Compact frames use the same angular edge without interfering with controls. */
+.cx-record-row,.cx-article__topics .cx-tag-links a,.cx-tag-links a,.cx-vault__filters button,.cx-vault__sort select,.cx-nav-search__panel,.cx-nav-search__result,.cx-info-page__links a,.cx-info-page__contact,.cx-account-surface :is(input,textarea,select),.cx-account-surface :is(button,.cx-account-links a),.cx-home-hero-actions a,.cx-explore-btn,.cx-expand-btn{
+ border-radius:0;border-color:rgba(70,211,240,.65);clip-path:polygon(0 7px,7px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%);
+}
+/* Do not clip the search container: it contains results expanding out of the bar. */
+@media(min-width:1001px){.cx-nav-search__panel{clip-path:none;border:0}}
+.cx-account-surface :is(input,textarea,select):focus-visible,.cx-vault__filters button:focus-visible,.cx-vault__sort select:focus-visible{outline:2px solid #94f6ff;outline-offset:3px;box-shadow:0 0 0 2px #94f6ff}
+@media(max-width:700px){.cx-article-page :is(.cx-category-panel,.cx-all-records,.cx-info,.cx-info-page__panel,.cx-article__intro,.cx-toc,.cx-article__topics,.cx-article__related,.cx-community,.cx-editor,.cx-account){--cx-signal-shape:polygon(0 9px,9px 0,calc(100% - 11px) 0,100% 11px,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%)}}
+
+/* Standalone framed notices, including the not-found page. */
+.cx-article-page .cx-frame:not(.cx-hero):not(.cx-terminal):not(.cx-info){border-radius:0;clip-path:var(--cx-signal-shape);border:1px solid var(--cx-signal-edge);background:linear-gradient(115deg,rgba(5,30,48,.9),rgba(3,14,30,.9));box-shadow:inset 3px 0 rgba(54,223,246,.45)}
