@@ -1,0 +1,15 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { urlFor } from '../../lib/posts';
+---
+<SiteLayout title="İletişim | CoreXLyth" description="CoreXLyth ile e-posta üzerinden iletişime geç.">
+ <main id="home" class="cx-info-page">
+  <section class="cx-info-page__panel">
+   <p class="cx-info-page__kicker">COREXLYTH // İLETİŞİM</p>
+   <h1>Bağlantı <span>kur.</span></h1>
+   <p>İçerikler hakkında görüşlerini, sorularını ve önerilerini bizimle paylaşabilirsin.</p>
+   <div class="cx-info-page__contact"><span>E-POSTA</span><a href="mailto:corexlyth@gmail.com">corexlyth@gmail.com</a></div>
+   <div class="cx-info-page__links"><a href="mailto:corexlyth@gmail.com">E-posta gönder →</a><a href={urlFor('hakkinda/')}>CoreXLyth hakkında →</a></div>
+  </section>
+ </main>
+</SiteLayout>

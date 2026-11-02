@@ -1,0 +1,15 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { urlFor } from '../../lib/posts';
+---
+<SiteLayout title="Hakkında | CoreXLyth" description="CoreXLyth hakkında ve yayın alanlarımız.">
+ <main id="home" class="cx-info-page">
+  <section class="cx-info-page__panel">
+   <p class="cx-info-page__kicker">COREXLYTH // HAKKINDA</p>
+   <h1>Merak et. <span>Keşfet.</span></h1>
+   <p>CoreXLyth; teknoloji, dijital dünya, uygulamalar, bilim ve tarihe dair içeriklerin bir araya geldiği bağımsız bir keşif alanı.</p>
+   <p>Amacımız merak uyandıran konuları anlaşılır biçimde ele almak, deneyimleri paylaşmak ve araştırmaya devam etmek.</p>
+   <div class="cx-info-page__links"><a href={urlFor('arsiv/')}>Yazıları keşfet →</a><a href={urlFor('iletisim/')}>İletişime geç →</a></div>
+  </section>
+ </main>
+</SiteLayout>

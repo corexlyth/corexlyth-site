@@ -35,6 +35,7 @@ const showNavSearch = currentPath !== rootPath && !currentPath.startsWith(`${roo
 <link rel="stylesheet" href={`${base}assets/css/main.css?v=nav-search-8`} />
 <link rel="stylesheet" href={`${base}assets/css/archive-vault.css?v=5`} />
 <link rel="stylesheet" href={`${base}assets/css/nav-glass.css?v=1`} />
+<link rel="stylesheet" href={`${base}assets/css/info-pages.css?v=1`} />
 <noscript><style is:inline>.cx-boot{display:none!important}@media(max-width:700px){.cx-menu-button{display:none!important}.cx-nav{display:flex!important;position:static!important;box-shadow:none!important}.cx-header__inner{flex-wrap:wrap}.cx-nav{width:100%}}</style></noscript>
 <noscript><style is:inline>@media(max-width:1000px){.cx-article-page .cx-menu-button{display:none!important}.cx-article-page .cx-nav{display:flex!important;position:static!important;box-shadow:none!important;width:100%}.cx-article-page .cx-header__inner{flex-wrap:wrap}}</style></noscript>
 <slot name="head" />
@@ -76,7 +77,8 @@ const showNavSearch = currentPath !== rootPath && !currentPath.startsWith(`${roo
 
       <nav class="cx-nav" id="cx-nav" aria-label="Ana menü">
         <a href={base} aria-current={currentPath === rootPath ? "page" : undefined}>Ana Sayfa</a>
-          <a href={`${base}#hakkinda`}>Hakkında</a>
+          <a href={`${base}hakkinda/`} aria-current={currentPath === `${rootPath}/hakkinda` ? "page" : undefined}>Hakkında</a>
+          <a href={`${base}iletisim/`} aria-current={currentPath === `${rootPath}/iletisim` ? "page" : undefined}>İletişim</a>
           {showNavSearch && <div class="cx-nav-search" data-nav-search data-base={base}>
             <button class="cx-nav-search__toggle" type="button" aria-label="Aramayı aç" aria-expanded="false" aria-controls="cx-nav-search-panel">⌕</button>
             <div class="cx-nav-search__panel" id="cx-nav-search-panel" hidden>
