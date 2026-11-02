@@ -45,6 +45,7 @@ const structuredData = {
 >
   {post.data.publicationRevision && <meta slot="head" name="cx-publication" content={`${post.id}:${post.data.publicationRevision}`} />}
   <div class="cx-reading-progress" aria-hidden="true"><span></span></div>
+  <link slot="head" rel="stylesheet" href={urlFor("assets/css/callouts-signal.css?v=1")} />
   <main id="home" class="cx-reading-shell">
     <article class="cx-article cx-hud-frame" data-pagefind-body>
       <nav class="cx-breadcrumb" aria-label="İçerik yolu" data-pagefind-ignore>

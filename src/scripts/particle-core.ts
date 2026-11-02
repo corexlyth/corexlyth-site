@@ -12,7 +12,7 @@ if (canvas) {
       if (index % 4 !== 0) point[index % 3] = (index % 2 ? 1 : -1) * (.9 + Math.random() * .1);
       return {x:point[0], y:point[1], z:point[2], size:.45 + Math.random() * .8, light:Math.random()};
     });
-    // Keep the initials facing the reader while the surrounding cloud rotates.
+    // The red initials turn in the opposite direction to the outer cube.
     const glyphCanvas = document.createElement('canvas');
     glyphCanvas.width = 100; glyphCanvas.height = 50;
     const glyph = glyphCanvas.getContext('2d');
@@ -50,7 +50,9 @@ if (canvas) {
         context.fillRect(px,py,point.size,point.size);
       }
       for (const dot of initials) {
-        const px=width/2+dot.x*scale*1.55, py=height*.47+dot.y*scale*.78;
+        const inverse = -phase, x = dot.x * Math.cos(inverse), depth = dot.x * Math.sin(inverse);
+        const perspective = 3.4 / (3.4 + depth * .45);
+        const px=width/2+x*scale*1.55*perspective, py=height*.47+dot.y*scale*.78*perspective;
         context.fillStyle='rgba(255,55,83,.95)';context.fillRect(px,py,dot.size,dot.size);
       }
       frame.classList.add('is-particles-ready');

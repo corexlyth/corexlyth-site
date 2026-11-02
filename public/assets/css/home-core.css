@@ -1,0 +1,6 @@
+/* Slightly larger particle cube, scoped to the homepage. */
+.cx-home-page .cx-orbit{width:min(100%,260px)}
+@media(max-width:700px){
+ .cx-home-page .cx-hero .cx-terminal{width:min(62vw,210px)}
+ .cx-home-page .cx-orbit{width:100%}
+}
