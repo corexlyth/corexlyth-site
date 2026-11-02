@@ -34,3 +34,35 @@
 
 /* Standalone framed notices, including the not-found page. */
 .cx-article-page .cx-frame:not(.cx-hero):not(.cx-terminal):not(.cx-info){border-radius:0;clip-path:var(--cx-signal-shape);border:1px solid var(--cx-signal-edge);background:linear-gradient(115deg,rgba(5,30,48,.9),rgba(3,14,30,.9));box-shadow:inset 3px 0 rgba(54,223,246,.45)}
+
+/* The visible signal details: hatched rail, neon edge, and three indicator bars. */
+:root{
+ --cx-signal-surface:
+  repeating-linear-gradient(130deg,rgba(50,220,255,.9) 0 5px,transparent 5px 9px) right 18px top 13px/32px 5px no-repeat,
+  linear-gradient(90deg,transparent,rgba(53,219,255,.75),transparent) right 14px top 25px/110px 1px no-repeat,
+  repeating-linear-gradient(135deg,rgba(71,217,253,.26) 0 1px,transparent 1px 4px) left 4px top/24px 100% no-repeat,
+  linear-gradient(90deg,rgba(45,220,255,.95) 0 3px,transparent 3px 27px,rgba(57,212,246,.55) 27px 28px,transparent 28px) left top/30px 100% no-repeat,
+  linear-gradient(115deg,rgba(4,27,46,.89),rgba(3,13,29,.9));
+}
+.cx-article-page :is(.cx-hero,.cx-terminal,.cx-category-panel,.cx-all-records,.cx-info,.cx-info-page__panel,.cx-article__intro,.cx-toc,.cx-article__topics,.cx-article__related,.cx-community,.cx-editor,.cx-account,.cx-account-identity,.cx-account-hero,.cx-profile-name,.cx-profile-activity,.cx-saved-posts,.cx-account-admin-actions,.cx-editor-group,.cx-editor-media,.cx-admin-section,.cx-settings-grid form,.cx-account-sections){
+ background:var(--cx-signal-surface);border-color:rgba(84,224,251,.88);box-shadow:inset 0 1px rgba(96,233,255,.7),inset 0 -1px rgba(104,157,244,.6),inset 3px 0 #39d9f6;
+}
+/* Several panels place their surface on a pseudo-element above the background. */
+.cx-article-page :is(.cx-article__intro,.cx-toc,.cx-article__topics,.cx-article__related,.cx-account,.cx-community,.cx-editor)::after{background:var(--cx-signal-surface);opacity:1}
+.cx-article-page .cx-header__inner::after{
+ background:repeating-linear-gradient(135deg,rgba(71,217,253,.32) 0 1px,transparent 1px 4px) left 4px top/19px 100% no-repeat,
+ linear-gradient(90deg,#40dbf5 0 3px,transparent 3px 23px,rgba(57,212,246,.55) 23px 24px,transparent 24px) left top/26px 100% no-repeat,
+ linear-gradient(110deg,rgba(5,20,42,.82),rgba(9,20,44,.75));
+}
+.cx-article-page .cx-brand{margin-left:10px}
+/* Cards keep the image and hover effect while carrying the same edge details. */
+.cx-article-page .cx-vault-card{border:1px solid rgba(72,221,250,.88);border-left:4px solid #31def7;background:rgba(3,14,31,.96)}
+.cx-article-page .cx-vault-card::before{
+ inset:0;z-index:2;pointer-events:none;border:0;
+ background:repeating-linear-gradient(135deg,rgba(67,222,253,.45) 0 1px,transparent 1px 4px) left top/13px 100% no-repeat,
+ repeating-linear-gradient(130deg,#43dff9 0 5px,transparent 5px 9px) right 13px top 10px/30px 5px no-repeat,
+ linear-gradient(90deg,transparent,rgba(69,218,246,.8),transparent) right 10px top 20px/70px 1px no-repeat,
+ linear-gradient(135deg,transparent 50%,rgba(52,206,246,.35) 50%,rgba(52,206,246,.35) 53%,transparent 53%) right bottom/27px 27px no-repeat;
+}
+.cx-article-page .cx-vault-card__body{padding-left:22px}
+.cx-article-page .cx-vault-card__image img{width:100%;height:100%}
